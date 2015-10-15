@@ -30,13 +30,17 @@ frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 1.0
 strings_ayuda = ["Hola"," Adios",]
+p = [0,0,0]
+d = [0,0,0]
 
 # LeapMotion
 class SampleListener(Leap.Listener):
     state_names = ['STATE_INVALID', 'STATE_START', 'STATE_UPDATE', 'STATE_END']
 
+
     # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):
+        self.hard = pygame.mixer.Sound('Snare_hard.ogg')
         print "Inicializado"
 
     # Función que se ejecuta al conectar el Leap Motion
@@ -57,23 +61,27 @@ class SampleListener(Leap.Listener):
 
     # Función que se ejecuta al recibir cada frame.
     def on_frame(self, controller):
+        global p,d
         # Tomamos un frame
         frame = controller.frame()
 
         for tool in frame.tools:
-            print "  Tool id: %d, position: %s, direction: %s" % (
-                tool.id, tool.tip_position, tool.direction)
+            #print "  Tool id: %d, position: %s, direction: %s" % (
+            #    tool.id, tool.tip_position, tool.direction)
+            p = tool.tip_position
+            d = tool.direction
+            #print p, d
 
         # Comprobamos los gestos
         for gesture in frame.gestures():
             # Key tap (gesto similar al de pulsar una tecla)
             if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
                 keytap = KeyTapGesture(gesture)
-                song.play()
+                self.hard.play()
                 print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state],
                         keytap.position, keytap.direction )
-
+        glutPostRedisplay()
 
         # if not (frame.hands.is_empty and frame.gestures().is_empty):
         #     print ""
@@ -142,7 +150,12 @@ def dibujarEjes():
     glEnd()
 
 def dibujarObjetos():
-    pass
+    glColor3f(0,0,0)
+    # print p, d
+    glBegin(GL_LINES)
+    glVertex3f(p[0],p[1],p[2])
+    glVertex3f(p[0]-20*d[0],p[1]-20*d[1],p[2]-20*d[2])
+    glEnd()
 
 def ayuda():
     glMatrixMode(GL_PROJECTION)
@@ -173,7 +186,6 @@ def dibujar():
 
     fijarViewportProyeccion()
     fijarCamara()
-
     dibujarEjes()
 
     dibujarObjetos()
@@ -265,7 +277,7 @@ def moverRaton(x,y):
         # Redibujar
         glutPostRedisplay();
 
-def inicializar(argumentos):
+def inicializar():
     glEnable(GL_NORMALIZE)
     glEnable(GL_MULTISAMPLE_ARB);
     glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
@@ -273,13 +285,13 @@ def inicializar(argumentos):
 
 def main():
     # opengl funciones
-    glutInit(argumentos)
+    glutInit()
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 
     glutInitWindowPosition(0, 0)
     glutInitWindowSize(ventana_tam_x, ventana_tam_y)
-    glutCreateWindow("Prueba openGL")
-    inicializar(argumentos)
+    glutCreateWindow("Bateria")
+    inicializar()
 
     glEnable( GL_DEPTH_TEST )
 
@@ -294,9 +306,6 @@ def main():
     # Inicializamos pygame (para el audio)
     pygame.init()
 
-    # Cargamos la canción (a meter en la clase)
-    global song
-    song = pygame.mixer.Sound('s.ogg')
 
     # Creamos un listener
     listener = SampleListener()
@@ -307,10 +316,10 @@ def main():
     # Configurando el controller
     # Le cambiamos valores de velocidad, historia y distancia
     # para que consiga reconocer mejor el gesto
-    # controller.config.set("Gesture.KeyTap.MinDownVelocity", 20.0)
-    # controller.config.set("Gesture.KeyTap.HistorySeconds", 0.2)
-    # controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
-    # controller.config.save()
+    controller.config.set("Gesture.KeyTap.MinDownVelocity", 20.0)
+    controller.config.set("Gesture.KeyTap.HistorySeconds", 0.2)
+    controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
+    controller.config.save()
 
     # Añadimos el listener al controller para que así éste reciba toda la
     # información desde el Leap Motion
@@ -318,6 +327,7 @@ def main():
 
     # Hay que mantener la hebra principal activa
     glutMainLoop()
+    controller.remove_listener(listener)
     """
     print "Pulsa enter para salir..."
     try:
