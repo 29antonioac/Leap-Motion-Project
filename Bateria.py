@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-
+# coding=utf-8
 
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
@@ -48,7 +48,6 @@ class SampleListener(Leap.Listener):
                         gesture.id, self.state_names[gesture.state],
                         keytap.position, keytap.direction )
 
-        sleep(1)
 
         # if not (frame.hands.is_empty and frame.gestures().is_empty):
         #     print ""
@@ -83,10 +82,10 @@ def main():
     # Configurando el controller
     # Le cambiamos valores de velocidad, historia y distancia
     # para que consiga reconocer mejor el gesto
-    controller.config.set("Gesture.KeyTap.MinDownVelocity", 20.0)
-    controller.config.set("Gesture.KeyTap.HistorySeconds", 0.2)
-    controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
-    controller.config.save()
+    # controller.config.set("Gesture.KeyTap.MinDownVelocity", 20.0)
+    # controller.config.set("Gesture.KeyTap.HistorySeconds", 0.2)
+    # controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
+    # controller.config.save()
 
     # Añadimos el listener al controller para que así éste reciba toda la
     # información desde el Leap Motion
