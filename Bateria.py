@@ -78,7 +78,10 @@ class SampleListener(Leap.Listener):
             # Key tap (gesto similar al de pulsar una tecla)
             if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
                 keytap = KeyTapGesture(gesture)
-                self.hard.play()
+                if p[0] < 0:
+                    self.hard.play()
+                else:
+                    self.soft.play()
                 print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state],
                         keytap.position, keytap.direction )
