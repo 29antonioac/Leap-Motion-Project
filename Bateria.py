@@ -41,6 +41,7 @@ class SampleListener(Leap.Listener):
     # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):
         self.hard = pygame.mixer.Sound('Snare_hard.ogg')
+        self.soft = pygame.mixer.Sound('Snare_soft.ogg')
         print "Inicializado"
 
     # Función que se ejecuta al conectar el Leap Motion
