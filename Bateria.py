@@ -7,6 +7,7 @@ import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 import pygame
 from time import sleep
+import logging # Deberíamos usarlo!
 
 import OpenGL
 OpenGL.ERROR_ON_COPY = True
@@ -34,6 +35,8 @@ frustum_factor_escala = 1.0
 strings_ayuda = ["Hola"," Adios",]
 p = [0,0,0]
 d = [0,0,0]
+
+DEBUG = False
 
 # LeapMotion
 class SampleListener(Leap.Listener):
@@ -81,16 +84,16 @@ class SampleListener(Leap.Listener):
             if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
                 keytap = KeyTapGesture(gesture)
                 pos = keytap.position
-                print "pos[0] = ", pos[0],
+                if DEBUG: print "pos[0] = ", pos[0],
                 if pos[0] < 0:
-                    print "HARD",
+                    if DEBUG: print "HARD",
                     self.hard.play()
                 else:
-                    print "SOFT",
+                    if DEBUG: print "SOFT",
                     self.soft.play()
-                print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
-                        gesture.id, self.state_names[gesture.state],
-                        keytap.position, keytap.direction )
+                if DEBUG: print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
+                            gesture.id, self.state_names[gesture.state],
+                            keytap.position, keytap.direction )
         glutPostRedisplay()
 
         # if not (frame.hands.is_empty and frame.gestures().is_empty):
@@ -341,6 +344,10 @@ def main(argumentos):
     # Añadimos el listener al controller para que así éste reciba toda la
     # información desde el Leap Motion
     controller.add_listener(listener)
+
+    if "--debug" in argumentos:
+        global DEBUG
+        DEBUG = True
 
     # Hay que mantener la hebra principal activa
     glutMainLoop()
