@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 # coding=utf-8
 
+# Batería para Leap Motion
+
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 import pygame
@@ -78,9 +80,13 @@ class SampleListener(Leap.Listener):
             # Key tap (gesto similar al de pulsar una tecla)
             if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
                 keytap = KeyTapGesture(gesture)
-                if p[0] < 0:
+                pos = keytap.position
+                print "pos[0] = ", pos[0],
+                if pos[0] < 0:
+                    print "HARD",
                     self.hard.play()
                 else:
+                    print "SOFT",
                     self.soft.play()
                 print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state],
@@ -210,7 +216,7 @@ def teclaNormal(k, x, y):
     elif k == b'r':
         camara_angulo_x = camara_angulo_y = 0.0
     elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
-        sys.exit(0)
+        glutLeaveMainLoop()
     else:
         return
     glutPostRedisplay()
@@ -283,13 +289,16 @@ def moverRaton(x,y):
 
 def inicializar():
     glEnable(GL_NORMALIZE)
-    glEnable(GL_MULTISAMPLE_ARB);
-    glClearColor( 1.0, 1.0, 1.0, 1.0 ) ;
+    glEnable(GL_MULTISAMPLE_ARB)
+    glClearColor( 1.0, 1.0, 1.0, 1.0 )
     glColor3f(0.0,0.0,0.0)
 
-def main():
+def limpiarTodo():
+    pass
+
+def main(argumentos):
     # opengl funciones
-    glutInit()
+    glutInit(argumentos)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
 
     glutInitWindowPosition(0, 0)
@@ -305,6 +314,10 @@ def main():
     glutSpecialFunc(teclaEspecial)
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
+
+    glutCloseFunc(limpiarTodo);
+
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
 
     # Inicializamos pygame (para el audio)
@@ -331,8 +344,8 @@ def main():
 
     # Hay que mantener la hebra principal activa
     glutMainLoop()
-    controller.remove_listener(listener)
-    """
+    # controller.remove_listener(listener)
+
     print "Pulsa enter para salir..."
     try:
         sys.stdin.readline()
@@ -341,7 +354,7 @@ def main():
     finally:
         # Borrar el listener al salir
         controller.remove_listener(listener)
-    """
+
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
