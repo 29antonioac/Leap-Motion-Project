@@ -4,11 +4,12 @@
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 import pygame
+from time import sleep
 
 class SampleListener(Leap.Listener):
     state_names = ['STATE_INVALID', 'STATE_START', 'STATE_UPDATE', 'STATE_END']
 
-    # Función que se ejecuta al inicializar el Leap Motion
+    # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):
         print "Inicializado"
 
@@ -33,6 +34,10 @@ class SampleListener(Leap.Listener):
         # Tomamos un frame
         frame = controller.frame()
 
+        for tool in frame.tools:
+            print "  Tool id: %d, position: %s, direction: %s" % (
+                tool.id, tool.tip_position, tool.direction)
+
         # Comprobamos los gestos
         for gesture in frame.gestures():
             # Key tap (gesto similar al de pulsar una tecla)
@@ -42,6 +47,8 @@ class SampleListener(Leap.Listener):
                 print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state],
                         keytap.position, keytap.direction )
+
+        sleep(1)
 
         # if not (frame.hands.is_empty and frame.gestures().is_empty):
         #     print ""
@@ -80,7 +87,6 @@ def main():
     controller.config.set("Gesture.KeyTap.HistorySeconds", 0.2)
     controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
     controller.config.save()
-
 
     # Añadimos el listener al controller para que así éste reciba toda la
     # información desde el Leap Motion
