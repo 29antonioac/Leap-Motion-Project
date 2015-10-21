@@ -83,7 +83,6 @@ class SampleListener(Leap.Listener):
                     print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
 
-        #print self.posicion_media[0]
         if  len(posicion_media) > 0:
             graficos.redibujar()
         posicion_media = []
@@ -120,5 +119,3 @@ class SampleListener(Leap.Listener):
 
         if state == Leap.Gesture.STATE_INVALID:
             return "STATE_INVALID"
-
-

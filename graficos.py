@@ -15,17 +15,16 @@ import leapmotion
 vec4 = GLfloat_4
 tStart = t0 = time.time()
 frames = 0
-camara_angulo_x = 0#+10
+camara_angulo_x = 25#+10
 camara_angulo_y = 0#-45
 ventana_pos_x  = 50
 ventana_pos_y  = 50
 ventana_tam_x  = 1024
 ventana_tam_y  = 800
-frustum_factor_escala = 1.0
 frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
-frustum_factor_escala = 1.0
+frustum_factor_escala = 0.005
 strings_ayuda = ["Hola"," Adios",]
 
 posiciones_baquetas = []
@@ -49,8 +48,34 @@ def fijarCamara():
     glRotatef(camara_angulo_x,1,0,0)
     glRotatef(camara_angulo_y,0,1,0)
 
+def dibujarRejilla():
+    long_grid = 1000.0
+    gap = 50.0
+
+    num_lines = int( (long_grid*2)/gap )
+
+    # establecer modo de dibujo a lineas (podría estar en puntos)
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    # Ancho de línea
+    glLineWidth( 0.2 );
+
+    # dibujar las líneas
+    glBegin(GL_LINES)
+    # Color negro
+    glColor3f( 0.2, 0.2, 0.2 )
+
+    for i in xrange(num_lines):
+        if i != num_lines/2:
+            glVertex3f( -long_grid, 0.0, gap*(i-num_lines/2) )
+            glVertex3f( +long_grid, 0.0, gap*(i-num_lines/2) )
+
+            glVertex3f( gap*(i-num_lines/2), 0.0, -long_grid )
+            glVertex3f( gap*(i-num_lines/2), 0.0, +long_grid )
+
+    glEnd()
+
 def dibujarEjes():
-    long_ejes = 30.0
+    long_ejes = 1000.0
     # establecer modo de dibujo a lineas (podría estar en puntos)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     # Ancho de línea
@@ -70,9 +95,13 @@ def dibujarEjes():
     glVertex3f( 0.0, 0.0, -long_ejes )
     glVertex3f( 0.0, 0.0, +long_ejes )
     glEnd()
+    glBegin(GL_POINTS)
+    glColor3f( 1.0, 1.0, 1.0 )
+    glVertex3f(0.0,0.0,0.0)
+    glEnd()
 
 def dibujarObjetos():
-    global posiciones_baquetas, direcciones_baquetas
+    global posiciones_baquetas, direcciones_baquetas, hay_tool
     glColor3f(0,0,0)
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
@@ -81,6 +110,8 @@ def dibujarObjetos():
         glVertex3f(p[0],p[1],p[2])
         glVertex3f(p[0]-20*d[0],p[1]-20*d[1],p[2]-20*d[2])
     glEnd()
+    posiciones_baquetas = []
+    direcciones_baquetas = []
 
 def ayuda():
     glMatrixMode(GL_PROJECTION)
@@ -110,9 +141,12 @@ def dibujar():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     fijarViewportProyeccion()
     fijarCamara()
+    #print frustum_factor_escala
+    dibujarRejilla()
     dibujarEjes()
     dibujarObjetos()
     ayuda()
+    glutPostRedisplay()
     glutSwapBuffers()
 
 # Teclas normales: para cambiar escala y velocidad
@@ -218,9 +252,10 @@ def inicializarOpenGL():
     glEnable(GL_NORMALIZE)
     glEnable(GL_MULTISAMPLE_ARB)
     glEnable( GL_DEPTH_TEST )
-    glClearColor( 1.0, 1.0, 1.0, 1.0 )
+    glClearColor( 0.0, 0.0, 0.0, 1.0 )
     glColor3f(0.0,0.0,0.0)
 
+    glutIdleFunc(dibujar)
     glutDisplayFunc(dibujar)
     glutReshapeFunc(cambioTamanio)
     glutKeyboardFunc(teclaNormal)
@@ -231,4 +266,3 @@ def inicializarOpenGL():
     # TO DO
     glutCloseFunc(limpiarTodo);
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-
