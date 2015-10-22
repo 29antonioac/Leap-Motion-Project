@@ -37,7 +37,7 @@ direcciones_baquetas = []
 tiempo_transcurrido_ultimo_dato = time.time()
 margen_tiempo = 10
 
-traslacion_baterias = [[-150,0,-150],[0,0,0],[150,0,-150]]
+traslacion_baterias = [[-150,100,-0],[0,100,0],[150,100,-0]]
 propiedades_baterias = [[50,50],[50,50],[50,50]]    # radio,altura
 
 def fijarProyeccion():
@@ -171,7 +171,6 @@ def ayuda():
 
 # Función de dibujado
 def dibujar():
-    #if tiempo_transcurrido_ultimo_dato is not None and ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
     rotationRate = (time.time() - tStart) * 1.05
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     fijarViewportProyeccion()
