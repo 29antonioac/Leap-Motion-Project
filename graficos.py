@@ -75,7 +75,7 @@ def dibujarRejilla():
     glEnd()
 
 def dibujarEjes():
-    long_ejes = 1000.0
+    long_ejes = 100.0
     # establecer modo de dibujo a lineas (podría estar en puntos)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     # Ancho de línea
