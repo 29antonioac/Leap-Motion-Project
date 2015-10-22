@@ -12,6 +12,8 @@ import math
 
 import leapmotion
 
+import time
+
 vec4 = GLfloat_4
 tStart = t0 = time.time()
 frames = 0
@@ -29,6 +31,9 @@ strings_ayuda = ["Hola"," Adios",]
 
 posiciones_baquetas = []
 direcciones_baquetas = []
+
+tiempo_transcurrido_ultimo_dato = None
+margen_tiempo = 5
 
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
@@ -100,9 +105,32 @@ def dibujarEjes():
     glVertex3f(0.0,0.0,0.0)
     glEnd()
 
+def dibujaCilindro(traslacion,propiedades):
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+
+    glColor3f(0.5,0.5,0.5)
+    glTranslatef(traslacion[0],traslacion[1],traslacion[2])
+    glRotatef(-90,1,0,0)
+
+    glVertex3f(0,0,0)
+    glutSolidCylinder(propiedades[0],propiedades[1],100,100)
+
+    glPopMatrix()
+
 def dibujarObjetos():
-    global posiciones_baquetas, direcciones_baquetas, hay_tool
-    glColor3f(0,0,0)
+    #"""global posiciones_baquetas, direcciones_baquetas, hay_tool
+
+    traslacion_baterias = [[-300,0,-300],[0,0,0],[300,0,-300]]
+    propiedades_baterias = [[100,100],[100,100],[100,100]]    # radio,altura
+
+    for i in range(len(traslacion_baterias)):
+        dibujaCilindro(traslacion_baterias[i],propiedades_baterias[i])
+
+    #"""
+    #pass
+    """
+    glColor3f(1,1,1)
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
         p = posiciones_baquetas[j]
@@ -112,6 +140,7 @@ def dibujarObjetos():
     glEnd()
     posiciones_baquetas = []
     direcciones_baquetas = []
+    #"""
 
 def ayuda():
     glMatrixMode(GL_PROJECTION)
@@ -137,17 +166,27 @@ def ayuda():
 
 # Función de dibujado
 def dibujar():
-    rotationRate = (time.time() - tStart) * 1.05
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    fijarViewportProyeccion()
-    fijarCamara()
-    #print frustum_factor_escala
-    dibujarRejilla()
-    dibujarEjes()
-    dibujarObjetos()
-    ayuda()
-    glutPostRedisplay()
-    glutSwapBuffers()
+    global tiempo_transcurrido_ultimo_dato, margen_tiempo
+
+    if tiempo_transcurrido_ultimo_dato is None:
+        tiempo_transcurrido_ultimo_dato = time.time()
+
+    ahora = time.time()
+
+    #if tiempo_transcurrido_ultimo_dato is not None and ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
+    if ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
+        #print ahora - tiempo_transcurrido_ultimo_dato
+        rotationRate = (time.time() - tStart) * 1.05
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        fijarViewportProyeccion()
+        fijarCamara()
+        #print frustum_factor_escala
+        dibujarRejilla()
+        dibujarEjes()
+        dibujarObjetos()
+        ayuda()
+        glutPostRedisplay()
+        glutSwapBuffers()
 
 # Teclas normales: para cambiar escala y velocidad
 def teclaNormal(k, x, y):
@@ -219,7 +258,9 @@ def pulsarRaton(boton,estado,x,y):
         glutPostRedisplay();
 
 def moverRaton(x,y):
-    global camara_angulo_x,camara_angulo_y, origen
+    global camara_angulo_x,camara_angulo_y, origen, tiempo_transcurrido_ultimo_dato, ahora
+
+    tiempo_transcurrido_ultimo_dato = time.time()
 
     if origen[0] >= 0 and origen[1] >= 0:
         camara_angulo_x += (y - origen[1])*0.25;
@@ -233,9 +274,12 @@ def limpiarTodo():
     pass
 
 def redibujar():
-    global posiciones_baquetas, direcciones_baquetas
+    global posiciones_baquetas, direcciones_baquetas, ahora, tiempo_transcurrido_ultimo_dato
+
+    tiempo_transcurrido_ultimo_dato = time.time()
     posiciones_baquetas = leapmotion.posicion_media
     direcciones_baquetas = leapmotion.direccion_media
+
     glutPostRedisplay()
 
 def openGLmainloop():
