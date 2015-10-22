@@ -27,7 +27,9 @@ frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.005
-strings_ayuda = ["Hola"," Adios",]
+strings_ayuda = ["Hola"," Adios"]
+
+origen_ejes = [-100.0,0.0,0.0]
 
 posiciones_baquetas = []
 direcciones_baquetas = []
@@ -70,17 +72,17 @@ def dibujarRejilla():
     glColor3f( 0.2, 0.2, 0.2 )
 
     for i in xrange(num_lines):
-        if i != num_lines/2:
-            glVertex3f( -long_grid, 0.0, gap*(i-num_lines/2) )
-            glVertex3f( +long_grid, 0.0, gap*(i-num_lines/2) )
+        # if i != num_lines/2:
+        glVertex3f( -long_grid, 0.0, gap*(i-num_lines/2) )
+        glVertex3f( +long_grid, 0.0, gap*(i-num_lines/2) )
 
-            glVertex3f( gap*(i-num_lines/2), 0.0, -long_grid )
-            glVertex3f( gap*(i-num_lines/2), 0.0, +long_grid )
+        glVertex3f( gap*(i-num_lines/2), 0.0, -long_grid )
+        glVertex3f( gap*(i-num_lines/2), 0.0, +long_grid )
 
     glEnd()
 
 def dibujarEjes():
-    long_ejes = 1000.0
+    long_ejes = 100.0
     # establecer modo de dibujo a lineas (podría estar en puntos)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     # Ancho de línea
@@ -89,21 +91,22 @@ def dibujarEjes():
     glBegin(GL_LINES)
     # eje X, color rojo
     glColor3f( 1.0, 0.0, 0.0 )
-    glVertex3f( -long_ejes, 0.0, 0.0 )
-    glVertex3f( +long_ejes, 0.0, 0.0 )
+
+    glVertex3f( origen_ejes[0]              , origen_ejes[1], origen_ejes[2] )
+    glVertex3f( origen_ejes[0] +long_ejes   , origen_ejes[1], origen_ejes[2] )
     # eje Y, color verde
     glColor3f( 0.0, 1.0, 0.0 )
-    glVertex3f( 0.0, -long_ejes, 0.0 )
-    glVertex3f( 0.0, +long_ejes, 0.0 )
+    glVertex3f( origen_ejes[0], origen_ejes[1]              , origen_ejes[2] )
+    glVertex3f( origen_ejes[0], origen_ejes[1] +long_ejes   , origen_ejes[2] )
     # eje Z, color azul
     glColor3f( 0.0, 0.0, 1.0 )
-    glVertex3f( 0.0, 0.0, -long_ejes )
-    glVertex3f( 0.0, 0.0, +long_ejes )
+    glVertex3f( origen_ejes[0], origen_ejes[1]  ,           origen_ejes[2]  )
+    glVertex3f( origen_ejes[0], origen_ejes[1]  , origen_ejes[2] +long_ejes )
     glEnd()
-    glBegin(GL_POINTS)
+
+    # Dibujar punto
     glColor3f( 1.0, 1.0, 1.0 )
-    glVertex3f(0.0,0.0,0.0)
-    glEnd()
+    glutSolidSphere( 5.0, 20, 20 )
 
 def dibujaCilindro(traslacion,propiedades):
     glMatrixMode(GL_MODELVIEW)
@@ -131,6 +134,7 @@ def dibujarObjetos():
     #pass
     """
     glColor3f(1,1,1)
+
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
         p = posiciones_baquetas[j]
@@ -197,7 +201,8 @@ def teclaNormal(k, x, y):
     elif k == b'-':
         frustum_factor_escala /= 1.05
     elif k == b'r':
-        camara_angulo_x = camara_angulo_y = 0.0
+        camara_angulo_x = 25
+        camara_angulo_y = 0.0
     elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
         glutLeaveMainLoop()
     else:
