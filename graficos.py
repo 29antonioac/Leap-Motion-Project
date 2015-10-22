@@ -25,7 +25,7 @@ frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.005
-strings_ayuda = ["Hola"," Adios",]
+strings_ayuda = ["Hola"," Adios"]
 
 origen_ejes = [-100.0,0.0,0.0]
 
@@ -105,7 +105,7 @@ def dibujarEjes():
 
 def dibujarObjetos():
     global posiciones_baquetas, direcciones_baquetas, hay_tool
-    glColor3f(0,0,0)
+    glColor3f(1.0,1.0,1.0)
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
         p = posiciones_baquetas[j]
@@ -161,7 +161,8 @@ def teclaNormal(k, x, y):
     elif k == b'-':
         frustum_factor_escala /= 1.05
     elif k == b'r':
-        camara_angulo_x = camara_angulo_y = 0.0
+        camara_angulo_x = 25
+        camara_angulo_y = 0.0
     elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
         glutLeaveMainLoop()
     else:
