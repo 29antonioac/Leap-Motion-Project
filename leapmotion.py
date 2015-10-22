@@ -6,6 +6,7 @@ import graficos
 
 posicion_media = []
 direccion_media = []
+string_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Snare_hard.ogg']
 
 # LeapMotion
 class SampleListener(Leap.Listener):
@@ -16,12 +17,12 @@ class SampleListener(Leap.Listener):
 
     num_frame = 0
     num_medio_frames = 5
-    DEBUG = False
+    DEBUG = True
 
     def inicializar(self):
+        global string_sonidos
         pygame.init()
-        self.strings_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Snare_hard.ogg']
-        self.sonidos_baterias = [pygame.mixer.Sound(s) for s in self.string_sonidos]
+        self.sonidos_baterias = [pygame.mixer.Sound(s) for s in string_sonidos]
 
     # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):

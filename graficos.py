@@ -29,13 +29,16 @@ frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.005
 strings_ayuda = ["Hola"," Adios"]
 
-origen_ejes = [-100.0,0.0,0.0]
+origen_ejes = [-500.0,0.0,-400.0]
 
 posiciones_baquetas = []
 direcciones_baquetas = []
 
 tiempo_transcurrido_ultimo_dato = None
-margen_tiempo = 5
+margen_tiempo = 50
+
+traslacion_baterias = [[-150,0,-150],[0,0,0],[150,0,-150]]
+propiedades_baterias = [[50,50],[50,50],[50,50]]    # radio,altura
 
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
@@ -71,7 +74,7 @@ def dibujarRejilla():
     # Color negro
     glColor3f( 0.2, 0.2, 0.2 )
 
-    for i in xrange(num_lines):
+    for i in range(num_lines):
         # if i != num_lines/2:
         glVertex3f( -long_grid, 0.0, gap*(i-num_lines/2) )
         glVertex3f( +long_grid, 0.0, gap*(i-num_lines/2) )
@@ -82,7 +85,7 @@ def dibujarRejilla():
     glEnd()
 
 def dibujarEjes():
-    long_ejes = 100.0
+    long_ejes = 500.0
     # establecer modo de dibujo a lineas (podría estar en puntos)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     # Ancho de línea
@@ -122,17 +125,12 @@ def dibujaCilindro(traslacion,propiedades):
     glPopMatrix()
 
 def dibujarObjetos():
-    #"""global posiciones_baquetas, direcciones_baquetas, hay_tool
-
-    traslacion_baterias = [[-300,0,-300],[0,0,0],[300,0,-300]]
-    propiedades_baterias = [[100,100],[100,100],[100,100]]    # radio,altura
+    global posiciones_baquetas, direcciones_baquetas
+    global traslacion_baterias, propiedades_baterias
 
     for i in range(len(traslacion_baterias)):
         dibujaCilindro(traslacion_baterias[i],propiedades_baterias[i])
 
-    #"""
-    #pass
-    """
     glColor3f(1,1,1)
 
     glBegin(GL_LINES)
@@ -144,7 +142,7 @@ def dibujarObjetos():
     glEnd()
     posiciones_baquetas = []
     direcciones_baquetas = []
-    #"""
+
 
 def ayuda():
     glMatrixMode(GL_PROJECTION)
@@ -179,7 +177,7 @@ def dibujar():
 
     #if tiempo_transcurrido_ultimo_dato is not None and ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
     if ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
-        #print ahora - tiempo_transcurrido_ultimo_dato
+        print ahora - tiempo_transcurrido_ultimo_dato
         rotationRate = (time.time() - tStart) * 1.05
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         fijarViewportProyeccion()
