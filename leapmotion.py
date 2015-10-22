@@ -20,8 +20,8 @@ class SampleListener(Leap.Listener):
 
     def inicializar(self):
         pygame.init()
-        self.sonidohard = pygame.mixer.Sound('Snare_hard.ogg')
-        self.sonidosoft = pygame.mixer.Sound('Snare_soft.ogg')
+        self.strings_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Snare_hard.ogg']
+        self.sonidos_baterias = [pygame.mixer.Sound(s) for s in self.string_sonidos]
 
     # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):
@@ -68,16 +68,17 @@ class SampleListener(Leap.Listener):
                 keytap = Leap.KeyTapGesture(gesture)
                 pos = keytap.position
 
+                tolerancia = 1.1
+
                 if self.DEBUG:
                     print "pos[0] = ", pos[0],
-                if pos[0] < 0:
-                    if self.DEBUG:
-                        print "HARD",
-                    self.sonidohard.play()
-                else:
-                    if self.DEBUG:
-                        print "SOFT",
-                    self.sonidosoft.play()
+                for i in xrange(len(self.sonidos_baterias)):
+                    if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
+                    and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
+                    and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
+                        if self.DEBUG:
+                            print "Sonido",i
+                        self.sonidos_baterias[i].play()
 
                 if self.DEBUG:
                     print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
