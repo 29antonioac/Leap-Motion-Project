@@ -34,8 +34,8 @@ origen_ejes = [-500.0,0.0,-400.0]
 posiciones_baquetas = []
 direcciones_baquetas = []
 
-tiempo_transcurrido_ultimo_dato = None
-margen_tiempo = 50
+tiempo_transcurrido_ultimo_dato = time.time()
+margen_tiempo = 10
 
 traslacion_baterias = [[-150,0,-150],[0,0,0],[150,0,-150]]
 propiedades_baterias = [[50,50],[50,50],[50,50]]    # radio,altura
@@ -127,6 +127,7 @@ def dibujaCilindro(traslacion,propiedades):
 def dibujarObjetos():
     global posiciones_baquetas, direcciones_baquetas
     global traslacion_baterias, propiedades_baterias
+    global tiempo_transcurrido_ultimo_dato, margen_tiempo
 
     for i in range(len(traslacion_baterias)):
         dibujaCilindro(traslacion_baterias[i],propiedades_baterias[i])
@@ -140,9 +141,11 @@ def dibujarObjetos():
         glVertex3f(p[0],p[1],p[2])
         glVertex3f(p[0]-20*d[0],p[1]-20*d[1],p[2]-20*d[2])
     glEnd()
-    posiciones_baquetas = []
-    direcciones_baquetas = []
 
+    if  time.time() - tiempo_transcurrido_ultimo_dato > margen_tiempo:
+        print time.time() - tiempo_transcurrido_ultimo_dato
+        posiciones_baquetas = []
+        direcciones_baquetas = []
 
 def ayuda():
     glMatrixMode(GL_PROJECTION)
@@ -168,27 +171,17 @@ def ayuda():
 
 # Función de dibujado
 def dibujar():
-    global tiempo_transcurrido_ultimo_dato, margen_tiempo
-
-    if tiempo_transcurrido_ultimo_dato is None:
-        tiempo_transcurrido_ultimo_dato = time.time()
-
-    ahora = time.time()
-
     #if tiempo_transcurrido_ultimo_dato is not None and ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
-    if ahora - tiempo_transcurrido_ultimo_dato < margen_tiempo:
-        print ahora - tiempo_transcurrido_ultimo_dato
-        rotationRate = (time.time() - tStart) * 1.05
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        fijarViewportProyeccion()
-        fijarCamara()
-        #print frustum_factor_escala
-        dibujarRejilla()
-        dibujarEjes()
-        dibujarObjetos()
-        ayuda()
-        glutPostRedisplay()
-        glutSwapBuffers()
+    rotationRate = (time.time() - tStart) * 1.05
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    fijarViewportProyeccion()
+    fijarCamara()
+    dibujarRejilla()
+    dibujarEjes()
+    dibujarObjetos()
+    ayuda()
+    glutPostRedisplay()
+    glutSwapBuffers()
 
 # Teclas normales: para cambiar escala y velocidad
 def teclaNormal(k, x, y):
