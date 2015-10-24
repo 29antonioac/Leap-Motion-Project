@@ -17,7 +17,7 @@ import time
 vec4 = GLfloat_4
 tStart = t0 = time.time()
 frames = 0
-camara_angulo_x = 25#+10
+camara_angulo_x = 90#+10
 camara_angulo_y = 0#-45
 ventana_pos_x  = 50
 ventana_pos_y  = 50
