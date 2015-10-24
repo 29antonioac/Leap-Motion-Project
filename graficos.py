@@ -29,7 +29,7 @@ frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.008 / 1.05
 strings_ayuda = ["Hola"," Adios"]
 
-origen_ejes = [-200.0,0.0,-200.0]
+origen_ejes = [-150.0,0.0,-150.0]
 
 posiciones_baquetas = []
 direcciones_baquetas = []
@@ -126,12 +126,12 @@ def dibujaCilindro(traslacion,propiedades):
 
 def dibujarZonaBateriaUnitaria():
     glBegin(GL_TRIANGLES)
-    glVertex3f(-100,0,-100)
-    glVertex3f(-100,0,100)
-    glVertex3f(100,0,-100)
-    glVertex3f(-100,0,100)
-    glVertex3f(100,0,-100)
-    glVertex3f(100,0,100)
+    glVertex3f(-75,-0.01,-75)
+    glVertex3f(-75,-0.01,75)
+    glVertex3f(75,-0.01,-75)
+    glVertex3f(-75,-0.01,75)
+    glVertex3f(75,-0.01,-75)
+    glVertex3f(75,-0.01,75)
     glEnd()
 
 # 1 2
@@ -147,7 +147,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 1: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 1: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(-100,0,-100)
+    glTranslatef(-75,0,-75)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -155,7 +155,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 2: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 2: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(-100,0,100)
+    glTranslatef(-75,0,75)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -163,7 +163,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 3: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 3: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(100,0,-100)
+    glTranslatef(75,0,-75)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -171,7 +171,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 4: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 4: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(100,0,100)
+    glTranslatef(75,0,75)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
