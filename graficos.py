@@ -125,7 +125,6 @@ def dibujaCilindro(traslacion,propiedades):
     glPopMatrix()
 
 def dibujarZonaBateriaUnitaria():
-    glColor3f(1,1,1)
     glBegin(GL_TRIANGLES)
     glVertex3f(-100,0,-100)
     glVertex3f(-100,0,100)
@@ -135,24 +134,42 @@ def dibujarZonaBateriaUnitaria():
     glVertex3f(100,0,100)
     glEnd()
 
-def dibujarZonasBateria():
+# 1 2
+# 3 4
+# zonas resaltadas
+def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glMatrixMode(GL_MODELVIEW)
 
+    c1 = [1,1,0]
+    c2 = [0,1,1]
+
+    glColor3f(1,1,1)
+    if zonaResaltadas[0] == 1: glColor3f(c1[0],c1[1],c1[2])
+    elif zonaResaltadas[1] == 1: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(-100,0,-100)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
+    glColor3f(1,1,1)
+    if zonaResaltadas[0] == 2: glColor3f(c1[0],c1[1],c1[2])
+    elif zonaResaltadas[1] == 2: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(-100,0,100)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
+    glColor3f(1,1,1)
+    if zonaResaltadas[0] == 3: glColor3f(c1[0],c1[1],c1[2])
+    elif zonaResaltadas[1] == 3: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(100,0,-100)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
+    glColor3f(1,1,1)
+    if zonaResaltadas[0] == 4: glColor3f(c1[0],c1[1],c1[2])
+    elif zonaResaltadas[1] == 4: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(100,0,100)
     dibujarZonaBateriaUnitaria()
@@ -164,14 +181,23 @@ def dibujarObjetos():
     global tiempo_transcurrido_ultimo_dato, margen_tiempo
 
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
-    dibujarZonasBateria()
+
+    zonaResaltadas = [0,0]
+    for j in range(len(posiciones_baquetas)):
+        if j == 2: break
+        p = posiciones_baquetas[j]
+        if p[0] < 0 and p[2] < 0: zonaResaltadas[j] = 1
+        elif p[0] < 0 and p[2] > 0: zonaResaltadas[j] = 2
+        elif p[0] > 0 and p[2] < 0: zonaResaltadas[j] = 3
+        elif p[0] > 0 and p[2] > 0: zonaResaltadas[j] = 4
+
+    #dibujarZonasBateria(zonaResaltadas)
 
     glLineWidth( 2.5 );
-
-    col = [[1,1,0],[0,1,1],[1,0,1]]
-
+    col = [[1,1,0],[0,1,1]]
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
+        if j == 2: break
         glColor3f(col[j][0],col[j][1],col[j][2])
         p = posiciones_baquetas[j]
         d = direcciones_baquetas[j]
@@ -180,7 +206,7 @@ def dibujarObjetos():
     glEnd()
 
     if  time.time() - tiempo_transcurrido_ultimo_dato > margen_tiempo:
-        #print time.time() - tiempo_transcurrido_ultimo_dato
+        print time.time() - tiempo_transcurrido_ultimo_dato
         posiciones_baquetas = []
         direcciones_baquetas = []
 
