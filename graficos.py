@@ -134,7 +134,7 @@ def dibujarObjetos():
 
     glLineWidth( 2.5 );
 
-    col = [[1,1,0],[0,1,1]]
+    col = [[1,1,0],[0,1,1],[1,0,1]]
 
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
