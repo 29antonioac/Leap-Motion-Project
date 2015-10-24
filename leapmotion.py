@@ -6,7 +6,7 @@ import graficos
 
 posicion_media = []
 direccion_media = []
-string_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Kick_hard.ogg','Kick_soft.ogg']
+string_sonidos = ['Kick_hard.ogg','Kick_soft.ogg','Snare_hard.ogg','Snare_soft.ogg']
 
 # LeapMotion
 class SampleListener(Leap.Listener):
@@ -65,25 +65,37 @@ class SampleListener(Leap.Listener):
 
                 if self.DEBUG:
                     print "pos = ", pos,
-                for i in range(len(self.sonidos)):
-                    if self.DEBUG:
-                        print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
-                        print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
-                        print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
+                # for i in range(len(self.sonidos)):
+                #     if self.DEBUG:
+                #         print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
+                #         print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
+                #         print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
                     # if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
                     # and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
                     # and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
-                    if -200 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and -200 <= pos[2] <= 200:
-                        if self.DEBUG:
-                            print "Sonido",i
-                        self.sonidos[0].play()
-                        
+                if -100 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and -100 <= pos[2] <= 0:
+                    if self.DEBUG:
+                        print "Sonido 0"
+                    self.sonidos[0].play()
+                if 0 <= pos[0] <= 200 and 0 <= pos[1] <= 200 and -100 <= pos[2] <= 0:
+                    if self.DEBUG:
+                        print "Sonido 1"
+                    self.sonidos[1].play()
+                if -100 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and -100 <= pos[2] <= 0:
+                    if self.DEBUG:
+                        print "Sonido 2"
+                    self.sonidos[2].play()
+                if 0 <= pos[0] <= 100 and 0 <= pos[1] <= 200 and 0 <= pos[2] <= 100:
+                    if self.DEBUG:
+                        print "Sonido 3"
+                    self.sonidos[3].play()
+
 
                 if self.DEBUG:
                     print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
 
-        if  posicion_media:
+        if posicion_media:
             graficos.redibujar()
 
         posicion_media = []
