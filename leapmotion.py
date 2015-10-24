@@ -14,7 +14,7 @@ class SampleListener(Leap.Listener):
     num_maximo_baquetas = 2
     num_frame = 0
     num_medio_frames = 5
-    DEBUG = False
+    DEBUG = True
 
     def inicializar(self):
         global string_sonidos
@@ -77,11 +77,11 @@ class SampleListener(Leap.Listener):
                     if self.DEBUG:
                         print "Sonido 0"
                     self.sonidos[0].play()
-                if 0 <= pos[0] <= 200 and 0 <= pos[1] <= 200 and -100 <= pos[2] <= 0:
+                if 0 <= pos[0] <= 100 and 0 <= pos[1] <= 200 and -100 <= pos[2] <= 0:
                     if self.DEBUG:
                         print "Sonido 1"
                     self.sonidos[1].play()
-                if -100 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and -100 <= pos[2] <= 0:
+                if -100 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and 0 <= pos[2] <= 100:
                     if self.DEBUG:
                         print "Sonido 2"
                     self.sonidos[2].play()
