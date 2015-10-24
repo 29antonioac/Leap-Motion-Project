@@ -65,7 +65,7 @@ class SampleListener(Leap.Listener):
 
                 if self.DEBUG:
                     print "pos = ", pos,
-                for i in range(len(self.sonidos_baterias)):
+                for i in range(len(self.sonidos)):
                     if self.DEBUG:
                         print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
                         print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
@@ -76,7 +76,8 @@ class SampleListener(Leap.Listener):
                     if -200 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and -200 <= pos[2] <= 200:
                         if self.DEBUG:
                             print "Sonido",i
-                        self.sonidos_baterias[i].play()
+                        self.sonidos[0].play()
+                        
 
                 if self.DEBUG:
                     print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
