@@ -14,7 +14,7 @@ class SampleListener(Leap.Listener):
     num_maximo_baquetas = 2
     num_frame = 0
     num_medio_frames = 5
-    DEBUG = True
+    DEBUG = False
 
     def inicializar(self):
         global string_sonidos
@@ -66,9 +66,10 @@ class SampleListener(Leap.Listener):
                 if self.DEBUG:
                     print "pos = ", pos,
                 for i in range(len(self.sonidos_baterias)):
-                    print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
-                    print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
-                    print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
+                    if self.DEBUG:
+                        print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
+                        print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
+                        print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
                     if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
                     and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
                     and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):

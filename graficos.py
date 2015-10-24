@@ -26,10 +26,10 @@ ventana_tam_y  = 800
 frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
-frustum_factor_escala = 0.005
+frustum_factor_escala = 0.008
 strings_ayuda = ["Hola"," Adios"]
 
-origen_ejes = [-500.0,0.0,-400.0]
+origen_ejes = [-200.0,0.0,-200.0]
 
 posiciones_baquetas = []
 direcciones_baquetas = []
@@ -132,14 +132,17 @@ def dibujarObjetos():
     for i in range(len(traslacion_baterias)):
         dibujaCilindro(traslacion_baterias[i],propiedades_baterias[i])
 
-    glColor3f(1,1,1)
+    glLineWidth( 2.5 );
+
+    col = [[1,1,0],[0,1,1]]
 
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
+        glColor3f(col[j][0],col[j][1],col[j][2])
         p = posiciones_baquetas[j]
         d = direcciones_baquetas[j]
         glVertex3f(p[0],p[1],p[2])
-        glVertex3f(p[0]-20*d[0],p[1]-20*d[1],p[2]-20*d[2])
+        glVertex3f(p[0]-40*d[0],p[1]-40*d[1],p[2]-40*d[2])
     glEnd()
 
     if  time.time() - tiempo_transcurrido_ultimo_dato > margen_tiempo:
