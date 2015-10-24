@@ -6,7 +6,7 @@ import graficos
 
 posicion_media = []
 direccion_media = []
-string_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Snare_hard.ogg']
+string_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Kick_hard.ogg','Kick_soft.ogg']
 
 # LeapMotion
 class SampleListener(Leap.Listener):
@@ -19,7 +19,7 @@ class SampleListener(Leap.Listener):
     def inicializar(self):
         global string_sonidos
         pygame.init()
-        self.sonidos_baterias = [pygame.mixer.Sound(s) for s in string_sonidos]
+        self.sonidos = [pygame.mixer.Sound(s) for s in string_sonidos]
 
     # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):
@@ -70,9 +70,10 @@ class SampleListener(Leap.Listener):
                         print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
                         print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
                         print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
-                    if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
-                    and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
-                    and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
+                    # if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
+                    # and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
+                    # and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
+                    if -200 <= pos[0] <= 0 and 0 <= pos[1] <= 200 and -200 <= pos[2] <= 200:
                         if self.DEBUG:
                             print "Sonido",i
                         self.sonidos_baterias[i].play()
