@@ -12,9 +12,6 @@ string_sonidos = ['Snare_hard.ogg','Snare_soft.ogg','Snare_hard.ogg']
 class SampleListener(Leap.Listener):
     state_names = ['STATE_INVALID', 'STATE_START', 'STATE_UPDATE', 'STATE_END']
     num_maximo_baquetas = 2
-    #posicion_media = [[0,0,0] for i in range(num_maximo_baquetas)]
-    #direccion_media = [[0,0,0] for i in range(num_maximo_baquetas)]
-
     num_frame = 0
     num_medio_frames = 5
     DEBUG = True
@@ -48,17 +45,12 @@ class SampleListener(Leap.Listener):
     # Función que se ejecuta al recibir cada frame.
     def on_frame(self, controller):
         global direccion_media, posicion_media
+
         # Tomamos un frame
         frame = controller.frame()
 
         # Obtenemos la posicion y la direccion de la baqueta(s)
-        #posicion_actual = []
-        #direccion_actual = []
-        #ids_baquetas = []
         for tool in frame.tools:
-            #posicion_actual.append(tool.tip_position)
-            #direccion_actual.append(tool.direction)
-            #ids_baquetas.append(tool.id)
             posicion_media.append(tool.tip_position)
             direccion_media.append(tool.direction)
 
@@ -88,29 +80,11 @@ class SampleListener(Leap.Listener):
                     print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                         gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
 
-        if  len(posicion_media) > 0:
+        if  posicion_media:
             graficos.redibujar()
+
         posicion_media = []
         direccion_media = []
-        """
-        num_baquetas_actual = len(posicion_actual)
-        for j in range(num_baquetas_actual):
-            self.posicion_media[j] = [self.posicion_media[j][i]+posicion_actual[j][i] for i in range(3)]
-            self.direccion_media[j] = [self.direccion_media[j][i]+direccion_actual[j][i] for i in range(3)]
-
-        self.num_frame = (self.num_frame+1)%self.num_medio_frames
-        if self.num_frame == 0:
-            for j in range(num_baquetas_actual):
-                self.posicion_media[j] = [float(self.posicion_media[j][i]/self.num_medio_frames) for i in range(3)]
-                self.direccion_media[j] = [float(self.direccion_media[j][i]/self.num_medio_frames) for i in range(3)]
-
-            if self.DEBUG:
-                for j in range(num_baquetas_actual):
-                    print ids_baquetas[j], self.posicion_media[j], self.direccion_media[j]
-
-            graficos.redibujar()
-        """
-
 
     def state_string(self, state):
         if state == Leap.Gesture.STATE_START:

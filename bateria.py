@@ -25,9 +25,8 @@ def main():
     listener = leapmotion.SampleListener()
     controller = Leap.Controller()
     controller.add_listener(listener) # añadimos el listener al controlador
+
     configurarControlador(controller)
-
-
 
     graficos.openGLmainloop()
 
