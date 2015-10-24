@@ -14,7 +14,7 @@ class SampleListener(Leap.Listener):
     num_maximo_baquetas = 2
     num_frame = 0
     num_medio_frames = 5
-    DEBUG = True
+    DEBUG = False
 
     def inicializar(self):
         global string_sonidos

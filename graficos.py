@@ -35,7 +35,7 @@ posiciones_baquetas = []
 direcciones_baquetas = []
 
 tiempo_transcurrido_ultimo_dato = time.time()
-margen_tiempo = 10
+margen_tiempo = 0.5
 
 traslacion_baterias = [[-150,100,-0],[0,100,0],[150,100,-0]]
 propiedades_baterias = [[50,50],[50,50],[50,50]]    # radio,altura
@@ -191,10 +191,10 @@ def dibujarObjetos():
         elif p[0] > 0 and p[2] < 0: zonaResaltadas[j] = 3
         elif p[0] > 0 and p[2] > 0: zonaResaltadas[j] = 4
 
-    #dibujarZonasBateria(zonaResaltadas)
+    dibujarZonasBateria(zonaResaltadas)
 
     glLineWidth( 2.5 );
-    col = [[1,1,0],[0,1,1]]
+    col = [[0.5,0.5,0],[0,0.5,0.5]]
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
         if j == 2: break
@@ -205,8 +205,8 @@ def dibujarObjetos():
         glVertex3f(p[0]-40*d[0],p[1]-40*d[1],p[2]-40*d[2])
     glEnd()
 
+    #print time.time() - tiempo_transcurrido_ultimo_dato
     if  time.time() - tiempo_transcurrido_ultimo_dato > margen_tiempo:
-        print time.time() - tiempo_transcurrido_ultimo_dato
         posiciones_baquetas = []
         direcciones_baquetas = []
 
