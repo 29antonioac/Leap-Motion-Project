@@ -26,7 +26,7 @@ ventana_tam_y  = 800
 frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
-frustum_factor_escala = 0.008
+frustum_factor_escala = 0.008 / 1.05
 strings_ayuda = ["Hola"," Adios"]
 
 origen_ejes = [-200.0,0.0,-200.0]
@@ -85,7 +85,7 @@ def dibujarRejilla():
     glEnd()
 
 def dibujarEjes():
-    long_ejes = 500.0
+    long_ejes = 450.0
     # establecer modo de dibujo a lineas (podría estar en puntos)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     # Ancho de línea
@@ -100,7 +100,7 @@ def dibujarEjes():
     # eje Y, color verde
     glColor3f( 0.0, 1.0, 0.0 )
     glVertex3f( origen_ejes[0], origen_ejes[1]              , origen_ejes[2] )
-    glVertex3f( origen_ejes[0], origen_ejes[1] +long_ejes   , origen_ejes[2] )
+    glVertex3f( origen_ejes[0], origen_ejes[1] +long_ejes-250   , origen_ejes[2] )
     # eje Z, color azul
     glColor3f( 0.0, 0.0, 1.0 )
     glVertex3f( origen_ejes[0], origen_ejes[1]  ,           origen_ejes[2]  )
@@ -124,13 +124,47 @@ def dibujaCilindro(traslacion,propiedades):
 
     glPopMatrix()
 
+def dibujarZonaBateriaUnitaria():
+    glColor3f(1,1,1)
+    glBegin(GL_TRIANGLES)
+    glVertex3f(-100,0,-100)
+    glVertex3f(-100,0,100)
+    glVertex3f(100,0,-100)
+    glVertex3f(-100,0,100)
+    glVertex3f(100,0,-100)
+    glVertex3f(100,0,100)
+    glEnd()
+
+def dibujarZonasBateria():
+    glMatrixMode(GL_MODELVIEW)
+
+    glPushMatrix()
+    glTranslatef(-100,0,-100)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(-100,0,100)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(100,0,-100)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(100,0,100)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
 def dibujarObjetos():
     global posiciones_baquetas, direcciones_baquetas
     global traslacion_baterias, propiedades_baterias
     global tiempo_transcurrido_ultimo_dato, margen_tiempo
 
-    for i in range(len(traslacion_baterias)):
-        dibujaCilindro(traslacion_baterias[i],propiedades_baterias[i])
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
+    dibujarZonasBateria()
 
     glLineWidth( 2.5 );
 
@@ -146,7 +180,7 @@ def dibujarObjetos():
     glEnd()
 
     if  time.time() - tiempo_transcurrido_ultimo_dato > margen_tiempo:
-        print time.time() - tiempo_transcurrido_ultimo_dato
+        #print time.time() - tiempo_transcurrido_ultimo_dato
         posiciones_baquetas = []
         direcciones_baquetas = []
 
