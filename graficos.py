@@ -29,7 +29,7 @@ frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.008 / 1.05
 strings_ayuda = ["Hola"," Adios"]
 
-origen_ejes = [-150.0,0.0,-150.0]
+origen_ejes = [-200.0,0.0,-200.0]
 
 posiciones_baquetas = []
 direcciones_baquetas = []
@@ -39,6 +39,10 @@ margen_tiempo = 0.5
 
 traslacion_baterias = [[-150,100,-0],[0,100,0],[150,100,-0]]
 propiedades_baterias = [[50,50],[50,50],[50,50]]    # radio,altura
+
+desplazamiento_bateria = 100
+tamanio_bateria = 75
+comienzo_bateria = desplazamiento_bateria - tamanio_bateria
 
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
@@ -126,12 +130,12 @@ def dibujaCilindro(traslacion,propiedades):
 
 def dibujarZonaBateriaUnitaria():
     glBegin(GL_TRIANGLES)
-    glVertex3f(-75,-0.01,-75)
-    glVertex3f(-75,-0.01,75)
-    glVertex3f(75,-0.01,-75)
-    glVertex3f(-75,-0.01,75)
-    glVertex3f(75,-0.01,-75)
-    glVertex3f(75,-0.01,75)
+    glVertex3f(-tamanio_bateria,-0.01,-tamanio_bateria)
+    glVertex3f(-tamanio_bateria,-0.01,tamanio_bateria)
+    glVertex3f(tamanio_bateria,-0.01,-tamanio_bateria)
+    glVertex3f(-tamanio_bateria,-0.01,tamanio_bateria)
+    glVertex3f(tamanio_bateria,-0.01,-tamanio_bateria)
+    glVertex3f(tamanio_bateria,-0.01,tamanio_bateria)
     glEnd()
 
 # 1 2
@@ -143,11 +147,13 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     c1 = [1,1,0]
     c2 = [0,1,1]
 
+
+
     glColor3f(1,1,1)
     if zonaResaltadas[0] == 1: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 1: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(-75,0,-75)
+    glTranslatef(-desplazamiento_bateria,0,-desplazamiento_bateria)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -155,7 +161,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 2: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 2: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(-75,0,75)
+    glTranslatef(-desplazamiento_bateria,0,desplazamiento_bateria)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -163,7 +169,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 3: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 3: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(75,0,-75)
+    glTranslatef(desplazamiento_bateria,0,-desplazamiento_bateria)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -171,7 +177,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     if zonaResaltadas[0] == 4: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 4: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
-    glTranslatef(75,0,75)
+    glTranslatef(desplazamiento_bateria,0,desplazamiento_bateria)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
@@ -180,16 +186,19 @@ def dibujarObjetos():
     global traslacion_baterias, propiedades_baterias
     global tiempo_transcurrido_ultimo_dato, margen_tiempo
 
+    longitud_baqueta = 60
+
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
 
     zonaResaltadas = [0,0]
+
     for j in range(len(posiciones_baquetas)):
         if j == 2: break
         p = posiciones_baquetas[j]
-        if p[0] < 0 and p[2] < 0: zonaResaltadas[j] = 1
-        elif p[0] < 0 and p[2] > 0: zonaResaltadas[j] = 2
-        elif p[0] > 0 and p[2] < 0: zonaResaltadas[j] = 3
-        elif p[0] > 0 and p[2] > 0: zonaResaltadas[j] = 4
+        if p[0] < -comienzo_bateria and p[2] < -comienzo_bateria: zonaResaltadas[j] = 1
+        elif p[0] < -comienzo_bateria and p[2] > comienzo_bateria: zonaResaltadas[j] = 2
+        elif p[0] > comienzo_bateria and p[2] < -comienzo_bateria: zonaResaltadas[j] = 3
+        elif p[0] > comienzo_bateria and p[2] > comienzo_bateria: zonaResaltadas[j] = 4
 
     dibujarZonasBateria(zonaResaltadas)
 
@@ -202,7 +211,7 @@ def dibujarObjetos():
         p = posiciones_baquetas[j]
         d = direcciones_baquetas[j]
         glVertex3f(p[0],p[1],p[2])
-        glVertex3f(p[0]-40*d[0],p[1]-40*d[1],p[2]-40*d[2])
+        glVertex3f(p[0]-longitud_baqueta*d[0],p[1]-longitud_baqueta*d[1],p[2]-longitud_baqueta*d[2])
     glEnd()
 
     #print time.time() - tiempo_transcurrido_ultimo_dato
@@ -254,7 +263,7 @@ def teclaNormal(k, x, y):
     elif k == b'-':
         frustum_factor_escala /= 1.05
     elif k == b'r':
-        camara_angulo_x = 25
+        camara_angulo_x = 90
         camara_angulo_y = 0.0
     elif k == b'q' or k == b'Q' or ord(k) == 27: # Escape
         glutLeaveMainLoop()

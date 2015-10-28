@@ -12,11 +12,11 @@ def configurarControlador(controller):
     # Configurando el controller
     # Le cambiamos valores de velocidad, historia y distancia
     # para que consiga reconocer mejor el gesto
-    # controller.config.set("Gesture.KeyTap.MinDownVelocity", 20.0)
-    # controller.config.set("Gesture.KeyTap.HistorySeconds", 0.2)
-    # controller.config.set("Gesture.KeyTap.MinDistance", 1.0)
-    # controller.config.save()
-    pass
+    controller.config.set("Gesture.KeyTap.MinDownVelocity", 5.0)
+    controller.config.set("Gesture.KeyTap.HistorySeconds", 0.00000001)
+    controller.config.set("Gesture.KeyTap.MinDistance", 0.5)
+    controller.config.save()
+    # pass
 
 def main():
     # Inicializamos openGL
