@@ -73,19 +73,19 @@ class SampleListener(Leap.Listener):
                     # if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
                     # and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
                     # and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
-                if -100 <= pos[0] <= 0 and -100 <= pos[2] <= 0:
+                if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
                     if self.DEBUG:
                         print "Sonido 0"
                     self.sonidos[0].play()
-                if 0 <= pos[0] <= 100 and -100 <= pos[2] <= 0:
+                if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
                     if self.DEBUG:
                         print "Sonido 1"
                     self.sonidos[1].play()
-                if -100 <= pos[0] <= 0 and 0 <= pos[2] <= 100:
+                if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
                     if self.DEBUG:
                         print "Sonido 2"
                     self.sonidos[2].play()
-                if 0 <= pos[0] <= 100 and 0 <= pos[2] <= 100:
+                if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
                     if self.DEBUG:
                         print "Sonido 3"
                     self.sonidos[3].play()

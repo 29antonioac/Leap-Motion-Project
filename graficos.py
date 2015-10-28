@@ -202,7 +202,7 @@ def dibujarObjetos():
 
     dibujarZonasBateria(zonaResaltadas)
 
-    glLineWidth( 2.5 );
+    glLineWidth( 10.5 );
     col = [[0.5,0.5,0],[0,0.5,0.5]]
     glBegin(GL_LINES)
     for j in range(len(posiciones_baquetas)):
