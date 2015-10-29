@@ -68,10 +68,8 @@ def cambio_instrumento(string_sonidos_actuales):
                 click = pygame.mouse.get_pos()
                 for instrumento in instrumentos:
                    if instrumento.get_rect().collidepoint(click):
-
-                       return instrumento.get_nombre() + ".ogg"
-                    #    nuevo_instrumento = instrumento.get_nombre() + ".wav"
-                    #    fin = True
+                       nuevo_instrumento = instrumento.get_nombre() + ".ogg"
+                       fin = True
 
         for instrumento in instrumentos:
             screen.blit(instrumento.get_imagen(), instrumento.get_rect())
@@ -80,7 +78,7 @@ def cambio_instrumento(string_sonidos_actuales):
 
 
     pygame.display.quit()
-    # return nuevo_instrumento
+    return nuevo_instrumento
 
 
 def tutorial():
