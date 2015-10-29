@@ -56,7 +56,7 @@ def cambio_instrumento(string_sonidos_actuales):
     print strings_sonidos_nuevos
     print string_sonidos_actuales
 
-    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("sonidos/" + strings_sonidos_nuevos[i] + ".jpg" ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
+    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("imagenes/" + strings_sonidos_nuevos[i] + ".jpg" ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
 
     nuevo_instrumento = ""
 
