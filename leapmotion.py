@@ -1,5 +1,7 @@
 # coding=utf-8
 
+# sonidos obtenidos de http://99sounds.org/drum-samples/
+
 import Leap, sys, thread, time
 import pygame
 import graficos
