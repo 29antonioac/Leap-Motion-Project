@@ -112,7 +112,9 @@ def dibujarEjes():
     glEnd()
 
     # Dibujar punto
-    glColor3f( 1.0, 1.0, 1.0 )
+    grey = [0.5,0.5,0.5]
+    g1, g2, g3 = grey
+    glColor3f( g1, g2, g3 )
     glutSolidSphere( 5.0, 20, 20 )
 
 def dibujaCilindro(traslacion,propiedades):
@@ -138,8 +140,8 @@ def dibujarZonaBateriaUnitaria():
     glVertex3f(tamanio_bateria,-0.01,tamanio_bateria)
     glEnd()
 
-# 1 2
-# 3 4
+# 1 3
+# 2 4
 # zonas resaltadas
 def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glMatrixMode(GL_MODELVIEW)
@@ -147,10 +149,12 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     c1 = [1,1,0]
     c2 = [0,1,1]
 
-
+    grey = [0.1,0.1,0.1]
+    g1, g2, g3 = grey
 
     glColor3f(1,1,1)
-    if zonaResaltadas[0] == 1: glColor3f(c1[0],c1[1],c1[2])
+    if leapmotion.tutorial_activo_leap: glColor3f(g1,g2,g3)
+    elif zonaResaltadas[0] == 1: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 1: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(-desplazamiento_bateria,0,-desplazamiento_bateria)
@@ -158,7 +162,8 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glPopMatrix()
 
     glColor3f(1,1,1)
-    if zonaResaltadas[0] == 2: glColor3f(c1[0],c1[1],c1[2])
+    if leapmotion.tutorial_activo_leap: glColor3f(g1,g2,g3)
+    elif zonaResaltadas[0] == 2: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 2: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(-desplazamiento_bateria,0,desplazamiento_bateria)
@@ -166,7 +171,8 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glPopMatrix()
 
     glColor3f(1,1,1)
-    if zonaResaltadas[0] == 3: glColor3f(c1[0],c1[1],c1[2])
+    if leapmotion.tutorial_activo_leap: glColor3f(g1,g2,g3)
+    elif zonaResaltadas[0] == 3: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 3: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
     glTranslatef(desplazamiento_bateria,0,-desplazamiento_bateria)
@@ -174,6 +180,7 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glPopMatrix()
 
     glColor3f(1,1,1)
+    #if tutorial_activo: glColor3f(0.75,0.75,0.75)
     if zonaResaltadas[0] == 4: glColor3f(c1[0],c1[1],c1[2])
     elif zonaResaltadas[1] == 4: glColor3f(c2[0],c2[1],c2[2])
     glPushMatrix()
@@ -352,6 +359,25 @@ def redibujar():
 def openGLmainloop():
     glutMainLoop()
 
+"""
+def sonido1():
+    print("OLA")
+
+SONIDO1, SONIDO2 = list(range(2))
+menudict ={SONIDO1 : sonido1}
+
+def dmenu(item):
+    menudict[item]()
+    return 0
+
+def createMenu():
+    menu = glutCreateMenu(dmenu)
+    glutAddMenuEntry("Sonido 1", sonido1)
+    glutAddMenuEntry("Sonido 2", sonido2)
+    glutAttachMenu(GLUT_RIGHT_BUTTON)
+    return 0
+"""
+
 def inicializarOpenGL():
     glutInit()
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
@@ -373,6 +399,7 @@ def inicializarOpenGL():
     glutSpecialFunc(teclaEspecial)
     glutMouseFunc(pulsarRaton)
     glutMotionFunc(moverRaton)
+    #createMenu()
 
     # TO DO
     glutCloseFunc(limpiarTodo);

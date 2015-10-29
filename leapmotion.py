@@ -4,9 +4,21 @@ import Leap, sys, thread, time
 import pygame
 import graficos
 
+import time
+
 posicion_media = []
 direccion_media = []
 string_sonidos = ['Kick_hard.ogg','Kick_soft.ogg','Snare_hard.ogg','Snare_soft.ogg']
+
+tutorial_activo_leap = True
+tutorial_iniciado_leap = False
+inicio_tutorial = None
+tiempo_baqueta_tutorial = 3
+
+cambiosonido_iniciado = False
+inicio_cambiosonido = None
+tiempo_cambiosonido = 3
+num_instrumento = None
 
 # LeapMotion
 class SampleListener(Leap.Listener):
@@ -44,7 +56,8 @@ class SampleListener(Leap.Listener):
 
     # Función que se ejecuta al recibir cada frame.
     def on_frame(self, controller):
-        global direccion_media, posicion_media
+        global direccion_media, posicion_media,tutorial_activo_leap, tutorial_iniciado_leap, inicio_tutorial,tiempo_baqueta_tutorial, string_sonidos
+        global cambiosonido_iniciado, inicio_cambiosonido, tiempo_cambiosonido, num_instrumento
 
         # Tomamos un frame
         frame = controller.frame()
@@ -54,46 +67,95 @@ class SampleListener(Leap.Listener):
             posicion_media.append(tool.tip_position)
             direccion_media.append(tool.direction)
 
-        # Comprobamos los gestos
-        for gesture in frame.gestures():
-            # Key tap (gesto similar al de pulsar una tecla)
-            if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
-                keytap = Leap.KeyTapGesture(gesture)
-                pos = keytap.position
+        if not tutorial_activo_leap:
+            # Comprobamos los gestos
+            for gesture in frame.gestures():
+                # Key tap (gesto similar al de pulsar una tecla)
+                if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
+                    keytap = Leap.KeyTapGesture(gesture)
+                    pos = keytap.position
 
-                tolerancia = 1.5
+                    tolerancia = 1.5
 
-                if self.DEBUG:
-                    print "pos = ", pos,
-                # for i in range(len(self.sonidos)):
-                #     if self.DEBUG:
-                #         print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
-                #         print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
-                #         print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
-                    # if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
-                    # and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
-                    # and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
-                if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
                     if self.DEBUG:
-                        print "Sonido 0"
-                    self.sonidos[0].play()
-                if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
-                    if self.DEBUG:
-                        print "Sonido 1"
-                    self.sonidos[1].play()
-                if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
-                    if self.DEBUG:
-                        print "Sonido 2"
-                    self.sonidos[2].play()
-                if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
-                    if self.DEBUG:
-                        print "Sonido 3"
-                    self.sonidos[3].play()
+                        print "pos = ", pos,
+                    # for i in range(len(self.sonidos)):
+                    #     if self.DEBUG:
+                    #         print tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]),"<=",pos[0],"<=",tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0])
+                    #         print tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]),"<=",pos[1],"<=",tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1])
+                    #         print tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]),"<=",pos[2],"<=",tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0])
+                        # if  tolerancia*(graficos.traslacion_baterias[i][0] - graficos.propiedades_baterias[i][0]) <= pos[0] <= tolerancia*(graficos.traslacion_baterias[i][0] + graficos.propiedades_baterias[i][0]) \
+                        # and tolerancia*(graficos.traslacion_baterias[i][1] - graficos.propiedades_baterias[i][1]) <= pos[1] <= tolerancia*(graficos.traslacion_baterias[i][1] + graficos.propiedades_baterias[i][1]) \
+                        # and tolerancia*(graficos.traslacion_baterias[i][2] - graficos.propiedades_baterias[i][0]) <= pos[2] <= tolerancia*(graficos.traslacion_baterias[i][2] + graficos.propiedades_baterias[i][0]):
+                    if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
+                        if self.DEBUG:
+                            print "Sonido 0"
+                        self.sonidos[0].play()
+                    if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
+                        if self.DEBUG:
+                            print "Sonido 1"
+                        self.sonidos[1].play()
+                    if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
+                        if self.DEBUG:
+                            print "Sonido 2"
+                        self.sonidos[2].play()
+                    if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
+                        if self.DEBUG:
+                            print "Sonido 3"
+                        self.sonidos[3].play()
 
+                    if self.DEBUG:
+                        print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
+                            gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
 
-                if self.DEBUG:
-                    print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
-                        gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
+        if  tutorial_activo_leap and posicion_media:
+            if not tutorial_iniciado_leap:
+                if graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria:
+                    tutorial_iniciado_leap = True
+                    inicio_tutorial = time.time()
+            else:
+                #print(time.time() - inicio_tutorial)
+                if time.time() - inicio_tutorial < tiempo_baqueta_tutorial:
+                    if not(graficos.comienzo_bateria <= posicion_media[0][0]<= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria):
+                        tutorial_iniciado_leap = False
+                else:
+                    tutorial_activo_leap = False
+
+        if not tutorial_activo_leap and posicion_media:
+            if not cambiosonido_iniciado :
+                if -graficos.desplazamiento_bateria <= posicion_media[0][0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= posicion_media[0][2] <= -graficos.comienzo_bateria:
+                    num_instrumento = 0
+                if graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and -graficos.desplazamiento_bateria <= posicion_media[0][2] <= -graficos.comienzo_bateria:
+                    num_instrumento = 1
+                if -graficos.desplazamiento_bateria <= posicion_media[0][0] <= -graficos.comienzo_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria:
+                    num_instrumento = 2
+                if graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria:
+                    num_instrumento = 3
+                if num_instrumento is not None:
+                    cambiosonido_iniciado = True
+                    inicio_cambiosonido = time.time()
+            else:
+                #print(time.time() - inicio_cambiosonido)
+                if time.time() - inicio_cambiosonido < tiempo_cambiosonido:
+                    if num_instrumento == 0:
+                        if not(-graficos.desplazamiento_bateria <= posicion_media[0][0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= posicion_media[0][2] <= -graficos.comienzo_bateria):
+                            cambiosonido_iniciado = False
+                    elif num_instrumento == 1:
+                        if not(graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and -graficos.desplazamiento_bateria <= posicion_media[0][2] <= -graficos.comienzo_bateria):
+                            cambiosonido_iniciado = False
+                    elif num_instrumento == 2:
+                        if not(-graficos.desplazamiento_bateria <= posicion_media[0][0] <= -graficos.comienzo_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria):
+                            cambiosonido_iniciado = False
+                    elif num_instrumento == 3:
+                        if not(graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria):
+                            cambiosonido_iniciado = False
+                else:
+                    # TOQUETEAR POR ANTONIO
+                    # string_sonidos = moduloAntonio.CAMBIARSONIDOS(sonidos,num_instrumento)
+                    # self.sonidos = [pygame.mixer.Sound(s) for s in string_sonidos]
+                    print("3 SEGUNDOS ALCANZADOS")
+                    input()
+                    cambiosonido_iniciado = False
 
         if posicion_media:
             graficos.redibujar()
