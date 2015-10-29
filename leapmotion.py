@@ -23,6 +23,8 @@ inicio_cambiosonido = None
 tiempo_cambiosonido = 3
 num_instrumento = None
 
+hubo_gesto = False
+
 # LeapMotion
 class SampleListener(Leap.Listener):
     state_names = ['STATE_INVALID', 'STATE_START', 'STATE_UPDATE', 'STATE_END']
@@ -75,8 +77,10 @@ class SampleListener(Leap.Listener):
             for gesture in frame.gestures():
                 # Key tap (gesto similar al de pulsar una tecla)
                 if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
+
                     keytap = Leap.KeyTapGesture(gesture)
                     pos = keytap.position
+                    hubo_gesto = True
 
                     tolerancia = 1.5
 
@@ -138,8 +142,10 @@ class SampleListener(Leap.Listener):
                     cambiosonido_iniciado = True
                     inicio_cambiosonido = time.time()
             else:
+                if hubo_gesto:
+                    cambiosonido_iniciado = False
                 #print(time.time() - inicio_cambiosonido)
-                if time.time() - inicio_cambiosonido < tiempo_cambiosonido:
+                elif time.time() - inicio_cambiosonido < tiempo_cambiosonido:
                     if num_instrumento == 0:
                         if not(-graficos.desplazamiento_bateria <= posicion_media[0][0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= posicion_media[0][2] <= -graficos.comienzo_bateria):
                             cambiosonido_iniciado = False
@@ -167,6 +173,7 @@ class SampleListener(Leap.Listener):
 
         posicion_media = []
         direccion_media = []
+        hubo_gesto = False
 
     def state_string(self, state):
         if state == Leap.Gesture.STATE_START:
