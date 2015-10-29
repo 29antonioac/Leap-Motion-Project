@@ -153,8 +153,9 @@ class SampleListener(Leap.Listener):
                             cambiosonido_iniciado = False
                 else:
                     # TOQUETEAR POR ANTONIO
-                    # string_sonidos = moduloAntonio.CAMBIARSONIDOS(sonidos,num_instrumento)
+                    # self.sonidos[num_instrumento] = moduloAntonio.CAMBIARSONIDOS(sonidos,num_instrumento)
                     # self.sonidos = [pygame.mixer.Sound(s) for s in string_sonidos]
+
                     print("3 SEGUNDOS ALCANZADOS")
                     input()
                     cambiosonido_iniciado = False
