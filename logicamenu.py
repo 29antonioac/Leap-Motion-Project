@@ -43,7 +43,7 @@ def load_image(filename, scale = 1):
 """
 def cambio_instrumento(string_sonidos_actuales):
 
-    strings_sonidos_nuevos = [os.path.splitext(nombre)[0] for nombre in os.listdir("./sonidos/") if nombre.endswith("wav") and nombre not in string_sonidos_actuales]
+    strings_sonidos_nuevos = [os.path.splitext(nombre)[0] for nombre in os.listdir("./sonidos/") if nombre.endswith("ogg") and nombre not in string_sonidos_actuales]
     screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
     pygame.display.set_caption("Elige un nuevo instrumento")
 
@@ -67,7 +67,7 @@ def cambio_instrumento(string_sonidos_actuales):
                 for instrumento in instrumentos:
                    if instrumento.get_rect().collidepoint(click):
                        pygame.display.quit()
-                       return instrumento.get_nombre() + ".wav"
+                       return instrumento.get_nombre() + ".ogg"
                     #    nuevo_instrumento = instrumento.get_nombre() + ".wav"
                     #    fin = True
 

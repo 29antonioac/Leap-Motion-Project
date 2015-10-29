@@ -11,16 +11,16 @@ import time
 
 posicion_media = []
 direccion_media = []
-string_sonidos = ['bombo.wav','bombo2.wav','caja.wav','caja2.wav']
+string_sonidos = ['bombo.ogg','bombo2.ogg','caja.ogg','caja2.ogg']
 
 tutorial_activo_leap = True
 tutorial_iniciado_leap = False
 inicio_tutorial = None
-tiempo_baqueta_tutorial = 1
+tiempo_baqueta_tutorial = 3
 
 cambiosonido_iniciado = False
 inicio_cambiosonido = None
-tiempo_cambiosonido = 1
+tiempo_cambiosonido = 3
 num_instrumento = None
 
 # LeapMotion
