@@ -20,7 +20,7 @@ tiempo_baqueta_tutorial = 3
 
 cambiosonido_iniciado = False
 inicio_cambiosonido = None
-tiempo_cambiosonido = 7
+tiempo_cambiosonido = 3
 num_instrumento = None
 
 hubo_gesto = False
