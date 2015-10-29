@@ -56,8 +56,6 @@ def cambio_instrumento(string_sonidos_actuales):
 
     instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image(strings_sonidos_nuevos[i] + ".png", scale=4 ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
 
-
-
     while not fin:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -102,12 +100,3 @@ def tutorial():
 
 
         pygame.display.flip()
-
-    return 0
-
-
-
-if __name__ == '__main__':
-    pygame.init()
-    # tutorial()
-    print cambio_instrumento(['bombo.wav','bombo2.wav','caja.wav','caja2.wav'])

@@ -6,6 +6,7 @@ import Leap, sys, thread, time
 import pygame
 import graficos
 
+
 import time
 
 posicion_media = []
