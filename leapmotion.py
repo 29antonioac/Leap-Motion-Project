@@ -20,7 +20,7 @@ tiempo_baqueta_tutorial = 3
 
 cambiosonido_iniciado = False
 inicio_cambiosonido = None
-tiempo_cambiosonido = 3
+tiempo_cambiosonido = 7
 num_instrumento = None
 
 hubo_gesto = False
@@ -63,6 +63,7 @@ class SampleListener(Leap.Listener):
     def on_frame(self, controller):
         global direccion_media, posicion_media,tutorial_activo_leap, tutorial_iniciado_leap, inicio_tutorial,tiempo_baqueta_tutorial, string_sonidos
         global cambiosonido_iniciado, inicio_cambiosonido, tiempo_cambiosonido, num_instrumento
+        global hubo_gesto
 
         # Tomamos un frame
         frame = controller.frame()
