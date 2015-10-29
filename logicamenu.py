@@ -4,8 +4,10 @@
 import sys, pygame, random, os
 from pygame.locals import *
 
-WIDTH = 640
-HEIGHT = 480
+image_size = 290
+
+WIDTH = image_size * 2
+HEIGHT = image_size * 2
 
 class Instrumento(pygame.sprite.Sprite):
     def __init__(self,nombre,imagen,rect):
@@ -54,7 +56,7 @@ def cambio_instrumento(string_sonidos_actuales):
     print strings_sonidos_nuevos
     print string_sonidos_actuales
 
-    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("sonidos/" + strings_sonidos_nuevos[i] + ".png", scale=4 ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
+    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("sonidos/" + strings_sonidos_nuevos[i] + ".jpg" ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
 
     nuevo_instrumento = ""
 
@@ -66,7 +68,7 @@ def cambio_instrumento(string_sonidos_actuales):
                 click = pygame.mouse.get_pos()
                 for instrumento in instrumentos:
                    if instrumento.get_rect().collidepoint(click):
-                       pygame.display.quit()
+
                        return instrumento.get_nombre() + ".ogg"
                     #    nuevo_instrumento = instrumento.get_nombre() + ".wav"
                     #    fin = True
@@ -77,7 +79,7 @@ def cambio_instrumento(string_sonidos_actuales):
         pygame.display.flip()
 
 
-
+    pygame.display.quit()
     # return nuevo_instrumento
 
 
