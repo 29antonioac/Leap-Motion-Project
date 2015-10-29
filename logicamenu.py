@@ -29,13 +29,10 @@ class Instrumento(pygame.sprite.Sprite):
 
 
 
-def load_image(filename, scale = 1):
+def load_image(filename):
     try: image = pygame.image.load(filename)
     except pygame.error as message:
         raise SystemExit(message)
-    image = image.convert()
-
-    image = pygame.transform.scale(image, (WIDTH / scale, HEIGHT / scale))
     image = image.convert()
     return image
 
@@ -51,13 +48,9 @@ def cambio_instrumento(string_sonidos_actuales):
 
     posiciones = [ (0,0), (0, image_size), (image_size, 0), (image_size, image_size) ]
 
-    print posiciones
-
     instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("imagenes/" + strings_sonidos_nuevos[i] + ".jpg" ), Rect(posiciones[i],(image_size, image_size))) for i in range(len(strings_sonidos_nuevos)) ]
 
     nuevo_instrumento = ""
-
-
 
     while True:
         keys = pygame.key.get_pressed()
@@ -70,8 +63,7 @@ def cambio_instrumento(string_sonidos_actuales):
                        return instrumento.get_nombre() + ".ogg"
 
         for instrumento in instrumentos:
-            # print instrumento.get_imagen().get_rect()
-            screen.blit(instrumento.get_imagen(), instrumento.get_rect(), instrumento.get_rect())
+            screen.blit(instrumento.get_imagen(), instrumento.get_rect())
 
         pygame.display.flip()
 
