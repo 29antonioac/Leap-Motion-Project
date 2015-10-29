@@ -5,6 +5,8 @@ import Leap, sys
 
 import leapmotion
 import graficos
+import logicamenu
+import pygame
 
 #import logging # Deberíamos usarlo!
 
@@ -19,6 +21,8 @@ def configurarControlador(controller):
     # pass
 
 def main():
+    # Inicializar pygame
+    pygame.init()
     # Inicializamos openGL
     graficos.inicializarOpenGL()
 
@@ -28,6 +32,8 @@ def main():
     controller.add_listener(listener) # añadimos el listener al controlador
 
     configurarControlador(controller)
+
+    # logicamenu.tutorial()
 
     graficos.openGLmainloop()
 

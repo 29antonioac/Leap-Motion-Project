@@ -43,7 +43,7 @@ def load_image(filename, scale = 1):
 """
 def cambio_instrumento(string_sonidos_actuales):
 
-    strings_sonidos_nuevos = [os.path.splitext(nombre)[0] for nombre in os.listdir(".") if nombre.endswith("wav") and nombre not in string_sonidos_actuales]
+    strings_sonidos_nuevos = [os.path.splitext(nombre)[0] for nombre in os.listdir("./sonidos/") if nombre.endswith("wav") and nombre not in string_sonidos_actuales]
     screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
     pygame.display.set_caption("Elige un nuevo instrumento")
 
@@ -54,18 +54,22 @@ def cambio_instrumento(string_sonidos_actuales):
     print strings_sonidos_nuevos
     print string_sonidos_actuales
 
-    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image(strings_sonidos_nuevos[i] + ".png", scale=4 ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
+    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("sonidos/" + strings_sonidos_nuevos[i] + ".png", scale=4 ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
+
+    nuevo_instrumento = ""
+
 
     while not fin:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                pos = pygame.mouse.get_pos()
+                click = pygame.mouse.get_pos()
                 for instrumento in instrumentos:
-                   if instrumento.get_rect().collidepoint(pos):
-                       nuevo_instrumento = instrumento.get_nombre() + ".wav"
-                       fin = True
-
+                   if instrumento.get_rect().collidepoint(click):
+                       pygame.display.quit()
+                       return instrumento.get_nombre() + ".wav"
+                    #    nuevo_instrumento = instrumento.get_nombre() + ".wav"
+                    #    fin = True
 
         for instrumento in instrumentos:
             screen.blit(instrumento.get_imagen(), instrumento.get_rect())
@@ -73,7 +77,8 @@ def cambio_instrumento(string_sonidos_actuales):
         pygame.display.flip()
 
 
-    return nuevo_instrumento
+
+    # return nuevo_instrumento
 
 
 def tutorial():

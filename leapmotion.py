@@ -5,22 +5,22 @@
 import Leap, sys, thread, time
 import pygame
 import graficos
-
+import logicamenu
 
 import time
 
 posicion_media = []
 direccion_media = []
-string_sonidos = ['Kick_hard.ogg','Kick_soft.ogg','Snare_hard.ogg','Snare_soft.ogg']
+string_sonidos = ['bombo.wav','bombo2.wav','caja.wav','caja2.wav']
 
 tutorial_activo_leap = True
 tutorial_iniciado_leap = False
 inicio_tutorial = None
-tiempo_baqueta_tutorial = 3
+tiempo_baqueta_tutorial = 1
 
 cambiosonido_iniciado = False
 inicio_cambiosonido = None
-tiempo_cambiosonido = 3
+tiempo_cambiosonido = 1
 num_instrumento = None
 
 # LeapMotion
@@ -29,12 +29,12 @@ class SampleListener(Leap.Listener):
     num_maximo_baquetas = 2
     num_frame = 0
     num_medio_frames = 5
-    DEBUG = True
+    DEBUG = False
 
     def inicializar(self):
         global string_sonidos
-        pygame.init()
-        self.sonidos = [pygame.mixer.Sound(s) for s in string_sonidos]
+        # pygame.init()
+        self.sonidos = [pygame.mixer.Sound("sonidos/" + s) for s in string_sonidos]
 
     # Función que se ejecuta al inicializar el programa
     def on_init(self, controller):
@@ -153,12 +153,13 @@ class SampleListener(Leap.Listener):
                         if not(graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria):
                             cambiosonido_iniciado = False
                 else:
-                    # TOQUETEAR POR ANTONIO
-                    # self.sonidos[num_instrumento] = moduloAntonio.CAMBIARSONIDOS(sonidos,num_instrumento)
-                    # self.sonidos = [pygame.mixer.Sound(s) for s in string_sonidos]
+                    # TOQUETEAR POR Antonio
+                    string_sonidos[num_instrumento] = logicamenu.cambio_instrumento(string_sonidos)
+                    print string_sonidos
+                    self.sonidos = [pygame.mixer.Sound("sonidos/" + s) for s in string_sonidos]
 
                     print("3 SEGUNDOS ALCANZADOS")
-                    input()
+                    # input()
                     cambiosonido_iniciado = False
 
         if posicion_media:
