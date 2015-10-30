@@ -29,13 +29,10 @@ class Instrumento(pygame.sprite.Sprite):
 
 
 
-def load_image(filename, scale = 1):
+def load_image(filename):
     try: image = pygame.image.load(filename)
     except pygame.error as message:
         raise SystemExit(message)
-    image = image.convert()
-
-    image = pygame.transform.scale(image, (WIDTH / scale, HEIGHT / scale))
     image = image.convert()
     return image
 
@@ -49,35 +46,27 @@ def cambio_instrumento(string_sonidos_actuales):
     screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
     pygame.display.set_caption("Elige un nuevo instrumento")
 
-    fin = False
+    posiciones = [ (0,0), (0, image_size), (image_size, 0), (image_size, image_size) ]
 
-    posiciones = [ (0,0), (0, WIDTH / 2), (HEIGHT / 2, 0), (HEIGHT / 2, WIDTH / 2) ]
-
-    print posiciones
-
-    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("imagenes/" + strings_sonidos_nuevos[i] + ".jpg" ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
+    instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("imagenes/" + strings_sonidos_nuevos[i] + ".jpg" ), Rect(posiciones[i],(image_size, image_size))) for i in range(len(strings_sonidos_nuevos)) ]
 
     nuevo_instrumento = ""
 
-
-    while not fin:
+    while True:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click = pygame.mouse.get_pos()
                 for instrumento in instrumentos:
                    if instrumento.get_rect().collidepoint(click):
-                       nuevo_instrumento = instrumento.get_nombre() + ".ogg"
-                       fin = True
+                       pygame.display.quit()
+                       return instrumento.get_nombre() + ".ogg"
 
         for instrumento in instrumentos:
             screen.blit(instrumento.get_imagen(), instrumento.get_rect())
 
         pygame.display.flip()
 
-
-    pygame.display.quit()
-    return nuevo_instrumento
 
 
 def tutorial():
@@ -104,3 +93,8 @@ def tutorial():
 
 
         pygame.display.flip()
+
+if __name__ == '__main__':
+    pygame.init()
+    # tutorial()
+    print cambio_instrumento(['caja.ogg','platillo.ogg','bombo.ogg','tom-tom.ogg'])
