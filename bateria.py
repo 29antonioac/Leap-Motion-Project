@@ -8,35 +8,26 @@ import graficos
 import logicamenu
 import pygame
 
-#import logging # Deberíamos usarlo!
-
-#def configurarControlador(controller):
-    # Configurando el controller
-    # Le cambiamos valores de velocidad, historia y distancia
-    # para que consiga reconocer mejor el gesto
-    #controller.config.set("Gesture.KeyTap.MinDownVelocity", 5.0)
-    #controller.config.set("Gesture.KeyTap.HistorySeconds", 0.00000001)
-    #controller.config.set("Gesture.KeyTap.MinDistance", 0.5)
-    #controller.config.save()
-    # pass
 
 def main():
     # Inicializar pygame
     pygame.init()
+
+    # Mostramos el tutorial
+    logicamenu.tutorial()
+
     # Inicializamos openGL
     graficos.inicializarOpenGL()
 
     # Creamos un listener y un controlador
-    listener = leapmotion.SampleListener()
+    listener = leapmotion.BateriaListener()
     controller = Leap.Controller()
     controller.add_listener(listener) # añadimos el listener al controlador
 
-    #configurarControlador(controller)
-
-    # logicamenu.tutorial()
-
+    # Comenzamos la gestión de eventos de OpenGL
     graficos.openGLmainloop()
 
+    # Al terminar, pulsar Enter para salir
     print "Pulsa enter para salir..."
     try:
         sys.stdin.readline()
