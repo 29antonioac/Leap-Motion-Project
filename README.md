@@ -60,7 +60,7 @@ página oficial de Leap Motion también encontramos descargas para GNU/Linux.
 
 Después de esto, deberíamos ser capaces de ejecutar nuestro proyecto sin ningún problema.
 
-### Ejecucción
+### Ejecución
 
 En Archilinux, bastaría conectar el Leap Motion mediante los comandos:
 ```
@@ -75,7 +75,7 @@ $ python2 bateria.py
 
 ### Uso
 
-El siguiente tutorial tambíen aparece al ejecutar este programa.
+El siguiente tutorial tambíen aparece al ejecutar el programa.
 
 ![01](capturas/t1.png)
 
