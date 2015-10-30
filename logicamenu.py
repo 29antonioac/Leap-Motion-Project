@@ -51,8 +51,8 @@ def cambio_instrumento(string_sonidos_actuales):
 
     posiciones = [ (0,0), (0, WIDTH / 2), (HEIGHT / 2, 0), (HEIGHT / 2, WIDTH / 2) ]
 
-    print strings_sonidos_nuevos
-    print string_sonidos_actuales
+    #print strings_sonidos_nuevos
+    #print string_sonidos_actuales
 
     instrumentos = [ Instrumento(strings_sonidos_nuevos[i], load_image("sonidos/" + strings_sonidos_nuevos[i] + ".png", scale=4 ), Rect(posiciones[i],(WIDTH / 4, HEIGHT / 4))) for i in range(len(strings_sonidos_nuevos)) ]
 

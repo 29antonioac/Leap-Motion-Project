@@ -11,7 +11,7 @@ import time
 
 posicion_media = []
 direccion_media = []
-string_sonidos = ['bombo.ogg','bombo2.ogg','caja.ogg','caja2.ogg']
+string_sonidos = ['caja.ogg','platillo.ogg','bombo.ogg','tom-tom.ogg']
 
 tutorial_activo_leap = True
 tutorial_iniciado_leap = False
@@ -165,8 +165,6 @@ class SampleListener(Leap.Listener):
                     print string_sonidos
                     self.sonidos = [pygame.mixer.Sound("sonidos/" + s) for s in string_sonidos]
 
-                    print("3 SEGUNDOS ALCANZADOS")
-                    # input()
                     cambiosonido_iniciado = False
 
         if posicion_media:

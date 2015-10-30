@@ -27,7 +27,7 @@ frustum_dis_del = 0.1
 frustum_dis_tra = 10.0
 frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.008 / 1.05
-strings_ayuda = ["Hola"," Adios"]
+#strings_ayuda = ["Hola"," Adios"]
 
 origen_ejes = [-200.0,0.0,-200.0]
 
@@ -226,6 +226,7 @@ def dibujarObjetos():
         posiciones_baquetas = []
         direcciones_baquetas = []
 
+"""
 def ayuda():
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
@@ -247,6 +248,7 @@ def ayuda():
     glPopMatrix()
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
+"""
 
 # Función de dibujado
 def dibujar():
@@ -257,7 +259,7 @@ def dibujar():
     dibujarRejilla()
     dibujarEjes()
     dibujarObjetos()
-    ayuda()
+    #ayuda()
     glutPostRedisplay()
     glutSwapBuffers()
 
@@ -397,8 +399,8 @@ def inicializarOpenGL():
     glutReshapeFunc(cambioTamanio)
     glutKeyboardFunc(teclaNormal)
     glutSpecialFunc(teclaEspecial)
-    glutMouseFunc(pulsarRaton)
-    glutMotionFunc(moverRaton)
+    #glutMouseFunc(pulsarRaton)
+    #glutMotionFunc(moverRaton)
     #createMenu()
 
     # TO DO
