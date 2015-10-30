@@ -4,7 +4,7 @@
 import sys, pygame, random, os
 from pygame.locals import *
 
-image_size = 290
+image_size = 292
 
 WIDTH = image_size * 2
 HEIGHT = image_size * 2
