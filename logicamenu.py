@@ -4,11 +4,14 @@
 import sys, pygame, random, os
 from pygame.locals import *
 
-image_size = 292
+"""
+Clase que contendrá lo necesario para albergar un instrumento.
 
-WIDTH = image_size * 2
-HEIGHT = image_size * 2
+    @nombre : nombre del instrumento
+    @imagen : imagen del instrumento
+    @rect   : rectángulo que ocupa el instrumento
 
+"""
 class Instrumento(pygame.sprite.Sprite):
     def __init__(self,nombre,imagen,rect):
         pygame.sprite.Sprite.__init__(self)
@@ -23,12 +26,15 @@ class Instrumento(pygame.sprite.Sprite):
     def get_imagen(self):
         return self.imagen
 
-
     def get_rect(self):
         return self.rect
 
+"""
+Función para cargar una imagen según un nombre de archivo
 
-
+    @filename : nombre de archivo a cargar
+    @image    : imagen devuelta
+"""
 def load_image(filename):
     try: image = pygame.image.load(filename)
     except pygame.error as message:
@@ -37,10 +43,17 @@ def load_image(filename):
     return image
 
 """
-0 2
-1 3
+Función para seleccionar un instrumento desde un lienzo con varios de ellos.
+
+    @string_sonidos_actuales : lista que contiene los sonidos actuales, para no volverlos a coger
+    @return : se devuelve el nombre del sonido asociado al instrumento seleccionado por pantalla
 """
 def cambio_instrumento(string_sonidos_actuales):
+
+    image_size = 292
+
+    WIDTH = image_size * 2
+    HEIGHT = image_size * 2
 
     strings_sonidos_nuevos = [os.path.splitext(nombre)[0] for nombre in os.listdir("./sonidos/") if nombre.endswith("ogg") and nombre not in string_sonidos_actuales]
     screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
@@ -67,13 +80,19 @@ def cambio_instrumento(string_sonidos_actuales):
 
         pygame.display.flip()
 
-
+"""
+Función para mostrar una secuencia de imágenes con Pygame. La usamos a modo de
+tutorial para el funcionamiento de la batería virtual.
+"""
 
 def tutorial():
+    WIDTH = 800
+    HEIGHT = 600
+
     screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
 
     pygame.display.set_caption("Tutorial Leap Motion")
-    names_images = ['victory.jpg','fondo_pong.png']
+    names_images = ['capturas/V1.png','capturas/V2.png']
     tutorial_images = ( load_image(name) for name in names_images )
     actual_image = next(tutorial_images)
 
@@ -93,6 +112,7 @@ def tutorial():
 
 
         pygame.display.flip()
+    pygame.quit()
 
 if __name__ == '__main__':
     pygame.init()
