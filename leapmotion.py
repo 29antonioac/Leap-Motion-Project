@@ -1,15 +1,12 @@
 # coding=utf-8
 
-# sonidos obtenidos de http://99sounds.org/drum-samples/
-
 import Leap, sys, thread, time
 import pygame
 import graficos
 import logicamenu
-
 import time
 
-# Posición y dirección de las baquetas en media
+# Posición y dirección de las baquetas
 posicion_media = []
 direccion_media = []
 
@@ -110,20 +107,16 @@ class BateriaListener(Leap.Listener):
 
                     # Dependiendo de la región, reproducimos un sonido u otro
                     if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
-                        if self.DEBUG:
-                            print "Sonido 0"
+                        if self.DEBUG: print "Sonido 0"
                         self.sonidos[0].play()
                     if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and -graficos.desplazamiento_bateria <= pos[2] <= -graficos.comienzo_bateria:
-                        if self.DEBUG:
-                            print "Sonido 1"
+                        if self.DEBUG: print "Sonido 1"
                         self.sonidos[1].play()
                     if -graficos.desplazamiento_bateria <= pos[0] <= -graficos.comienzo_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
-                        if self.DEBUG:
-                            print "Sonido 2"
+                        if self.DEBUG: print "Sonido 2"
                         self.sonidos[2].play()
                     if graficos.comienzo_bateria <= pos[0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= pos[2] <= graficos.desplazamiento_bateria:
-                        if self.DEBUG:
-                            print "Sonido 3"
+                        if self.DEBUG: print "Sonido 3"
                         self.sonidos[3].play()
 
                     if self.DEBUG:
@@ -131,6 +124,7 @@ class BateriaListener(Leap.Listener):
                             gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
 
 
+        # Lógica para hacer el gesto de reconocimiento
         if  tutorial_activo_leap and posicion_media:
             if not tutorial_iniciado_leap:
                 if graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria:
@@ -143,6 +137,7 @@ class BateriaListener(Leap.Listener):
                 else:
                     tutorial_activo_leap = False
 
+        # Lógica para cambiar el sonido de una región
         if not tutorial_activo_leap and posicion_media:
             if not cambiosonido_iniciado :
                 if -graficos.desplazamiento_bateria <= posicion_media[0][0] <= -graficos.comienzo_bateria and -graficos.desplazamiento_bateria <= posicion_media[0][2] <= -graficos.comienzo_bateria:
@@ -182,8 +177,7 @@ class BateriaListener(Leap.Listener):
         if posicion_media:
             graficos.redibujar()
 
-
-        # Quitar baquetas (evita parpadeo)
+        # Quitar baquetas
         posicion_media = []
         direccion_media = []
         hubo_gesto = False

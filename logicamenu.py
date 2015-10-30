@@ -85,7 +85,6 @@ def cambio_instrumento(string_sonidos_actuales):
 Función para mostrar una secuencia de imágenes con Pygame. La usamos a modo de
 tutorial para el funcionamiento de la batería virtual.
 """
-
 def tutorial():
     WIDTH = 720
     HEIGHT = 540
@@ -108,11 +107,10 @@ def tutorial():
                 except StopIteration:
                     fin = True
 
-
         screen.blit(actual_image, (0, 0))
 
-
         pygame.display.flip()
+
     pygame.quit()
 
 if __name__ == '__main__':
