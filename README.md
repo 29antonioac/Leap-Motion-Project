@@ -81,7 +81,7 @@ $ python2 bateria.py
 
 Cuando ejecutes el programa, encontrarás el siguiente tutorial bastante autoexplicativo.
 
-![Tutorial](capturas/tutorial.gif)
+![Tutorial](capturas/tutorial2.gif)
 
 Léelo con atención y... ¡disfruta tocando la batería!
 
