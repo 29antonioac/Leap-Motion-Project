@@ -12,6 +12,7 @@ import pygame
 def main():
     # Inicializar pygame
     pygame.init()
+    
 
     # Mostramos el tutorial
     logicamenu.tutorial()

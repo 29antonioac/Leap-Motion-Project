@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+# coding=utf-8
 
 # Modules
 import sys, pygame, random, os

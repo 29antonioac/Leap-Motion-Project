@@ -36,6 +36,7 @@ class BateriaListener(Leap.Listener):
     def inicializar(self):
         global string_sonidos
         # pygame.init()
+        pygame.mixer.init(44100, -16,2,2048)
         self.sonidos = [pygame.mixer.Sound("sonidos/" + s) for s in string_sonidos]
 
     # Función que se ejecuta al inicializar el programa
