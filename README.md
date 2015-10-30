@@ -72,3 +72,6 @@ La documentación oficial para [LeapMotion](https://developer.leapmotion.com/doc
 El entorno gráfico de OpenGL ha sido sacado de [aquí](https://github.com/analca3/TriedroFrenet_Evoluta), y
 todo lo referido a [Leap Motion](https://developer.leapmotion.com/documentation/python/index.html) y
 [Pygame](https://www.pygame.org/docs/) ha sido sacado de la documentación oficial.
+
+Los sonidos de ejemplo han sido sacados de [aquí](http://99sounds.org/drum-samples/), que
+son libres mientras no lo usemos en ámbito comercial.
