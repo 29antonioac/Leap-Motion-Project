@@ -9,11 +9,11 @@ import sys, time
 from OpenGL.constants import GLfloat
 from OpenGL.GL.ARB.multisample import GL_MULTISAMPLE_ARB
 import math
-
 import leapmotion
-
 import time
 
+
+# Variables del contexto de OpenGL
 vec4 = GLfloat_4
 tStart = t0 = time.time()
 frames = 0
@@ -29,6 +29,7 @@ frustum_ancho = 0.5 * frustum_dis_del
 frustum_factor_escala = 0.008 / 1.05
 #strings_ayuda = ["Hola"," Adios"]
 
+# Origen de los ejes de coordenadas
 origen_ejes = [-200.0,0.0,-200.0]
 
 posiciones_baquetas = []
@@ -37,13 +38,14 @@ direcciones_baquetas = []
 tiempo_transcurrido_ultimo_dato = time.time()
 margen_tiempo = 0.5
 
-traslacion_baterias = [[-150,100,-0],[0,100,0],[150,100,-0]]
-propiedades_baterias = [[50,50],[50,50],[50,50]]    # radio,altura
-
+# Traslación de las baterías
 desplazamiento_bateria = 100
 tamanio_bateria = 75
 comienzo_bateria = desplazamiento_bateria - tamanio_bateria
 
+"""
+Función para fijar la proyección en OpenGL
+"""
 def fijarProyeccion():
     ratioYX = float(ventana_tam_y) / float(ventana_tam_x)
     glMatrixMode(GL_PROJECTION)
@@ -52,16 +54,25 @@ def fijarProyeccion():
     glTranslatef( 0.0,0.0,-0.5*(frustum_dis_del+frustum_dis_tra))
     glScalef( frustum_factor_escala, frustum_factor_escala,  frustum_factor_escala )
 
+"""
+Función para fijar el Viewport y la proyección en OpenGL
+"""
 def fijarViewportProyeccion():
     glViewport( 0, 0, ventana_tam_x, ventana_tam_y )
     fijarProyeccion()
 
+"""
+Función para fijar la cámara en OpenGL
+"""
 def fijarCamara():
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
     glRotatef(camara_angulo_x,1,0,0)
     glRotatef(camara_angulo_y,0,1,0)
 
+"""
+Función para dibujar la rejilla, "el suelo"
+"""
 def dibujarRejilla():
     long_grid = 1000.0
     gap = 50.0
@@ -88,6 +99,9 @@ def dibujarRejilla():
 
     glEnd()
 
+"""
+Función para dibujar los ejes cartesianos
+"""
 def dibujarEjes():
     long_ejes = 450.0
     # establecer modo de dibujo a lineas (podría estar en puntos)
@@ -117,19 +131,9 @@ def dibujarEjes():
     glColor3f( g1, g2, g3 )
     glutSolidSphere( 5.0, 20, 20 )
 
-def dibujaCilindro(traslacion,propiedades):
-    glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-
-    glColor3f(0.5,0.5,0.5)
-    glTranslatef(traslacion[0],traslacion[1],traslacion[2])
-    glRotatef(-90,1,0,0)
-
-    glVertex3f(0,0,0)
-    glutSolidCylinder(propiedades[0],propiedades[1],100,100)
-
-    glPopMatrix()
-
+"""
+Función para dibujar una zona de batería
+"""
 def dibujarZonaBateriaUnitaria():
     glBegin(GL_TRIANGLES)
     glVertex3f(-tamanio_bateria,-0.01,-tamanio_bateria)
@@ -140,9 +144,9 @@ def dibujarZonaBateriaUnitaria():
     glVertex3f(tamanio_bateria,-0.01,tamanio_bateria)
     glEnd()
 
-# 1 3
-# 2 4
-# zonas resaltadas
+"""
+Función para dibujar las zonas de las baterías
+"""
 def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glMatrixMode(GL_MODELVIEW)
 
@@ -188,9 +192,11 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
+"""
+Función auxiliar para dibujar los objetos en pantalla
+"""
 def dibujarObjetos():
     global posiciones_baquetas, direcciones_baquetas
-    global traslacion_baterias, propiedades_baterias
     global tiempo_transcurrido_ultimo_dato, margen_tiempo
 
     longitud_baqueta = 60
@@ -221,11 +227,12 @@ def dibujarObjetos():
         glVertex3f(p[0]-longitud_baqueta*d[0],p[1]-longitud_baqueta*d[1],p[2]-longitud_baqueta*d[2])
     glEnd()
 
-    #print time.time() - tiempo_transcurrido_ultimo_dato
     if  time.time() - tiempo_transcurrido_ultimo_dato > margen_tiempo:
         posiciones_baquetas = []
         direcciones_baquetas = []
 
+"""
+Función que muestra ayuda en la ventana
 """
 def ayuda():
     glMatrixMode(GL_PROJECTION)
@@ -248,9 +255,11 @@ def ayuda():
     glPopMatrix()
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
-"""
 
-# Función de dibujado
+
+"""
+Función de dibujado
+"""
 def dibujar():
     rotationRate = (time.time() - tStart) * 1.05
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -263,7 +272,9 @@ def dibujar():
     glutPostRedisplay()
     glutSwapBuffers()
 
-# Teclas normales: para cambiar escala y velocidad
+"""
+Función que gestiona las teclas normales: para cambiar escala y velocidad
+"""
 def teclaNormal(k, x, y):
     global frustum_factor_escala, vertice_actual, velocidad, camara_angulo_x, camara_angulo_y, dibujoEvoluta
 
@@ -281,7 +292,9 @@ def teclaNormal(k, x, y):
 
     glutPostRedisplay()
 
-# Teclas especiales: para cambiar la cámara
+"""
+Función que gestiona las teclas especiales: para cambiar la cámara
+"""
 def teclaEspecial(k, x, y):
     global camara_angulo_x, camara_angulo_y
 
@@ -298,7 +311,9 @@ def teclaEspecial(k, x, y):
 
     glutPostRedisplay()
 
-# Nuevo tamaño de ventana
+"""
+Función que gestiona el cambio de tamaño de la ventana
+"""
 def cambioTamanio(width, height):
     global ventana_tam_x,ventana_tam_y
     ventana_tam_x = width
@@ -306,6 +321,9 @@ def cambioTamanio(width, height):
     fijarViewportProyeccion()
     glutPostRedisplay()
 
+"""
+Función que gestiona la pulsación de los botones del ratón en la ventana
+"""
 origen = [-1,-1]
 def pulsarRaton(boton,estado,x,y):
     da = 5.0
@@ -333,6 +351,9 @@ def pulsarRaton(boton,estado,x,y):
     if redisp:
         glutPostRedisplay();
 
+"""
+Función que gestiona el evento de mover el ratón sobre la ventana
+"""
 def moverRaton(x,y):
     global camara_angulo_x,camara_angulo_y, origen, tiempo_transcurrido_ultimo_dato, ahora
 
@@ -349,6 +370,9 @@ def moverRaton(x,y):
 def limpiarTodo():
     pass
 
+"""
+Función para redibujar desde leapmotion.py cuando hay baquetas
+"""
 def redibujar():
     global posiciones_baquetas, direcciones_baquetas, ahora, tiempo_transcurrido_ultimo_dato
 
@@ -358,28 +382,15 @@ def redibujar():
 
     glutPostRedisplay()
 
+"""
+Función para llamar al mainLoop desde bateria.py
+"""
 def openGLmainloop():
     glutMainLoop()
 
 """
-def sonido1():
-    print("OLA")
-
-SONIDO1, SONIDO2 = list(range(2))
-menudict ={SONIDO1 : sonido1}
-
-def dmenu(item):
-    menudict[item]()
-    return 0
-
-def createMenu():
-    menu = glutCreateMenu(dmenu)
-    glutAddMenuEntry("Sonido 1", sonido1)
-    glutAddMenuEntry("Sonido 2", sonido2)
-    glutAttachMenu(GLUT_RIGHT_BUTTON)
-    return 0
+Función para inicializar contexto de OpenGL
 """
-
 def inicializarOpenGL():
     glutInit()
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_ALPHA)
@@ -387,7 +398,6 @@ def inicializarOpenGL():
     glutInitWindowSize(ventana_tam_x, ventana_tam_y)
     glutCreateWindow("Bateria")
 
-    # funcion inicializar() antigua
     glEnable(GL_NORMALIZE)
     glEnable(GL_MULTISAMPLE_ARB)
     glEnable( GL_DEPTH_TEST )
@@ -401,8 +411,6 @@ def inicializarOpenGL():
     glutSpecialFunc(teclaEspecial)
     #glutMouseFunc(pulsarRaton)
     #glutMotionFunc(moverRaton)
-    #createMenu()
 
-    # TO DO
     glutCloseFunc(limpiarTodo);
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);

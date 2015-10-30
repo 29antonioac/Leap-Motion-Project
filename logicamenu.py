@@ -92,7 +92,7 @@ def tutorial():
     screen = pygame.display.set_mode((WIDTH,HEIGHT),0,32)
 
     pygame.display.set_caption("Tutorial Leap Motion")
-    names_images = ['capturas/T'+i+'.png' for i in range(1,8)]
+    names_images = ['capturas/t'+str(i)+'.png' for i in range(1,8)]
     tutorial_images = ( load_image(name) for name in names_images )
     actual_image = next(tutorial_images)
 
