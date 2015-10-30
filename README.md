@@ -68,28 +68,22 @@ $ sudo systemctl start leapd
 $ sudo leapd
 ```
 
-y ejecutar este proyecto simplemente escribiendo:
+Recomendamos la siguiente configuración en el panel de control de leap. En ArchLinux, puedes abrir dicho panel buscando la aplicación *Leap Motion Control Panel*
+
+![LeapPanel](capturas/leappanel.png)
+
+Para ejecutarlo este programa, basta escribir:
 ```
 $ python2 bateria.py
 ```
 
 ### Uso
 
-El siguiente tutorial también aparece al ejecutar el programa.
+Cuando ejecutes el programa, encontrarás el siguiente tutorial bastante autoexplicativo.
 
-![01](capturas/t1.png)
+![Tutorial](capturas/tutorial.gif)
 
-![02](capturas/t2.png)
-
-![03](capturas/t3.png)
-
-![04](capturas/t4.png)
-
-![05](capturas/t5.png)
-
-![06](capturas/t6.png)
-
-![07](capturas/t7.png)
+Léelo con atención y... ¡disfruta tocando la batería!
 
 ## Sección de errores frecuentes o aspectos destacados
 
