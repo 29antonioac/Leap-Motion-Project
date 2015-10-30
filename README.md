@@ -26,6 +26,8 @@ de las regiones y detectar un gesto, se reproducirá un sonido asociado a dicha 
 Manteniendo la baqueta sin realizar gestos en una determinada región, podemos cambiar
 el sonido que ofrece de manera sencilla.
 
+### Instalación
+
 Para poder ejecutar este proyecto, hacen falta varias cosas:
 
 * Python
@@ -57,6 +59,37 @@ repositorios oficiales, pero en caso de que no, se pueden instalar usando **pip*
 página oficial de Leap Motion también encontramos descargas para GNU/Linux.
 
 Después de esto, deberíamos ser capaces de ejecutar nuestro proyecto sin ningún problema.
+
+### Ejecución
+
+En Archilinux, bastaría conectar el Leap Motion mediante los comandos:
+```
+$ sudo systemctl start leapd
+$ sudo leapd
+```
+
+y ejecutar este proyecto simplemente escribiendo:
+```
+$ python2 bateria.py
+```
+
+### Uso
+
+El siguiente tutorial tambíen aparece al ejecutar el programa.
+
+![01](capturas/t1.png)
+
+![02](capturas/t2.png)
+
+![03](capturas/t3.png)
+
+![04](capturas/t4.png)
+
+![05](capturas/t5.png)
+
+![06](capturas/t6.png)
+
+![07](capturas/t7.png)
 
 ## Sección de errores frecuentes o aspectos destacados
 
