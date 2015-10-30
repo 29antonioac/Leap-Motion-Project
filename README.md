@@ -63,7 +63,7 @@ Después de esto, deberíamos ser capaces de ejecutar nuestro proyecto sin ning�
 ### Ejecución
 
 En Archilinux, bastaría conectar el Leap Motion mediante los comandos:
-```
+```bash
 $ sudo systemctl start leapd
 $ sudo leapd
 ```
@@ -73,7 +73,7 @@ Recomendamos la siguiente configuración en el panel de control de leap. En Arch
 ![LeapPanel](capturas/leappanel.png)
 
 Para ejecutarlo este programa, basta escribir:
-```
+```bash
 $ python2 bateria.py
 ```
 
