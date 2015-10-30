@@ -93,7 +93,18 @@ El siguiente tutorial tambíen aparece al ejecutar el programa.
 
 ## Sección de errores frecuentes o aspectos destacados
 
-Alguno de los errores destacados ha sido ...
+Alguno de los errores destacados han sido:
+
+* Elección de proyecto: En un principio queríamos realizar un minijuego de tiro al arco usando Kinect, pero vimos que la precisión que nos ofrecía no era lo suficiente, por eso cambiamos a este proyecto.
+
+* Detección de la herramienta: Pasó su tiempo en que diéramos con la herramienta correcta. Un lápiz no muy corto o un rotulador opaco y mate nos servirían como baqueta mágica.
+
+* Detección del gesto: El gesto de Keytap no es tan intuitivo con una herramienta que con tu propio dedo, por lo que hemos tenido que habituarnos para hacerlo correctamente.
+
+* Problemas con el 3D: La profundidad no quedaba muy bien, se precisaba de mucho esfuerzo para acertar a dar en los instrumentos, por lo que optamos por esta solución pseudo-2D.
+
+* Parpadeo: La baqueta parpadeaba mucho, debido a que OpenGL se actualiza muy rápido y lo solucionamos poniendo un temporizador.
+
 
 ## Sección de lecturas recomendadas
 
