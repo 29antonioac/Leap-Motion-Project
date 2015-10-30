@@ -75,7 +75,7 @@ $ python2 bateria.py
 
 ### Uso
 
-El siguiente tutorial tambíen aparece al ejecutar el programa.
+El siguiente tutorial también aparece al ejecutar el programa.
 
 ![01](capturas/t1.png)
 
