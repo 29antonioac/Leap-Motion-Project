@@ -160,9 +160,7 @@ class SampleListener(Leap.Listener):
                         if not(graficos.comienzo_bateria <= posicion_media[0][0] <= graficos.desplazamiento_bateria and graficos.comienzo_bateria <= posicion_media[0][2] <= graficos.desplazamiento_bateria):
                             cambiosonido_iniciado = False
                 else:
-                    # TOQUETEAR POR Antonio
                     string_sonidos[num_instrumento] = logicamenu.cambio_instrumento(string_sonidos)
-                    print string_sonidos
                     self.sonidos = [pygame.mixer.Sound("sonidos/" + s) for s in string_sonidos]
 
                     cambiosonido_iniciado = False
