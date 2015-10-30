@@ -26,7 +26,7 @@ num_instrumento = None
 hubo_gesto = False
 
 # LeapMotion
-class SampleListener(Leap.Listener):
+class BateriaListener(Leap.Listener):
     state_names = ['STATE_INVALID', 'STATE_START', 'STATE_UPDATE', 'STATE_END']
     num_maximo_baquetas = 2
     num_frame = 0
