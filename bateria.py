@@ -14,7 +14,7 @@ def main():
     pygame.init()
 
     # Mostramos el tutorial
-    logicamenu.tutorial()
+    #logicamenu.tutorial()
 
     # Inicializamos openGL
     graficos.inicializarOpenGL()

@@ -43,6 +43,9 @@ desplazamiento_bateria = 100
 tamanio_bateria = 75
 comienzo_bateria = desplazamiento_bateria - tamanio_bateria
 
+# variable que controla el menu
+menu_activo = True
+
 """
 Función para fijar la proyección en OpenGL
 """
@@ -192,6 +195,32 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
 
+def dibujarMenu():
+    #dibujar 3 cajas con y un panel de volumen
+
+    s = "VOLUMEN"
+    glWindowPos2i(2*ventana_tam_x/6, 2*ventana_tam_y /4)
+    for c in s:
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ord(c));
+
+    s = "ZOOM"
+    glWindowPos2i(2*ventana_tam_x/6, 3*ventana_tam_y /4)
+    for c in s:
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ord(c));
+
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glTranslatef(0,0,-150)
+    glScalef(0.5,0.5,0.5)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(0,0,0)
+    glScalef(0.5,0.5,0.5)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
 """
 Función auxiliar para dibujar los objetos en pantalla
 """
@@ -265,9 +294,14 @@ def dibujar():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     fijarViewportProyeccion()
     fijarCamara()
-    dibujarRejilla()
-    dibujarEjes()
-    dibujarObjetos()
+    if menu_activo:
+        glClearColor( 0.9, 1.0, 1.0, 1.0 )
+        dibujarMenu()
+    else:
+        glClearColor( 1.0, 1.0, 1.0, 1.0 )
+        dibujarRejilla()
+        dibujarEjes()
+        dibujarObjetos()
     #ayuda()
     glutPostRedisplay()
     glutSwapBuffers()
@@ -401,7 +435,6 @@ def inicializarOpenGL():
     glEnable(GL_NORMALIZE)
     glEnable(GL_MULTISAMPLE_ARB)
     glEnable( GL_DEPTH_TEST )
-    glClearColor( 0.0, 0.0, 0.0, 1.0 )
     glColor3f(0.0,0.0,0.0)
 
     glutIdleFunc(dibujar)
