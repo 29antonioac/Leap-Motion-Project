@@ -60,6 +60,8 @@ class BateriaListener(Leap.Listener):
 
         # Activa el gesto Key Tap
         controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
+        controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
+
 
     """
     Función que se ejecuta al desconectar el Leap Motion
