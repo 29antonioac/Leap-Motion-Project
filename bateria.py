@@ -46,7 +46,7 @@ class Baqueta(pygame.sprite.Sprite):
     """moves a baqueta on the screen, following the mouse"""
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
-        self.image, self.rect = load_image('baqueta.png', -1)
+        self.image, self.rect = load_image('baqueta.png',-1)
         self.kicking = 0
 
     def update(self):
@@ -56,12 +56,17 @@ class Baqueta(pygame.sprite.Sprite):
         if self.kicking:
             self.rect.move_ip(5, 10)
 
-    def kick(self, target):
+    def kick(self, target1,target2):
         "returns true if the baqueta collides with the target"
         if not self.kicking:
             self.kicking = 1
             hitbox = self.rect.inflate(-5, -5)
-            return hitbox.colliderect(target.rect)
+            if hitbox.colliderect(target1.rect):
+                return 1
+            elif hitbox.colliderect(target2.rect) :
+                return 2
+            else:
+                return 0
 
     def unkick(self):
         "called to pull the baqueta back"
@@ -69,19 +74,30 @@ class Baqueta(pygame.sprite.Sprite):
 
 
 class Caja(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image, self.rect = load_image('caja.jpg', -1)
-        self.original = self.image
-        screen = pygame.display.get_surface()
-        self.rect.topleft = 10, 10
+    def __init__(self,imagename):
+        self.ola = pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        self.image, self.rect = load_image(imagename,-1)
+        self.original = self.image.copy()
+
+        if imagename == 'caja.jpg':
+            self.rect.topleft = 0, 0
+        else:
+            self.rect.topleft = 400, 300
+
+        #self.image_hovered = self.image.copy()
+        #self.image_hovered.fill((255,0,0),self.rect.inflate(-100,-100))
         self.kicking = 0
 
     def update(self):
+        self.image = self.original
+
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.image = pygame.transform.scale(self.image,
+                (int(self.original.get_height()*1.2),
+                int(self.original.get_width()*1.2)))
+
         if self.kicking:
             self.image = pygame.transform.flip(self.image, 1, 0)
-        else:
-            self.image = self.original
 
     def kicked(self):
         if not self.kicking:
@@ -89,7 +105,6 @@ class Caja(pygame.sprite.Sprite):
 
     def unkick(self):
         self.kicking = 0
-
 
 def main():
     """this function is called when the program starts.
@@ -104,12 +119,12 @@ def main():
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
-    background.fill((250, 250, 250))
+    background.fill((255, 255, 255))
 
 #Put Text On The Background, Centered
     if pygame.font:
         font = pygame.font.Font(None, 36)
-        text = font.render("Toca la batera", 1, (10, 10, 10))
+        text = font.render("Toca la bateria", 1, (0, 0, 0))
         textpos = text.get_rect(centerx=background.get_width()/2)
         background.blit(text, textpos)
 
@@ -121,9 +136,13 @@ def main():
     clock = pygame.time.Clock()
     whiff_sound = load_sound('whiff.wav')
     punch_sound = load_sound('kick.wav')
-    caja = Caja()
     baqueta = Baqueta()
-    allsprites = pygame.sprite.RenderPlain((baqueta, caja))
+    caja1 = Caja('caja.jpg')
+    caja2 = Caja('caja2.jpg')
+    allsprites = pygame.sprite.OrderedUpdates()
+    allsprites.add(caja1)
+    allsprites.add(caja2)
+    allsprites.add(baqueta)
 
 
 #Main Loop
@@ -138,14 +157,19 @@ def main():
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 going = False
             elif event.type == MOUSEBUTTONDOWN:
-                if baqueta.kick(caja):
+                l = baqueta.kick(caja1,caja2)
+                if l != 0:
                     punch_sound.play() #kick
-                    caja.kicked()
+                    if l == 1:
+                        caja1.kicked()
+                    else:
+                        caja2.kicked()
                 else:
                     whiff_sound.play() #miss
             elif event.type == MOUSEBUTTONUP:
                 baqueta.unkick()
-                caja.unkick()
+                caja1.unkick()
+                caja2.unkick()
 
         allsprites.update()
 
