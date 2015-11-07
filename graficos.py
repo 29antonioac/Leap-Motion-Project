@@ -44,7 +44,7 @@ tamanio_bateria = 75
 comienzo_bateria = desplazamiento_bateria - tamanio_bateria
 
 # variable que controla el menu
-menu_activo = True
+menu_activo = False
 
 """
 Función para fijar la proyección en OpenGL

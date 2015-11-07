@@ -60,7 +60,7 @@ class BateriaListener(Leap.Listener):
 
         # Activa el gesto Key Tap
         controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
-        controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
+        controller.enable_gesture(Leap.Gesture.TYPE_SCREEN_TAP);
 
 
     """
@@ -124,7 +124,8 @@ class BateriaListener(Leap.Listener):
                     if self.DEBUG:
                         print "  Key Tap id: %d, %s, position: %s, direction: %s" % (
                             gesture.id, self.state_names[gesture.state], keytap.position, keytap.direction )
-
+                if gesture.type == Leap.Gesture.TYPE_SCREEN_TAP:
+                    graficos.menu_activo = not graficos.menu_activo
 
         # Lógica para hacer el gesto de reconocimiento
         if  tutorial_activo_leap and posicion_media:
