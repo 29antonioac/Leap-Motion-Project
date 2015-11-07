@@ -46,7 +46,7 @@ tamanio_bateria = 75
 comienzo_bateria = desplazamiento_bateria - tamanio_bateria
 
 # variable que controla el menu
-menu_activo = True
+menu_activo = False
 
 
 def PNGtoTexture(filename):
@@ -247,7 +247,32 @@ def dibujarMenu():
     glPopMatrix()
 
     glPushMatrix()
+    glTranslatef(100,0,-150)
+    glScalef(0.5,0.5,0.5)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(200,0,-150)
+    glScalef(0.5,0.5,0.5)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+
+    glPushMatrix()
     glTranslatef(0,0,0)
+    glScalef(0.5,0.5,0.5)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(100,0,0)
+    glScalef(0.5,0.5,0.5)
+    dibujarZonaBateriaUnitaria()
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(200,0,0)
     glScalef(0.5,0.5,0.5)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
