@@ -80,9 +80,9 @@ class Caja(pygame.sprite.Sprite):
         self.original = self.image.copy()
 
         if imagename == 'caja.jpg':
-            self.rect.topleft = 0, 0
+            self.rect.topleft = 15, 15
         else:
-            self.rect.topleft = 400, 300
+            self.rect.topleft = 300, 200
 
         #self.image_hovered = self.image.copy()
         #self.image_hovered.fill((255,0,0),self.rect.inflate(-100,-100))
@@ -92,12 +92,12 @@ class Caja(pygame.sprite.Sprite):
         self.image = self.original
 
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.image = pygame.transform.scale(self.image,
-                (int(self.original.get_height()*1.2),
-                int(self.original.get_width()*1.2)))
+            self.image = pygame.transform.smoothscale(self.image,
+                (int(self.original.get_height()*1.1),
+                int(self.original.get_width()*1.1)))
 
         if self.kicking:
-            self.image = pygame.transform.flip(self.image, 1, 0)
+            self.image = pygame.transform.flip(self.image, 0, 1)
 
     def kicked(self):
         if not self.kicking:
@@ -119,12 +119,12 @@ def main():
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
-    background.fill((255, 255, 255))
+    background.fill((0, 0, 0))
 
 #Put Text On The Background, Centered
     if pygame.font:
         font = pygame.font.Font(None, 36)
-        text = font.render("Toca la bateria", 1, (0, 0, 0))
+        text = font.render("Toca la bateria", 1, (255, 255, 255))
         textpos = text.get_rect(centerx=background.get_width()/2)
         background.blit(text, textpos)
 
@@ -135,7 +135,7 @@ def main():
 #Prepare Game Objects
     clock = pygame.time.Clock()
     whiff_sound = load_sound('whiff.wav')
-    punch_sound = load_sound('kick.wav')
+    punch_sound = load_sound('punch.wav')
     baqueta = Baqueta()
     caja1 = Caja('caja.jpg')
     caja2 = Caja('caja2.jpg')
@@ -159,13 +159,15 @@ def main():
             elif event.type == MOUSEBUTTONDOWN:
                 l = baqueta.kick(caja1,caja2)
                 if l != 0:
-                    punch_sound.play() #kick
                     if l == 1:
                         caja1.kicked()
+                        punch_sound.play() #kick
                     else:
+                        whiff_sound.play()
                         caja2.kicked()
                 else:
-                    whiff_sound.play() #miss
+                    pass
+                    #whiff_sound.play() #miss
             elif event.type == MOUSEBUTTONUP:
                 baqueta.unkick()
                 caja1.unkick()
