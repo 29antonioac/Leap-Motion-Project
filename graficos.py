@@ -12,6 +12,8 @@ import math
 import leapmotion
 import time
 
+from PIL import Image
+
 
 # Variables del contexto de OpenGL
 vec4 = GLfloat_4
@@ -45,6 +47,21 @@ comienzo_bateria = desplazamiento_bateria - tamanio_bateria
 
 # variable que controla el menu
 menu_activo = True
+
+
+def PNGtoTexture(filename):
+    img = Image.open(filename)
+    img_data = numpy.array(list(img.getdata()), numpy.uint8)
+
+    texture = glGenTextures(1)
+    glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+    glBindTexture(GL_TEXTURE_2D, texture)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.size[0], img.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
+    return texture
 
 """
 Función para fijar la proyección en OpenGL
@@ -194,6 +211,20 @@ def dibujarZonasBateria(zonaResaltadas=[0.0]):
     glTranslatef(desplazamiento_bateria,0,desplazamiento_bateria)
     dibujarZonaBateriaUnitaria()
     glPopMatrix()
+
+def dibujarPanelConfig(filename):
+    textura = PNGtoTexture(filename)
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textura)
+    glBegin(GL_TRIANGLES)
+    glVertex3f(-tamanio_bateria,-0.01,-tamanio_bateria)
+    glVertex3f(-tamanio_bateria,-0.01,tamanio_bateria)
+    glVertex3f(tamanio_bateria,-0.01,-tamanio_bateria)
+    glVertex3f(-tamanio_bateria,-0.01,tamanio_bateria)
+    glVertex3f(tamanio_bateria,-0.01,-tamanio_bateria)
+    glVertex3f(tamanio_bateria,-0.01,tamanio_bateria)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
 
 def dibujarMenu():
     #dibujar 3 cajas con y un panel de volumen
