@@ -1,3 +1,7 @@
+# Rama noopengl
+
+Uso de pygame para evitar usar OpenGL
+
 # Batería con Leap Motion
 
 Este proyecto para la asignatura Nuevos Paradigmas de Interacción de la UGR
