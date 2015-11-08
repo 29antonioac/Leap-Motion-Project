@@ -64,6 +64,7 @@ class Stick(pygame.sprite.Sprite):
             hitbox = self.rect.inflate(-5, -5)
             for target in targets:
                 if hitbox.colliderect(target.rect):
+                    target.kicked()
                     return target
             else:
                 return None
@@ -80,6 +81,7 @@ class Instrument(pygame.sprite.Sprite):
         self.original = self.image.copy()
         self.rect.topleft = topleft
         self.kicking = 0
+        self.imagename = imagename
 
     def update(self):
         self.image = self.original
@@ -90,7 +92,8 @@ class Instrument(pygame.sprite.Sprite):
                 int(self.original.get_width()*1.1)))
 
         if self.kicking:
-            self.image = pygame.transform.flip(self.image, 0, 1)
+            print self.imagename
+            self.image = pygame.transform.flip(self.image, 1, 1)
 
     def kicked(self):
         if not self.kicking:
