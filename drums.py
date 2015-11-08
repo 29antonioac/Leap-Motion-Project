@@ -10,11 +10,12 @@ if not pygame.font: print ('Warning, fonts disabled')
 if not pygame.mixer: print ('Warning, sound disabled')
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
-data_dir = os.path.join(main_dir, 'data')
+image_dir = os.path.join(main_dir, 'data/images')
+sound_dir = os.path.join(main_dir, 'data/sounds')
 
 #functions to create our resources
 def load_image(name, colorkey=None):
-    fullname = os.path.join(data_dir, name)
+    fullname = os.path.join(image_dir, name)
     try:
         image = pygame.image.load(fullname)
     except pygame.error:
@@ -32,7 +33,7 @@ def load_sound(name):
         def play(self): pass
     if not pygame.mixer or not pygame.mixer.get_init():
         return NoneSound()
-    fullname = os.path.join(data_dir, name)
+    fullname = os.path.join(sound_dir, name)
     try:
         sound = pygame.mixer.Sound(fullname)
     except pygame.error:
@@ -42,50 +43,42 @@ def load_sound(name):
 
 
 #classes for our game objects
-class Baqueta(pygame.sprite.Sprite):
-    """moves a baqueta on the screen, following the mouse"""
+class Stick(pygame.sprite.Sprite):
+    """moves a stick on the screen, following the mouse"""
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
-        self.image, self.rect = load_image('baqueta.png',-1)
+        self.image, self.rect = load_image('stick.png',-1)
         self.kicking = 0
 
     def update(self):
-        "move the baqueta based on the mouse position"
+        "move the stick based on the mouse position"
         pos = pygame.mouse.get_pos()
         self.rect.midtop = pos
         if self.kicking:
             self.rect.move_ip(5, 10)
 
-    def kick(self, target1,target2):
-        "returns true if the baqueta collides with the target"
+    def kick(self, targets):
+        "returns the target that the stick collides with"
         if not self.kicking:
             self.kicking = 1
             hitbox = self.rect.inflate(-5, -5)
-            if hitbox.colliderect(target1.rect):
-                return 1
-            elif hitbox.colliderect(target2.rect) :
-                return 2
+            for target in targets:
+                if hitbox.colliderect(target.rect):
+                    return target
             else:
-                return 0
+                return None
 
     def unkick(self):
-        "called to pull the baqueta back"
+        "called to pull the stick back"
         self.kicking = 0
 
 
-class Caja(pygame.sprite.Sprite):
-    def __init__(self,imagename):
-        self.ola = pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+class Instrument(pygame.sprite.Sprite):
+    def __init__(self,imagename,topleft):
+        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image, self.rect = load_image(imagename,-1)
         self.original = self.image.copy()
-
-        if imagename == 'caja.jpg':
-            self.rect.topleft = 15, 15
-        else:
-            self.rect.topleft = 300, 200
-
-        #self.image_hovered = self.image.copy()
-        #self.image_hovered.fill((255,0,0),self.rect.inflate(-100,-100))
+        self.rect.topleft = topleft
         self.kicking = 0
 
     def update(self):
@@ -103,7 +96,7 @@ class Caja(pygame.sprite.Sprite):
         if not self.kicking:
             self.kicking = 1
 
-    def unkick(self):
+    def unkicked(self):
         self.kicking = 0
 
 def main():
@@ -112,8 +105,10 @@ def main():
        a loop until the function returns."""
 #Initialize Everything
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption('Bateria')
+    screen_with = 800
+    screen_height = 600
+    screen = pygame.display.set_mode((screen_with, screen_height))
+    pygame.display.set_caption('Drums')
     pygame.mouse.set_visible(0)
 
 #Create The Backgound
@@ -124,7 +119,7 @@ def main():
 #Put Text On The Background, Centered
     if pygame.font:
         font = pygame.font.Font(None, 36)
-        text = font.render("Toca la bateria", 1, (255, 255, 255))
+        text = font.render("Virtual drums", 1, (255, 255, 255))
         textpos = text.get_rect(centerx=background.get_width()/2)
         background.blit(text, textpos)
 
@@ -134,16 +129,20 @@ def main():
 
 #Prepare Game Objects
     clock = pygame.time.Clock()
-    whiff_sound = load_sound('whiff.wav')
-    punch_sound = load_sound('punch.wav')
-    baqueta = Baqueta()
-    caja1 = Caja('caja.jpg')
-    caja2 = Caja('caja2.jpg')
-    allsprites = pygame.sprite.OrderedUpdates()
-    allsprites.add(caja1)
-    allsprites.add(caja2)
-    allsprites.add(baqueta)
+    floortom_sound = load_sound('floortom-acoustic01.wav')
+    snare_sound = load_sound('snare-acoustic01.wav')
 
+    stick = Stick()
+    snare = Instrument('snare.bmp',
+        (1*screen_with/5, 3*screen_height/5))
+    floortom = Instrument('floortom.bmp',
+        (3*screen_with/5, 3*screen_height/5))
+    instruments = [floortom,snare]
+
+    allsprites = pygame.sprite.OrderedUpdates()
+    for instrument in instruments:
+        allsprites.add(instrument)
+    allsprites.add(stick)
 
 #Main Loop
     going = True
@@ -157,21 +156,15 @@ def main():
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 going = False
             elif event.type == MOUSEBUTTONDOWN:
-                l = baqueta.kick(caja1,caja2)
-                if l != 0:
-                    if l == 1:
-                        caja1.kicked()
-                        punch_sound.play() #kick
-                    else:
-                        whiff_sound.play()
-                        caja2.kicked()
-                else:
-                    pass
-                    #whiff_sound.play() #miss
+                instrument_kicked = stick.kick(instruments)
+                if instrument_kicked == floortom:
+                    floortom_sound.play()
+                elif instrument_kicked == snare:
+                    snare_sound.play()
             elif event.type == MOUSEBUTTONUP:
-                baqueta.unkick()
-                caja1.unkick()
-                caja2.unkick()
+                stick.unkick()
+                for instrument in instruments:
+                    instrument.unkicked()
 
         allsprites.update()
 
