@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 #Import Modules
-import os, pygame
+import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
+import pygbutton
 
 if not pygame.font: print ('Warning, fonts disabled')
 if not pygame.mixer: print ('Warning, sound disabled')
@@ -100,6 +101,45 @@ class Instrument(pygame.sprite.Sprite):
     def unkicked(self):
         self.kicking = 0
 
+
+class Button(pygame.sprite.Sprite):
+    def __init__(self,imagename,topleft):
+        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        self.image, self.rect = load_image(imagename,-1)
+        self.rect.topleft = topleft
+        #self.kicking = 0
+
+        font = pygame.font.Font(None, 20)
+        self.text = font.render("Menu", 1, (255, 255, 255))
+        self.textpos = self.text.get_rect(centerx=self.image.get_width()/2,
+            centery=self.image.get_height()/2)
+        self.image.blit(self.text, self.textpos)
+
+        self.original = self.image.copy()
+
+        self.hovered = False
+        self.starthovering = None
+        self.speedhovering = 30
+
+    def update(self):
+        self.image = self.original.copy()
+
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            if self.hovered:
+                timepast = time.time() - self.starthovering
+            else:
+                timepast = 0
+                self.hovered = True
+                self.starthovering = time.time()
+
+            self.image.fill((0,100,0),self.image.get_rect().inflate(-100+(timepast*self.speedhovering),-15))
+            self.image.blit(self.text, self.textpos)
+
+            if timepast*self.speedhovering > self.image.get_width()-22:
+                raw_input("Lanzar Menu")
+        else:
+            self.hovered = False
+
 def main():
     """this function is called when the program starts.
        it initializes everything it needs, then runs in
@@ -121,7 +161,7 @@ def main():
     if pygame.font:
         font = pygame.font.Font(None, 36)
         text = font.render("Virtual drums", 1, (255, 255, 255))
-        textpos = text.get_rect(centerx=background.get_width()/2)
+        textpos = text.get_rect(centerx=background.get_width()/2,centery=20)
         background.blit(text, textpos)
 
 #Display The Background
@@ -134,6 +174,8 @@ def main():
     snare_sound = load_sound('snare-acoustic01.wav')
 
     stick = Stick()
+    button = Button('button.bmp',
+        (4*screen_with/5, 1*screen_height/20))
     snare = Instrument('snare.bmp',
         (1*screen_with/5, 3*screen_height/5))
     floortom = Instrument('floortom.bmp',
@@ -143,6 +185,7 @@ def main():
     allsprites = pygame.sprite.OrderedUpdates()
     for instrument in instruments:
         allsprites.add(instrument)
+    allsprites.add(button)
     allsprites.add(stick)
 
 #Main Loop
@@ -162,6 +205,8 @@ def main():
                     floortom_sound.play()
                 elif instrument_kicked == snare:
                     snare_sound.play()
+                elif instrument_kicked == button:
+                    print "button pressed"
             elif event.type == MOUSEBUTTONUP:
                 stick.unkick()
                 for instrument in instruments:
