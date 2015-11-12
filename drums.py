@@ -113,14 +113,18 @@ class Instrument(pygame.sprite.Sprite):
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self,imagename,topleft):
+    def __init__(self,imagename,text,topleft=(0,0),center=None):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image, self.rect = load_image(imagename,-1)
-        self.rect.topleft = topleft
+
+        if center:
+            self.rect.center = center
+        else:
+            self.rect.topleft = topleft
         #self.kicking = 0
 
         font = pygame.font.Font(None, 20)
-        self.text = font.render("Menu", 1, (255, 255, 255))
+        self.text = font.render(text, 1, (255, 255, 255))
         self.textpos = self.text.get_rect(centerx=self.image.get_width()/2,
             centery=self.image.get_height()/2)
         self.image.blit(self.text, self.textpos)
@@ -130,6 +134,7 @@ class Button(pygame.sprite.Sprite):
         self.hovered = False
         self.starthovering = None
         self.speedhovering = 30
+        self.hoveringended = False
 
     def update(self):
         self.image = self.original.copy()
@@ -146,7 +151,7 @@ class Button(pygame.sprite.Sprite):
             self.image.blit(self.text, self.textpos)
 
             if timepast*self.speedhovering > self.image.get_width()-22:
-                raw_input("Lanzar Menu")
+                self.hoveringended = True
         else:
             self.hovered = False
 
@@ -222,7 +227,6 @@ def main():
     controller = Leap.Controller()
     dataController = DataController(controller)
 
-
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -244,8 +248,14 @@ def main():
     floortom_sound = load_sound('floortom-acoustic01.wav')
     snare_sound = load_sound('snare-acoustic01.wav')
 
+    # startScreen
+    buttonStart = Button('button.bmp','Start',
+        center=(5*screen_with/10, 5*screen_height/10))
+    spritesStartScreen = pygame.sprite.RenderPlain(buttonStart)
+
+    # drumsScreen
     stick = Stick(dataController)
-    button = Button('button.bmp',
+    buttonOptions = Button('button.bmp','Options',
         (4*screen_with/5, 1*screen_height/20))
     snare = Instrument('snare.bmp',
         (1*screen_with/5, 3*screen_height/5))
@@ -253,20 +263,22 @@ def main():
         (3*screen_with/5, 3*screen_height/5))
     instruments = [floortom,snare]
 
-    allsprites = pygame.sprite.OrderedUpdates()
+    spritesDrumsScreen = pygame.sprite.OrderedUpdates()
     for instrument in instruments:
-        allsprites.add(instrument)
-    allsprites.add(button)
-    allsprites.add(stick)
+        spritesDrumsScreen.add(instrument)
+    spritesDrumsScreen.add(buttonOptions)
+    spritesDrumsScreen.add(stick)
+
+    # optionsScreen
+    spritesOptionsScreen = pygame.sprite.RenderPlain(buttonStart)
+
 
 #Main Loop
     going = True
+    startScreen = True
     while going:
         clock.tick(60)
         dataController.processNextFrame()
-
-
-
 
         #Handle Input Events
         for event in pygame.event.get():
@@ -274,6 +286,7 @@ def main():
                 going = False
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 going = False
+            """
             elif event.type == MOUSEBUTTONDOWN:
                 instrument_kicked = stick.kick(instruments)
                 if instrument_kicked == floortom:
@@ -286,13 +299,22 @@ def main():
                 stick.unkick()
                 for instrument in instruments:
                     instrument.unkicked()
+            """
 
-        allsprites.update()
+        if startScreen:
+            spritesStartScreen.update()
+        else:
+            spritesDrumsScreen.update()
 
         #Draw Everything
         screen.blit(background, (0, 0))
-        allsprites.draw(screen)
+        if startScreen:
+            spritesStartScreen.draw(screen)
+        else:
+            spritesDrumsScreen.draw(screen)
+
         pygame.display.flip()
+        startScreen = not buttonStart.hoveringended
 
     pygame.quit()
 
