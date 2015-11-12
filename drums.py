@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #Import Modules
+import Leap, sys, thread
 import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
@@ -46,14 +47,20 @@ def load_sound(name):
 #classes for our game objects
 class Stick(pygame.sprite.Sprite):
     """moves a stick on the screen, following the mouse"""
-    def __init__(self):
+    def __init__(self, controller):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
         self.image, self.rect = load_image('stick.png',-1)
-        self.kicking = 0
+        self.kicking = False
+        self.controller = controller
 
     def update(self):
         "move the stick based on the mouse position"
-        pos = pygame.mouse.get_pos()
+        if self.controller.sticksPosition:
+            pos = (self.controller.sticksPosition[0],self.controller.sticksPosition[1])
+        else:
+            pos = (0,0)
+
+
         self.rect.midtop = pos
         if self.kicking:
             self.rect.move_ip(5, 10)
@@ -61,7 +68,7 @@ class Stick(pygame.sprite.Sprite):
     def kick(self, targets):
         "returns the target that the stick collides with"
         if not self.kicking:
-            self.kicking = 1
+            self.kicking = True
             hitbox = self.rect.inflate(-5, -5)
             for target in targets:
                 if hitbox.colliderect(target.rect):
@@ -72,7 +79,7 @@ class Stick(pygame.sprite.Sprite):
 
     def unkick(self):
         "called to pull the stick back"
-        self.kicking = 0
+        self.kicking = False
 
 
 class Instrument(pygame.sprite.Sprite):
@@ -81,7 +88,7 @@ class Instrument(pygame.sprite.Sprite):
         self.image, self.rect = load_image(imagename,-1)
         self.original = self.image.copy()
         self.rect.topleft = topleft
-        self.kicking = 0
+        self.kicking = False
 
     def update(self):
         self.image = self.original
@@ -96,10 +103,10 @@ class Instrument(pygame.sprite.Sprite):
 
     def kicked(self):
         if not self.kicking:
-            self.kicking = 1
+            self.kicking = True
 
     def unkicked(self):
-        self.kicking = 0
+        self.kicking = False
 
 
 class Button(pygame.sprite.Sprite):
@@ -140,6 +147,64 @@ class Button(pygame.sprite.Sprite):
         else:
             self.hovered = False
 
+
+
+
+# Leap Motion controller class
+class DataController:
+
+    def __init__(self, controller):
+        self.controller = controller
+        self.lastFrame = None
+        self.lastFrameID = 0
+        self.lastProcessedFrameID = 0
+        self.detectedGesture = False
+        self.sticksPosition = None
+        self.sticksDirection = None
+
+        self.controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
+
+    def nextFrame(self):
+
+        currentID = currentFrame.id;
+
+
+
+
+
+        # for history in range(0, currentID - self.lastProcessedFrameID):
+        #     gesture = currentFrame.gesture(history)
+        #     if gesture:
+        #         self.detectedGesture = True
+        #     else:
+        #         self.detectedGesture = False
+        #     self.processNextFrame(self.controller.frame(history))
+        #     self.lastProcessedFrameID = currentID;
+
+
+    def processNextFrame(self):
+        frame = self.controller.frame()
+
+        if(frame.id == self.lastFrameID):
+            return
+        if(frame.is_valid):
+            for tool in frame.tools:
+                self.sticksPosition = tool.tip_position
+                self.sticksDirection = tool.direction
+            if self.lastFrame:
+                print self.lastFrameID, frame.id
+                gestures = frame.gestures(self.lastFrame)
+                print len(gestures)
+                for gesture in gestures:
+                    # Key tap
+                    if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
+                        self.detectedGesture = True
+            else:
+                self.detectedGesture = None
+
+        self.lastFrame = frame
+        self.lastFrameID = frame.id
+
 def main():
     """this function is called when the program starts.
        it initializes everything it needs, then runs in
@@ -151,6 +216,9 @@ def main():
     screen = pygame.display.set_mode((screen_with, screen_height))
     pygame.display.set_caption('Drums')
     pygame.mouse.set_visible(0)
+    controller = Leap.Controller()
+    dataController = DataController(controller)
+
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
@@ -173,7 +241,7 @@ def main():
     floortom_sound = load_sound('floortom-acoustic01.wav')
     snare_sound = load_sound('snare-acoustic01.wav')
 
-    stick = Stick()
+    stick = Stick(dataController)
     button = Button('button.bmp',
         (4*screen_with/5, 1*screen_height/20))
     snare = Instrument('snare.bmp',
@@ -192,6 +260,7 @@ def main():
     going = True
     while going:
         clock.tick(60)
+        dataController.processNextFrame()
 
         #Handle Input Events
         for event in pygame.event.get():
