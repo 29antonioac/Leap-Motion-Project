@@ -133,7 +133,7 @@ class Button(pygame.sprite.Sprite):
 
         self.hovered = False
         self.starthovering = None
-        self.speedhovering = 30
+        self.speedhovering = 60
         self.hoveringended = False
 
     def update(self):
@@ -152,6 +152,7 @@ class Button(pygame.sprite.Sprite):
 
             if timepast*self.speedhovering > self.image.get_width()-22:
                 self.hoveringended = True
+                self.hovered = False
         else:
             self.hovered = False
 
@@ -256,7 +257,7 @@ def main():
     # drumsScreen
     stick = Stick(dataController)
     buttonOptions = Button('button.bmp','Options',
-        (4*screen_with/5, 1*screen_height/20))
+        (4*screen_with/5, 3*screen_height/20))
     snare = Instrument('snare.bmp',
         (1*screen_with/5, 3*screen_height/5))
     floortom = Instrument('floortom.bmp',
@@ -270,12 +271,24 @@ def main():
     spritesDrumsScreen.add(stick)
 
     # optionsScreen
-    spritesOptionsScreen = pygame.sprite.RenderPlain(buttonStart)
+    buttonBackToDrums = Button('button.bmp','Back',
+        (4*screen_with/5, 1*screen_height/20))
+    buttonSetVolume = Button('button.bmp','Volume',
+        center=(2*screen_with/10, 2*screen_height/10))
+    buttonVolume0 = Button('button.bmp','0',
+        center=(4*screen_with/10, 2*screen_height/10))
+
+    spritesOptionsScreen = pygame.sprite.RenderPlain((
+        buttonBackToDrums,buttonSetVolume,buttonVolume0
+    ))
+
 
 
 #Main Loop
     going = True
     startScreen = True
+    optionsScreen = False
+    backToDrumsScreen = False
     while going:
         clock.tick(60)
         dataController.processNextFrame()
@@ -304,17 +317,25 @@ def main():
         if startScreen:
             spritesStartScreen.update()
         else:
-            spritesDrumsScreen.update()
+            if optionsScreen and not backToDrumsScreen:
+                spritesOptionsScreen.update()
+            else:
+                spritesDrumsScreen.update()
 
         #Draw Everything
         screen.blit(background, (0, 0))
         if startScreen:
             spritesStartScreen.draw(screen)
         else:
-            spritesDrumsScreen.draw(screen)
+            if optionsScreen and not backToDrumsScreen:
+                spritesOptionsScreen.draw(screen)
+            else:
+                spritesDrumsScreen.draw(screen)
 
         pygame.display.flip()
         startScreen = not buttonStart.hoveringended
+        optionsScreen = buttonOptions.hoveringended
+        backToDrumsScreen = buttonBackToDrums.hoveringended
 
     pygame.quit()
 
