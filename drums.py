@@ -1,6 +1,9 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+# baqueta
+# https://pixabay.com/p-149338/?no_redirect
+
 #Import Modules
 import Leap, sys, thread
 import os, time, pygame
@@ -261,6 +264,9 @@ def main():
     while going:
         clock.tick(60)
         dataController.processNextFrame()
+
+
+
 
         #Handle Input Events
         for event in pygame.event.get():
