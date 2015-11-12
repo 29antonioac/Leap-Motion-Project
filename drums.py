@@ -1,7 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-#Import Modules
+# baqueta
+# https://pixabay.com/p-149338/?no_redirect
+
+#Import the Modules
 import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
@@ -192,6 +195,9 @@ def main():
     going = True
     while going:
         clock.tick(60)
+
+
+
 
         #Handle Input Events
         for event in pygame.event.get():
