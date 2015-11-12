@@ -4,7 +4,7 @@
 # baqueta
 # https://pixabay.com/p-149338/?no_redirect
 
-#Import Modules
+# Import Modules
 import Leap, sys, thread
 import os, time, pygame
 from pygame.locals import *
@@ -173,6 +173,22 @@ class DataController:
 
         self.controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
 
+    def map2Dcoordinates(self):
+        app_width = 800
+        app_height = 800
+
+        pointable = self.lastFrame.pointables.frontmost
+        iBox = self.lastFrame.interaction_box
+        leapPoint = pointable.stabilized_tip_position
+        normalizedPoint = iBox.normalize_point(leapPoint, False)
+
+        app_x = normalizedPoint.x * app_width
+        # app_y = (1 - normalizedPoint.y) * app_height
+        app_y = (normalizedPoint.z) * app_height
+        #The z-coordinate is not used
+        pos = (app_x, app_y)
+        return pos
+
     def nextFrame(self):
 
         currentID = currentFrame.id;
@@ -198,7 +214,7 @@ class DataController:
             return
         if(frame.is_valid):
             for tool in frame.tools:
-                self.sticksPosition = tool.tip_position
+                self.sticksPosition = self.map2Dcoordinates()
                 self.sticksDirection = tool.direction
             if self.lastFrame:
                 print self.lastFrameID, frame.id
@@ -221,7 +237,7 @@ def main():
 #Initialize Everything
     pygame.init()
     screen_with = 800
-    screen_height = 600
+    screen_height = 800
     screen = pygame.display.set_mode((screen_with, screen_height))
     pygame.display.set_caption('Drums')
     pygame.mouse.set_visible(0)
@@ -297,7 +313,7 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 going = False
-            elif event.type == KEYDOWN and event.key == K_ESCAPE:
+            elif event.type == KEYDOWN and (event.key == K_ESCAPE or event.key == K_q):
                 going = False
             """
             elif event.type == MOUSEBUTTONDOWN:
