@@ -17,7 +17,6 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 image_dir = os.path.join(main_dir, 'data/images')
 sound_dir = os.path.join(main_dir, 'data/sounds')
 
-
 inputDevice = pygame.mouse
 
 # TODO: clean button class
@@ -161,7 +160,11 @@ class Button(pygame.sprite.Sprite):
     def update(self):
         self.image = self.original.copy()
 
-        if self.rect.collidepoint(inputDevice.get_pos()):
+        if inputDevice.get_pos() is None:
+            pos = (0,0)
+        else:
+            pos = inputDevice.get_pos()
+        if self.rect.collidepoint(pos):
             if self.hovered:
                 timepast = time.time() - self.starthovering
             else:
@@ -247,7 +250,8 @@ def main():
     controller = Leap.Controller()
     dataController = DataController(controller)
 
-    # inputDevice = controller
+    global inputDevice
+    inputDevice = dataController
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
@@ -318,14 +322,15 @@ def main():
 
 #Main Loop
     going = True
-    startScreen = True
-    optionsScreen = False
-    backToDrumsScreen = False
+    current_screen = "startScreen"
+    #startScreen = True
+    #optionsScreen = False
+    #backToDrumsScreen = False
     while going:
         clock.tick(60)
         dataController.processNextFrame()
 
-        if dataController.detectedGesture:
+        if dataController.detectedGesture and current_screen =="drumsScreen":
             instrument_kicked = stick.kick(instruments)
             if instrument_kicked == floortom:
                 floortom_sound.play()
@@ -344,28 +349,36 @@ def main():
             elif event.type == KEYDOWN and (event.key == K_ESCAPE or event.key == K_q):
                 going = False
 
-        if startScreen:
+        if current_screen == "startScreen":
             spritesStartScreen.update()
-        else:
-            if optionsScreen and not backToDrumsScreen:
-                spritesOptionsScreen.update()
-            else:
-                spritesDrumsScreen.update()
+        elif current_screen == "drumsScreen":
+            spritesDrumsScreen.update()
+        elif current_screen == "optionsScreen":
+            spritesOptionsScreen.update()
 
         #Draw Everything
         screen.blit(background, (0, 0))
-        if startScreen:
+        if current_screen == "startScreen":
             spritesStartScreen.draw(screen)
-        else:
-            if optionsScreen and not backToDrumsScreen:
-                spritesOptionsScreen.draw(screen)
-            else:
-                spritesDrumsScreen.draw(screen)
+        elif current_screen == "drumsScreen":
+            spritesDrumsScreen.draw(screen)
+        elif current_screen == "optionsScreen":
+            spritesOptionsScreen.draw(screen)
 
         pygame.display.flip()
-        startScreen = not buttonStart.hoveringended
-        optionsScreen = buttonOptions.hoveringended
-        backToDrumsScreen = buttonBackToDrums.hoveringended
+
+        if current_screen == "startScreen":
+            if buttonStart.hoveringended:
+                current_screen = "drumsScreen"
+                buttonStart.hoveringended = False
+        elif current_screen == "drumsScreen":
+            if buttonOptions.hoveringended:
+                current_screen = "optionsScreen"
+                buttonOptions.hoveringended = False
+        elif current_screen == "optionsScreen":
+            if buttonBackToDrums.hoveringended:
+                current_screen = "drumsScreen"
+                buttonBackToDrums.hoveringended = False
 
     pygame.quit()
 
