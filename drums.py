@@ -52,6 +52,22 @@ def load_sound(name):
         raise SystemExit(str(geterror()))
     return sound
 
+def volumeSounds(sounds, option):
+
+    if option == 0:
+        volume = 0.1
+    elif option == 1:
+        volume = 0.5
+    elif option == 2:
+        volume = 1
+    else:
+        raise ValueError("Volume option not 0, 1 or 2")
+
+    for s in sounds:
+        s.set_sound(volume)
+
+
+
 #classes for our game objects
 class Stick(pygame.sprite.Sprite):
     """moves a stick on the screen, following the mouse"""
@@ -254,7 +270,8 @@ def main():
     floortom_sound = load_sound('floortom-acoustic01.wav')
     snare_sound = load_sound('snare-acoustic01.wav')
 
-    stick = Stick(dataController)
+    # stick = Stick(dataController)
+    stick = Stick(inputDevice)
 
     # startScreen
     buttonStart = Button('button.bmp','Start',
@@ -264,8 +281,6 @@ def main():
     spritesStartScreen.add(stick)
 
     # drumsScreen
-
-    stick = Stick(inputDevice)
 
     buttonOptions = Button('button.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
@@ -286,13 +301,19 @@ def main():
         (4*screen_with/5, 1*screen_height/20))
     buttonSetVolume = Button('button.bmp','Volume',
         center=(2*screen_with/10, 2*screen_height/10))
-    buttonVolume0 = Button('button.bmp','0',
+    buttonVolume0 = Button('button.bmp','Bajo',
         center=(4*screen_with/10, 2*screen_height/10))
+    buttonVolume1 = Button('button.bmp','Medio',
+        center=(6*screen_with/10, 2*screen_height/10))
+    buttonVolume2 = Button('button.bmp','Alto',
+        center=(8*screen_with/10, 2*screen_height/10))
 
     spritesOptionsScreen = pygame.sprite.OrderedUpdates()
     spritesOptionsScreen.add(buttonBackToDrums)
     spritesOptionsScreen.add(buttonSetVolume)
     spritesOptionsScreen.add(buttonVolume0)
+    spritesOptionsScreen.add(buttonVolume1)
+    spritesOptionsScreen.add(buttonVolume2)
     spritesOptionsScreen.add(stick)
 
 #Main Loop
