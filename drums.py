@@ -4,7 +4,6 @@
 # baqueta
 # https://pixabay.com/p-149338/?no_redirect
 
-# Import Modules
 import Leap, sys, thread
 import os, time, pygame
 from pygame.locals import *
@@ -18,7 +17,12 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 image_dir = os.path.join(main_dir, 'data/images')
 sound_dir = os.path.join(main_dir, 'data/sounds')
 
+
 inputDevice = pygame.mouse
+
+# TODO: clean button class
+# TODO: add effect when gesture happend in stick
+# TODO: add controller to button (remove global variable)
 
 #functions to create our resources
 def load_image(name, colorkey=None):
@@ -48,7 +52,6 @@ def load_sound(name):
         raise SystemExit(str(geterror()))
     return sound
 
-
 #classes for our game objects
 class Stick(pygame.sprite.Sprite):
     """moves a stick on the screen, following the mouse"""
@@ -60,15 +63,18 @@ class Stick(pygame.sprite.Sprite):
 
     def update(self):
         "move the stick based on the mouse position"
+
         if self.controller.get_pos():
-            pos = (self.controller.get_pos()[0],self.controller.get_pos()[1])
+            pos = self.controller.get_pos()
+
         else:
             pos = (0,0)
-
+        self.rect.midtop = pos
 
         self.rect.midtop = pos
         if self.kicking:
-            self.rect.move_ip(5, 10)
+            print "hello"
+            #self.rect.move_ip(5, 10)
 
     def kick(self, targets):
         "returns the target that the stick collides with"
@@ -85,7 +91,6 @@ class Stick(pygame.sprite.Sprite):
     def unkick(self):
         "called to pull the stick back"
         self.kicking = False
-
 
 class Instrument(pygame.sprite.Sprite):
     def __init__(self,imagename,topleft):
@@ -112,7 +117,6 @@ class Instrument(pygame.sprite.Sprite):
 
     def unkicked(self):
         self.kicking = False
-
 
 class Button(pygame.sprite.Sprite):
     def __init__(self,imagename,text,topleft=(0,0),center=None):
@@ -158,12 +162,8 @@ class Button(pygame.sprite.Sprite):
         else:
             self.hovered = False
 
-
-
-
 # Leap Motion controller class
 class DataController:
-
     def __init__(self, controller):
         self.controller = controller
         self.lastFrame = None
@@ -194,24 +194,6 @@ class DataController:
         pos = (app_x, app_y)
         return pos
 
-    def nextFrame(self):
-
-        currentID = currentFrame.id;
-
-
-
-
-
-        # for history in range(0, currentID - self.lastProcessedFrameID):
-        #     gesture = currentFrame.gesture(history)
-        #     if gesture:
-        #         self.detectedGesture = True
-        #     else:
-        #         self.detectedGesture = False
-        #     self.processNextFrame(self.controller.frame(history))
-        #     self.lastProcessedFrameID = currentID;
-
-
     def processNextFrame(self):
         frame = self.controller.frame()
 
@@ -222,9 +204,9 @@ class DataController:
                 self.sticksPosition = self.map2Dcoordinates()
                 self.sticksDirection = tool.direction
             if self.lastFrame:
-                print self.lastFrameID, frame.id
+                #print self.lastFrameID, frame.id
                 gestures = frame.gestures(self.lastFrame)
-                print len(gestures)
+                #print len(gestures)
                 for gesture in gestures:
                     # Key tap
                     if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
@@ -272,13 +254,19 @@ def main():
     floortom_sound = load_sound('floortom-acoustic01.wav')
     snare_sound = load_sound('snare-acoustic01.wav')
 
+    stick = Stick(dataController)
+
     # startScreen
     buttonStart = Button('button.bmp','Start',
         center=(5*screen_with/10, 5*screen_height/10))
-    spritesStartScreen = pygame.sprite.RenderPlain(buttonStart)
+    spritesStartScreen = pygame.sprite.OrderedUpdates()
+    spritesStartScreen.add(buttonStart)
+    spritesStartScreen.add(stick)
 
     # drumsScreen
+
     stick = Stick(inputDevice)
+
     buttonOptions = Button('button.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
     snare = Instrument('snare.bmp',
@@ -301,11 +289,11 @@ def main():
     buttonVolume0 = Button('button.bmp','0',
         center=(4*screen_with/10, 2*screen_height/10))
 
-    spritesOptionsScreen = pygame.sprite.RenderPlain((
-        buttonBackToDrums,buttonSetVolume,buttonVolume0
-    ))
-
-
+    spritesOptionsScreen = pygame.sprite.OrderedUpdates()
+    spritesOptionsScreen.add(buttonBackToDrums)
+    spritesOptionsScreen.add(buttonSetVolume)
+    spritesOptionsScreen.add(buttonVolume0)
+    spritesOptionsScreen.add(stick)
 
 #Main Loop
     going = True
@@ -316,26 +304,24 @@ def main():
         clock.tick(60)
         dataController.processNextFrame()
 
+        if dataController.detectedGesture:
+            instrument_kicked = stick.kick(instruments)
+            if instrument_kicked == floortom:
+                floortom_sound.play()
+            elif instrument_kicked == snare:
+                snare_sound.play()
+        else:
+            stick.unkick()
+            for instrument in instruments:
+                instrument.unkicked()
+        dataController.detectedGesture = False
+
         #Handle Input Events
         for event in pygame.event.get():
             if event.type == QUIT:
                 going = False
             elif event.type == KEYDOWN and (event.key == K_ESCAPE or event.key == K_q):
                 going = False
-            """
-            elif event.type == MOUSEBUTTONDOWN:
-                instrument_kicked = stick.kick(instruments)
-                if instrument_kicked == floortom:
-                    floortom_sound.play()
-                elif instrument_kicked == snare:
-                    snare_sound.play()
-                elif instrument_kicked == button:
-                    print "button pressed"
-            elif event.type == MOUSEBUTTONUP:
-                stick.unkick()
-                for instrument in instruments:
-                    instrument.unkicked()
-            """
 
         if startScreen:
             spritesStartScreen.update()
@@ -361,9 +347,6 @@ def main():
         backToDrumsScreen = buttonBackToDrums.hoveringended
 
     pygame.quit()
-
-#Game Over
-
 
 #this calls the 'main' function when this script is executed
 if __name__ == '__main__':
