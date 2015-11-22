@@ -244,13 +244,16 @@ def main():
     floortom_sound = load_sound('floortom-acoustic01.wav')
     snare_sound = load_sound('snare-acoustic01.wav')
 
+    stick = Stick(dataController)
+
     # startScreen
     buttonStart = Button('button.bmp','Start',
         center=(5*screen_with/10, 5*screen_height/10))
-    spritesStartScreen = pygame.sprite.RenderPlain(buttonStart)
+    spritesStartScreen = pygame.sprite.OrderedUpdates()
+    spritesStartScreen.add(buttonStart)
+    spritesStartScreen.add(stick)
 
     # drumsScreen
-    stick = Stick(dataController)
     buttonOptions = Button('button.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
     snare = Instrument('snare.bmp',
@@ -273,9 +276,11 @@ def main():
     buttonVolume0 = Button('button.bmp','0',
         center=(4*screen_with/10, 2*screen_height/10))
 
-    spritesOptionsScreen = pygame.sprite.RenderPlain((
-        buttonBackToDrums,buttonSetVolume,buttonVolume0
-    ))
+    spritesOptionsScreen = pygame.sprite.OrderedUpdates()
+    spritesOptionsScreen.add(buttonBackToDrums)
+    spritesOptionsScreen.add(buttonSetVolume)
+    spritesOptionsScreen.add(buttonVolume0)
+    spritesOptionsScreen.add(stick)
 
 #Main Loop
     going = True
