@@ -18,6 +18,8 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 image_dir = os.path.join(main_dir, 'data/images')
 sound_dir = os.path.join(main_dir, 'data/sounds')
 
+inputDevice = pygame.mouse
+
 #functions to create our resources
 def load_image(name, colorkey=None):
     fullname = os.path.join(image_dir, name)
@@ -58,8 +60,8 @@ class Stick(pygame.sprite.Sprite):
 
     def update(self):
         "move the stick based on the mouse position"
-        if self.controller.sticksPosition:
-            pos = (self.controller.sticksPosition[0],self.controller.sticksPosition[1])
+        if self.controller.get_pos():
+            pos = (self.controller.get_pos()[0],self.controller.get_pos()[1])
         else:
             pos = (0,0)
 
@@ -96,7 +98,7 @@ class Instrument(pygame.sprite.Sprite):
     def update(self):
         self.image = self.original
 
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
+        if self.rect.collidepoint(inputDevice.get_pos()):
             self.image = pygame.transform.smoothscale(self.image,
                 (int(self.original.get_height()*1.1),
                 int(self.original.get_width()*1.1)))
@@ -139,7 +141,7 @@ class Button(pygame.sprite.Sprite):
     def update(self):
         self.image = self.original.copy()
 
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
+        if self.rect.collidepoint(inputDevice.get_pos()):
             if self.hovered:
                 timepast = time.time() - self.starthovering
             else:
@@ -172,6 +174,9 @@ class DataController:
         self.sticksDirection = None
 
         self.controller.enable_gesture(Leap.Gesture.TYPE_KEY_TAP);
+
+    def get_pos(self):
+        return self.sticksPosition
 
     def map2Dcoordinates(self):
         app_width = 800
@@ -244,6 +249,8 @@ def main():
     controller = Leap.Controller()
     dataController = DataController(controller)
 
+    # inputDevice = controller
+
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -271,7 +278,7 @@ def main():
     spritesStartScreen = pygame.sprite.RenderPlain(buttonStart)
 
     # drumsScreen
-    stick = Stick(dataController)
+    stick = Stick(inputDevice)
     buttonOptions = Button('button.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
     snare = Instrument('snare.bmp',
