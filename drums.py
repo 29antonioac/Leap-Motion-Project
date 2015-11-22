@@ -24,7 +24,7 @@ inputDevice = pygame.mouse
 # TODO: add controller to button (remove global variable)
 
 #functions to create our resources
-def load_image(name, colorkey=None):
+def loadImage(name, colorkey=None):
     fullname = os.path.join(image_dir, name)
     try:
         image = pygame.image.load(fullname)
@@ -38,7 +38,7 @@ def load_image(name, colorkey=None):
         image.set_colorkey(colorkey, RLEACCEL)
     return image, image.get_rect()
 
-def load_sound(name):
+def loadSound(name):
     class NoneSound:
         def play(self): pass
     if not pygame.mixer or not pygame.mixer.get_init():
@@ -72,7 +72,7 @@ class Stick(pygame.sprite.Sprite):
     """moves a stick on the screen, following the mouse"""
     def __init__(self, controller):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
-        self.image, self.rect = load_image('stick.png',-1)
+        self.image, self.rect = loadImage('stick.png',-1)
         self.kicking = False
         self.controller = controller
 
@@ -110,7 +110,7 @@ class Stick(pygame.sprite.Sprite):
 class Instrument(pygame.sprite.Sprite):
     def __init__(self,imagename,topleft):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image, self.rect = load_image(imagename,-1)
+        self.image, self.rect = loadImage(imagename,-1)
         self.original = self.image.copy()
         self.rect.topleft = topleft
         self.kicking = False
@@ -134,9 +134,9 @@ class Instrument(pygame.sprite.Sprite):
         self.kicking = False
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self,imagename,text,topleft=(0,0),center=None):
+    def __init__(self,imagename,text,topleft=(0,0),center=None,hoverable=True):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image, self.rect = load_image(imagename,-1)
+        self.image, self.rect = loadImage(imagename,-1)
 
         if center:
             self.rect.center = center
@@ -146,6 +146,7 @@ class Button(pygame.sprite.Sprite):
 
         font = pygame.font.Font(None, 20)
         self.text = font.render(text, 1, (255, 255, 255))
+        self.hoverable = hoverable
         self.textpos = self.text.get_rect(centerx=self.image.get_width()/2,
             centery=self.image.get_height()/2)
         self.image.blit(self.text, self.textpos)
@@ -164,7 +165,8 @@ class Button(pygame.sprite.Sprite):
             pos = (0,0)
         else:
             pos = inputDevice.get_pos()
-        if self.rect.collidepoint(pos):
+
+        if self.hoverable and self.rect.collidepoint(pos):
             if self.hovered:
                 timepast = time.time() - self.starthovering
             else:
@@ -250,8 +252,8 @@ def main():
     controller = Leap.Controller()
     dataController = DataController(controller)
 
-    global inputDevice
-    inputDevice = dataController
+    # global inputDevice
+    # inputDevice = dataController
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
@@ -271,8 +273,8 @@ def main():
 
 #Prepare Game Objects
     clock = pygame.time.Clock()
-    floortom_sound = load_sound('floortom-acoustic01.wav')
-    snare_sound = load_sound('snare-acoustic01.wav')
+    floortom_sound = loadSound('floortom-acoustic01.wav')
+    snare_sound = loadSound('snare-acoustic01.wav')
 
     # stick = Stick(dataController)
     stick = Stick(inputDevice)
@@ -304,13 +306,19 @@ def main():
     buttonBackToDrums = Button('button.bmp','Back',
         (4*screen_with/5, 1*screen_height/20))
     buttonSetVolume = Button('button.bmp','Volume',
-        center=(2*screen_with/10, 2*screen_height/10))
-    buttonVolume0 = Button('button.bmp','Bajo',
+        center=(2*screen_with/10, 2*screen_height/10), hoverable=False)
+    buttonVolume0 = Button('button.bmp','Low',
         center=(4*screen_with/10, 2*screen_height/10))
-    buttonVolume1 = Button('button.bmp','Medio',
+    buttonVolume1 = Button('button.bmp','Medium',
         center=(6*screen_with/10, 2*screen_height/10))
-    buttonVolume2 = Button('button.bmp','Alto',
+    buttonVolume2 = Button('button.bmp','High',
         center=(8*screen_with/10, 2*screen_height/10))
+    buttonSetBattery = Button('button.bmp','Battery',
+        center=(2*screen_with/10, 4*screen_height/10), hoverable=False)
+    buttonBatteryA = Button('button.bmp','Battery A',
+        center=(4*screen_with/10, 4*screen_height/10))
+    buttonBatteryB = Button('button.bmp','Battery B',
+        center=(6*screen_with/10, 4*screen_height/10))
 
     spritesOptionsScreen = pygame.sprite.OrderedUpdates()
     spritesOptionsScreen.add(buttonBackToDrums)
@@ -318,11 +326,14 @@ def main():
     spritesOptionsScreen.add(buttonVolume0)
     spritesOptionsScreen.add(buttonVolume1)
     spritesOptionsScreen.add(buttonVolume2)
+    spritesOptionsScreen.add(buttonSetBattery)
+    spritesOptionsScreen.add(buttonBatteryA)
+    spritesOptionsScreen.add(buttonBatteryB)
     spritesOptionsScreen.add(stick)
 
 #Main Loop
     going = True
-    current_screen = "startScreen"
+    current_screen = "optionsScreen"
     #startScreen = True
     #optionsScreen = False
     #backToDrumsScreen = False
