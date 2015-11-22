@@ -22,6 +22,18 @@ inputDevice = pygame.mouse
 # TODO: clean button class
 # TODO: add effect when gesture happend in stick
 # TODO: add controller to button (remove global variable)
+# TODO:
+        # Traceback (most recent call last):
+        #   File "./drums.py", line 415, in <module>
+        #     main()
+        #   File "./drums.py", line 342, in main
+        #     dataController.processNextFrame()
+        #   File "./drums.py", line 234, in processNextFrame
+        #     self.sticksPosition = self.map2Dcoordinates()
+        #   File "./drums.py", line 215, in map2Dcoordinates
+        #     pointable = self.lastFrame.pointables.frontmost
+        # AttributeError: 'NoneType' object has no attribute 'pointables'
+# TODO: solve collidepoint stick with button
 
 #functions to create our resources
 def load_image(name, colorkey=None):
@@ -88,7 +100,7 @@ class Stick(pygame.sprite.Sprite):
 
         self.rect.midtop = pos
         if self.kicking:
-            print "hello"
+            # PRINT FLASH
             #self.rect.move_ip(5, 10)
 
     def kick(self, targets):
@@ -156,9 +168,14 @@ class Button(pygame.sprite.Sprite):
         self.starthovering = None
         self.speedhovering = 60
         self.hoveringended = False
+        self.is_enable = False
 
     def update(self):
         self.image = self.original.copy()
+
+        if self.is_enable:
+            self.image.fill((0,100,0))
+            self.image.blit(self.text, self.textpos)
 
         if inputDevice.get_pos() is None:
             pos = (0,0)
@@ -180,6 +197,12 @@ class Button(pygame.sprite.Sprite):
                 self.hovered = False
         else:
             self.hovered = False
+
+    def enable(self):
+        self.is_enable = True
+
+    def disable(self):
+        self.is_enable = False
 
 # Leap Motion controller class
 class DataController:
@@ -322,7 +345,7 @@ def main():
 
 #Main Loop
     going = True
-    current_screen = "startScreen"
+    current_screen = "optionsScreen"
     #startScreen = True
     #optionsScreen = False
     #backToDrumsScreen = False
@@ -330,17 +353,34 @@ def main():
         clock.tick(60)
         dataController.processNextFrame()
 
-        if dataController.detectedGesture and current_screen =="drumsScreen":
-            instrument_kicked = stick.kick(instruments)
-            if instrument_kicked == floortom:
-                floortom_sound.play()
-            elif instrument_kicked == snare:
-                snare_sound.play()
-        else:
-            stick.unkick()
-            for instrument in instruments:
-                instrument.unkicked()
-        dataController.detectedGesture = False
+        if current_screen =="drumsScreen":
+            if dataController.detectedGesture:
+                instrument_kicked = stick.kick(instruments)
+                if instrument_kicked == floortom:
+                    floortom_sound.play()
+                elif instrument_kicked == snare:
+                    snare_sound.play()
+            else:
+                stick.unkick()
+                for instrument in instruments:
+                    instrument.unkicked()
+            dataController.detectedGesture = False
+        elif current_screen == "optionsScreen":
+            if buttonVolume0.hoveringended:
+                buttonVolume0.hoveringended = False
+                buttonVolume0.enable()
+                buttonVolume1.disable()
+                buttonVolume2.disable()
+            elif buttonVolume1.hoveringended:
+                buttonVolume1.hoveringended = False
+                buttonVolume1.enable()
+                buttonVolume0.disable()
+                buttonVolume2.disable()
+            elif buttonVolume2.hoveringended:
+                buttonVolume2.hoveringended = False
+                buttonVolume2.enable()
+                buttonVolume0.disable()
+                buttonVolume1.disable()
 
         #Handle Input Events
         for event in pygame.event.get():
