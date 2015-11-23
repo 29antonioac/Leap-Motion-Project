@@ -252,8 +252,9 @@ def main():
     controller = Leap.Controller()
     dataController = DataController(controller)
 
-    # global inputDevice
-    # inputDevice = dataController
+    if dataController.controller.is_connected:
+        global inputDevice
+        inputDevice = dataController
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
