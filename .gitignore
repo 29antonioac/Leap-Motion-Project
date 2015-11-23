@@ -58,3 +58,5 @@ target/
 
 # Sample.py
 Sample.py
+
+*.out
