@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# baqueta
+# baqueta: link
 # https://pixabay.com/p-149338/?no_redirect
 
 import Leap, sys, thread
@@ -34,6 +34,7 @@ inputDevice = pygame.mouse
         #     pointable = self.lastFrame.pointables.frontmost
         # AttributeError: 'NoneType' object has no attribute 'pointables'
 # TODO: solve collidepoint stick with button
+# TODO: change color no hoverable button
 
 #functions to create our resources
 def loadImage(name, colorkey=None):
@@ -100,6 +101,7 @@ class Stick(pygame.sprite.Sprite):
 
         self.rect.midtop = pos
         if self.kicking:
+            pass
             # PRINT FLASH
             #self.rect.move_ip(5, 10)
 
@@ -357,6 +359,8 @@ def main():
 #Main Loop
     going = True
     current_screen = "optionsScreen"
+    buttonVolume1.enable()
+    buttonBatteryA.enable()
     #startScreen = True
     #optionsScreen = False
     #backToDrumsScreen = False
@@ -392,6 +396,14 @@ def main():
                 buttonVolume2.enable()
                 buttonVolume0.disable()
                 buttonVolume1.disable()
+            elif buttonBatteryA.hoveringended:
+                buttonBatteryA.hoveringended = False
+                buttonBatteryA.enable()
+                buttonBatteryB.disable()
+            elif buttonBatteryB.hoveringended:
+                buttonBatteryB.hoveringended = False
+                buttonBatteryB.enable()
+                buttonBatteryA.disable()
 
         #Handle Input Events
         for event in pygame.event.get():
