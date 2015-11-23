@@ -19,22 +19,6 @@ sound_dir = os.path.join(main_dir, 'data/sounds')
 
 inputDevice = pygame.mouse
 
-# TODO: clean button class
-# TODO: add effect when gesture happend in stick
-# TODO: add controller to button (remove global variable)
-# TODO:
-        # Traceback (most recent call last):
-        #   File "./drums.py", line 415, in <module>
-        #     main()
-        #   File "./drums.py", line 342, in main
-        #     dataController.processNextFrame()
-        #   File "./drums.py", line 234, in processNextFrame
-        #     self.sticksPosition = self.map2Dcoordinates()
-        #   File "./drums.py", line 215, in map2Dcoordinates
-        #     pointable = self.lastFrame.pointables.frontmost
-        # AttributeError: 'NoneType' object has no attribute 'pointables'
-# TODO: solve collidepoint stick with button
-# TODO: change color no hoverable button
 
 #functions to create our resources
 def loadImage(name, colorkey=None):
@@ -98,8 +82,6 @@ class Stick(pygame.sprite.Sprite):
         else:
             pos = (0,0)
         self.rect.midtop = pos
-
-        self.rect.midtop = pos
         if self.kicking:
             pass
             # PRINT FLASH
@@ -109,9 +91,10 @@ class Stick(pygame.sprite.Sprite):
         "returns the target that the stick collides with"
         if not self.kicking:
             self.kicking = True
-            hitbox = self.rect.inflate(-5, -5)
+            # hitbox = self.rect.inflate(-5, -5)
+            hitbox = self.rect
             for target in targets:
-                if hitbox.colliderect(target.rect):
+                if hitbox.collidepoint((target.rect.x, target.rect.y)):
                     target.kicked()
                     return target
             else:
@@ -228,17 +211,20 @@ class DataController:
         app_width = 800
         app_height = 800
 
-        pointable = self.lastFrame.pointables.frontmost
-        iBox = self.lastFrame.interaction_box
-        leapPoint = pointable.stabilized_tip_position
-        normalizedPoint = iBox.normalize_point(leapPoint, False)
+        if self.lastFrame.pointables:
+            pointable = self.lastFrame.pointables.frontmost
+            iBox = self.lastFrame.interaction_box
+            leapPoint = pointable.stabilized_tip_position
+            normalizedPoint = iBox.normalize_point(leapPoint, False)
 
-        app_x = normalizedPoint.x * app_width
-        # app_y = (1 - normalizedPoint.y) * app_height
-        app_y = (normalizedPoint.z) * app_height
-        #The z-coordinate is not used
-        pos = (app_x, app_y)
-        return pos
+            app_x = normalizedPoint.x * app_width
+            # app_y = (1 - normalizedPoint.y) * app_height
+            app_y = (normalizedPoint.z) * app_height
+            #The z-coordinate is not used
+            pos = (app_x, app_y)
+            return pos
+        else:
+            return (0,0)
 
     def processNextFrame(self):
         frame = self.controller.frame()
@@ -273,7 +259,7 @@ def main():
     screen_height = 800
     screen = pygame.display.set_mode((screen_with, screen_height))
     pygame.display.set_caption('Drums')
-    pygame.mouse.set_visible(0)
+    # pygame.mouse.set_visible(0)
     controller = Leap.Controller()
     dataController = DataController(controller)
 
