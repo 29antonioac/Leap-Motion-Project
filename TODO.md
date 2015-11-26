@@ -5,3 +5,4 @@
 * [x] solve collidepoint stick with button
 * [ ] change color no hoverable button
 * [ ] determine weight and height of the window
+* [ ] fix lastrame.pointables when there are two tools
