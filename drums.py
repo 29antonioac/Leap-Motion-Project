@@ -48,7 +48,7 @@ def loadSound(name):
         raise SystemExit(str(geterror()))
     return sound
 
-def volumeSounds(sounds, option):
+def changeVolumeSounds(instruments, option):
 
     if option == 0:
         volume = 0.1
@@ -59,8 +59,8 @@ def volumeSounds(sounds, option):
     else:
         raise ValueError("Volume option not 0, 1 or 2")
 
-    for s in sounds:
-        s.set_sound(volume)
+    for i in instruments:
+        i.sound.set_sound(volume)
 
 
 
@@ -306,13 +306,23 @@ def main():
         (1*screen_with/5, 3*screen_height/5))
     floortom = Instrument('floortom.bmp',
         (3*screen_with/5, 3*screen_height/5))
-    instruments = [floortom,snare]
+    instrumentsBatteryA = [floortom,snare]
+    instrumentsBatteryB = [snare,floortom]
 
-    spritesDrumsScreen = pygame.sprite.OrderedUpdates()
-    for instrument in instruments:
-        spritesDrumsScreen.add(instrument)
-    spritesDrumsScreen.add(buttonOptions)
-    spritesDrumsScreen.add(stick)
+
+    spritesBatteryA = pygame.sprite.OrderedUpdates()
+    for instrument in instrumentsBatteryA:
+        spritesBatteryA.add(instrument)
+    spritesBatteryA.add(buttonOptions)
+    spritesBatteryA.add(stick)
+
+    spritesBatteryB = pygame.sprite.OrderedUpdates()
+    for instrument in instrumentsBatteryB:
+        spritesBatteryB.add(instrument)
+    spritesBatteryB.add(buttonOptions)
+    spritesBatteryB.add(stick)
+
+    spritesDrumsScreen = spritesBatteryA
 
     # optionsScreen
     buttonBackToDrums = Button('button.bmp','Back',
@@ -346,6 +356,7 @@ def main():
 #Main Loop
     going = True
     current_screen = "optionsScreen"
+    currentInstruments = instrumentsBatteryA
     buttonVolume1.enable()
     buttonBatteryA.enable()
     #startScreen = True
@@ -357,14 +368,14 @@ def main():
 
         if current_screen =="drumsScreen":
             if dataController.detectedGesture:
-                instrument_kicked = stick.kick(instruments)
+                instrument_kicked = stick.kick(currentInstruments)
                 if instrument_kicked == floortom:
                     floortom_sound.play()
                 elif instrument_kicked == snare:
                     snare_sound.play()
             else:
                 stick.unkick()
-                for instrument in instruments:
+                for instrument in currentInstruments:
                     instrument.unkicked()
             dataController.detectedGesture = False
         elif current_screen == "optionsScreen":
@@ -373,24 +384,32 @@ def main():
                 buttonVolume0.enable()
                 buttonVolume1.disable()
                 buttonVolume2.disable()
+                changeVolumeSounds(currentInstruments,0)
             elif buttonVolume1.hoveringended:
                 buttonVolume1.hoveringended = False
                 buttonVolume1.enable()
                 buttonVolume0.disable()
                 buttonVolume2.disable()
+                changeVolumeSounds(currentInstruments,1)
             elif buttonVolume2.hoveringended:
                 buttonVolume2.hoveringended = False
                 buttonVolume2.enable()
                 buttonVolume0.disable()
                 buttonVolume1.disable()
+                changeVolumeSounds(currentInstruments,2)
             elif buttonBatteryA.hoveringended:
                 buttonBatteryA.hoveringended = False
                 buttonBatteryA.enable()
                 buttonBatteryB.disable()
+                spritesDrumsScreen = spritesBatteryA
+                currentInstruments = instrumentsBatteryA
             elif buttonBatteryB.hoveringended:
                 buttonBatteryB.hoveringended = False
                 buttonBatteryB.enable()
                 buttonBatteryA.disable()
+                spritesDrumsScreen = spritesBatteryB
+                currentInstruments = instrumentsBatteryB
+
 
         #Handle Input Events
         for event in pygame.event.get():
