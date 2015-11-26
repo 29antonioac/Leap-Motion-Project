@@ -105,10 +105,11 @@ class Stick(pygame.sprite.Sprite):
         self.kicking = False
 
 class Instrument(pygame.sprite.Sprite):
-    def __init__(self,imagename,topleft):
+    def __init__(self,imagename,sound,topleft):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image, self.rect = loadImage(imagename,-1)
         self.original = self.image.copy()
+        self.sound = sound
         self.rect.topleft = topleft
         self.kicking = False
 
@@ -129,6 +130,9 @@ class Instrument(pygame.sprite.Sprite):
 
     def unkicked(self):
         self.kicking = False
+
+    def play(self):
+        self.sound.play()
 
 class Button(pygame.sprite.Sprite):
     def __init__(self,imagename,text,topleft=(0,0),center=None,hoverable=True):
@@ -369,10 +373,8 @@ def main():
         if current_screen =="drumsScreen":
             if dataController.detectedGesture:
                 instrument_kicked = stick.kick(currentInstruments)
-                if instrument_kicked == floortom:
-                    floortom_sound.play()
-                elif instrument_kicked == snare:
-                    snare_sound.play()
+                if instrument_kicked:
+                    instrument_kicked.play()
             else:
                 stick.unkick()
                 for instrument in currentInstruments:
