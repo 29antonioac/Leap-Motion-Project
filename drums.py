@@ -94,7 +94,7 @@ class Stick(pygame.sprite.Sprite):
             # hitbox = self.rect.inflate(-5, -5)
             hitbox = self.rect
             for target in targets:
-                if hitbox.collidepoint((target.rect.x, target.rect.y)):
+                if hitbox.colliderect(target.rect):
                     target.kicked()
                     return target
             else:
@@ -116,7 +116,8 @@ class Instrument(pygame.sprite.Sprite):
     def update(self):
         self.image = self.original
 
-        if self.rect.collidepoint(inputDevice.get_pos()):
+
+        if inputDevice.get_pos() and self.rect.collidepoint(inputDevice.get_pos()):
             self.image = pygame.transform.smoothscale(self.image,
                 (int(self.original.get_height()*1.1),
                 int(self.original.get_width()*1.1)))
@@ -215,7 +216,7 @@ class DataController:
         app_width = 800
         app_height = 800
 
-        if self.lastFrame.pointables:
+        if self.lastFrame and self.lastFrame.pointables:
             pointable = self.lastFrame.pointables.frontmost
             iBox = self.lastFrame.interaction_box
             leapPoint = pointable.stabilized_tip_position
@@ -267,9 +268,11 @@ def main():
     controller = Leap.Controller()
     dataController = DataController(controller)
 
-    if dataController.controller.is_connected:
-        global inputDevice
-        inputDevice = dataController
+    # if dataController.controller.is_connected:
+        # global inputDevice
+        # inputDevice = dataController
+    global inputDevice
+    inputDevice = dataController
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
@@ -289,8 +292,7 @@ def main():
 
 #Prepare Game Objects
     clock = pygame.time.Clock()
-    floortom_sound = loadSound('floortom-acoustic01.wav')
-    snare_sound = loadSound('snare-acoustic01.wav')
+
 
     # stick = Stick(dataController)
     stick = Stick(inputDevice)
@@ -306,13 +308,15 @@ def main():
 
     buttonOptions = Button('button.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
-    snare = Instrument('snare.bmp',
+    floortom_sound = loadSound('floortom-acoustic01.wav')
+    snare_sound = loadSound('snare-acoustic01.wav')
+    snare = Instrument('snare.bmp',snare_sound,
         (1*screen_with/5, 3*screen_height/5))
-    floortom = Instrument('floortom.bmp',
+    floortom = Instrument('floortom.bmp', floortom_sound,
         (3*screen_with/5, 3*screen_height/5))
-    instrumentsBatteryA = [floortom,snare]
-    instrumentsBatteryB = [snare,floortom]
 
+    instrumentsBatteryA = [floortom]
+    instrumentsBatteryB = [snare]
 
     spritesBatteryA = pygame.sprite.OrderedUpdates()
     for instrument in instrumentsBatteryA:
@@ -326,7 +330,6 @@ def main():
     spritesBatteryB.add(buttonOptions)
     spritesBatteryB.add(stick)
 
-    spritesDrumsScreen = spritesBatteryA
 
     # optionsScreen
     buttonBackToDrums = Button('button.bmp','Back',
@@ -359,8 +362,9 @@ def main():
 
 #Main Loop
     going = True
-    current_screen = "optionsScreen"
+    current_screen = "drumsScreen"
     currentInstruments = instrumentsBatteryA
+    spritesDrumsScreen = spritesBatteryA
     buttonVolume1.enable()
     buttonBatteryA.enable()
     #startScreen = True
