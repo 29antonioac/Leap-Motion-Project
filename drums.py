@@ -4,10 +4,6 @@
 # baqueta: link
 # https://pixabay.com/p-149338/?no_redirect
 
-# TODO: clean map2Dcoordinates()
-# TODO: clean print
-# change set volume to all instrument
-
 import Leap, sys, thread
 import os, time, pygame
 from pygame.locals import *
