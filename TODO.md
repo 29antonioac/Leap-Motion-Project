@@ -8,3 +8,4 @@
 * [x] fix lastrame.pointables when there are two tools
 * [ ] rotate sticks
 * [ ] improve resolution of the stick
+* [ ] clean code
