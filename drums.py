@@ -7,6 +7,7 @@
 # TODO: clean map2Dcoordinates()
 # TODO: clean print
 # change set volume to all instrument
+# why thread, why pygbutton
 
 import Leap, sys, thread
 import os, time, pygame
@@ -145,7 +146,8 @@ class Button(pygame.sprite.Sprite):
     controller = None
     def __init__(self,imagename,text,topleft=(0,0),center=None,hoverable=True):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image, self.rect = loadImage(imagename,-1)
+        self.original, self.rect = loadImage(imagename,-1)
+        self.image = self.original
 
         if center:
             self.rect.center = center
@@ -155,12 +157,11 @@ class Button(pygame.sprite.Sprite):
 
         font = pygame.font.Font(None, 20)
         self.text = font.render(text, 1, (255, 255, 255))
-        self.hoverable = hoverable
         self.textpos = self.text.get_rect(centerx=self.image.get_width()/2,
             centery=self.image.get_height()/2)
         self.image.blit(self.text, self.textpos)
 
-        self.original = self.image.copy()
+        self.hoverable = hoverable
 
         self.hovered = False
         self.starthovering = None
@@ -378,13 +379,15 @@ def main():
         clock.tick(60)
         dataController.processNextFrame()
 
-        currentSticks = pygame.sprite.OrderedUpdates(stick1,stick2)
-
         if current_screen == "startScreen":
+            currentSticks = pygame.sprite.OrderedUpdates(stick1)
+
             if buttonStart.hoveringended:
                 current_screen = "drumsScreen"
                 buttonStart.hoveringended = False
         elif current_screen =="drumsScreen":
+            currentSticks = pygame.sprite.OrderedUpdates(stick1,stick2)
+
             if buttonOptions.hoveringended:
                 current_screen = "optionsScreen"
                 buttonOptions.hoveringended = False
@@ -400,6 +403,8 @@ def main():
                 #    instrument.unkicked()
             dataController.detectedGesture = False
         elif current_screen == "optionsScreen":
+            currentSticks = pygame.sprite.OrderedUpdates(stick1)
+
             if buttonBackToDrums.hoveringended:
                 current_screen = "drumsScreen"
                 buttonBackToDrums.hoveringended = False
@@ -453,7 +458,7 @@ def main():
         #print (stick1.rect.midtop, stick2.rect.midtop)
         if stick1.visible == False:
              currentSticks.remove(stick1)
-        if stick2.visible == False:
+        if stick2.visible == False and current_screen == "drumsScreen":
              currentSticks.remove(stick2)
 
         #Draw Everything
