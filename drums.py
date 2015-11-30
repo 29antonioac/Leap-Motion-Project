@@ -13,6 +13,7 @@ import Leap, sys, thread
 import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
+from math import asin, degrees
 import pygbutton
 
 if not pygame.font: print ('Warning, fonts disabled')
@@ -83,12 +84,13 @@ class Stick(pygame.sprite.Sprite):
         if Stick.controller.sticksPosition[self.idTool]:
             self.rect.midtop  = Stick.controller.sticksPosition[self.idTool]
             self.visible = True
+            self.image = pygame.transform.rotate(
+                    self.image, degrees(asin(
+                    Stick.controller.sticksDirection[self.idTool][0])))
         else:
             self.visible = False
-        if self.kicking:
-            pass
-            #PRINT FLASH
-            #self.rect.move_ip(5, 10)
+
+
 
     def kick(self, targets):
         "returns the target that the stick collides with"
@@ -246,7 +248,7 @@ class DataController:
             i = 0
             for tool in frame.tools:
                 self.sticksPosition[i] = self.map2Dcoordinates(tool,frame)
-                self.sticksDirection[i] = tool.direction
+                self.sticksDirection[i] = (tool.direction.x, tool.direction.y)
                 i += 1
                 if i == 2:
                     sortedSticks = sorted(self.sticksPosition,reverse=True)
@@ -389,7 +391,7 @@ def main():
     instrument_kicked1 = None
     instrument_kicked2 = None
     while going:
-        clock.tick(60)
+        clock.tick(30)
         dataController.processNextFrame()
 
         if current_screen == "startScreen":
@@ -400,6 +402,9 @@ def main():
                 buttonStart.hoveringended = False
         elif current_screen =="drumsScreen":
             currentSticks = pygame.sprite.OrderedUpdates(stick1,stick2)
+
+            print dataController.sticksDirection
+            print dataController.sticksPosition
 
             if buttonOptions.hoveringended:
                 current_screen = "optionsScreen"
