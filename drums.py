@@ -9,11 +9,10 @@
 # change set volume to all instrument
 # why thread, why pygbutton
 
-import Leap, sys, thread
+import Leap, sys,
 import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
-import pygbutton
 
 if not pygame.font: print ('Warning, fonts disabled')
 if not pygame.mixer: print ('Warning, sound disabled')
@@ -143,17 +142,14 @@ class Instrument(pygame.sprite.Sprite):
         self.sound.play()
 
 class Button(pygame.sprite.Sprite):
-    controller = None
-    def __init__(self,imagename,text,topleft=(0,0),center=None,hoverable=True):
+    def __init__(self,imagename,text,topleft=(0,0),center=None):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.original, self.rect = loadImage(imagename,-1)
-        self.image = self.original
+        self.image, self.rect = loadImage(imagename,-1)
 
         if center:
             self.rect.center = center
         else:
             self.rect.topleft = topleft
-        #self.kicking = 0
 
         font = pygame.font.Font(None, 20)
         self.text = font.render(text, 1, (255, 255, 255))
@@ -161,7 +157,11 @@ class Button(pygame.sprite.Sprite):
             centery=self.image.get_height()/2)
         self.image.blit(self.text, self.textpos)
 
-        self.hoverable = hoverable
+class ButtonHoverable(Button):
+    controller = None
+    def __init__(self,imagename,text,topleft=(0,0),center=None):
+        Button.__init__(self,imagename,text,topleft,center)
+        self.original = self.image.copy()
 
         self.hovered = False
         self.starthovering = None
@@ -175,13 +175,10 @@ class Button(pygame.sprite.Sprite):
         if self.is_enable:
             self.image.fill((0,100,0))
             self.image.blit(self.text, self.textpos)
+            return
 
-        if Button.controller.sticksPosition[0] is None:
-            pos = (0,0)
-        else:
-            pos = Button.controller.sticksPosition[0]
-
-        if self.hoverable and self.rect.collidepoint(pos):
+        if ButtonHoverable.controller.sticksPosition[0] and self.rect.collidepoint(
+                ButtonHoverable.controller.sticksPosition[0]):
             if self.hovered:
                 timepast = time.time() - self.starthovering
             else:
@@ -189,7 +186,8 @@ class Button(pygame.sprite.Sprite):
                 self.hovered = True
                 self.starthovering = time.time()
 
-            self.image.fill((0,100,0),self.image.get_rect().inflate(-100+(timepast*self.speedhovering),-15))
+            self.image.fill((0,100,0),self.image.get_rect().inflate(
+                    -100+(timepast*self.speedhovering),-15))
             self.image.blit(self.text, self.textpos)
 
             if timepast*self.speedhovering > self.image.get_width()-22:
@@ -316,13 +314,13 @@ def main():
     # stick = Stick(inputDevice)
 
     #Start Screen
-    buttonStart = Button('button.bmp','Start',
+    buttonStart = ButtonHoverable('buttonHoverable.bmp','Start',
         center=(5*screen_with/10, 5*screen_height/10))
 
     spritesStartScreen = pygame.sprite.OrderedUpdates(buttonStart,stick1)
 
     #Drums Screen
-    buttonOptions = Button('button.bmp','Options',
+    buttonOptions = ButtonHoverable('buttonHoverable.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
 
     #battery A
@@ -344,21 +342,21 @@ def main():
     spritesBatteryB.add(buttonOptions)
 
     #Options Screen
-    buttonBackToDrums = Button('button.bmp','Back',
+    buttonBackToDrums = ButtonHoverable('buttonHoverable.bmp','Back',
         (4*screen_with/5, 1*screen_height/20))
     buttonSetVolume = Button('button.bmp','Volume',
         center=(2*screen_with/10, 2*screen_height/10), hoverable=False)
-    buttonVolume0 = Button('button.bmp','Low',
+    buttonVolume0 = ButtonHoverable('buttonHoverable.bmp','Low',
         center=(4*screen_with/10, 2*screen_height/10))
-    buttonVolume1 = Button('button.bmp','Medium',
+    buttonVolume1 = ButtonHoverable('buttonHoverable.bmp','Medium',
         center=(6*screen_with/10, 2*screen_height/10))
-    buttonVolume2 = Button('button.bmp','High',
+    buttonVolume2 = ButtonHoverable('buttonHoverable.bmp','High',
         center=(8*screen_with/10, 2*screen_height/10))
     buttonSetBattery = Button('button.bmp','Battery',
         center=(2*screen_with/10, 4*screen_height/10), hoverable=False)
-    buttonBatteryA = Button('button.bmp','Battery A',
+    buttonBatteryA = ButtonHoverable('buttonHoverable.bmp','Battery A',
         center=(4*screen_with/10, 4*screen_height/10))
-    buttonBatteryB = Button('button.bmp','Battery B',
+    buttonBatteryB = ButtonHoverable('buttonHoverable.bmp','Battery B',
         center=(6*screen_with/10, 4*screen_height/10))
 
     spritesOptionsScreen = pygame.sprite.OrderedUpdates()
