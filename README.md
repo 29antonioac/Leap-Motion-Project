@@ -82,11 +82,9 @@ $ python2 drums.py
 
 ### Uso
 
-Cuando ejecutes el programa, encontrarás el siguiente tutorial bastante autoexplicativo.
+Cuando ejecutes el programa, encontrarás un tutorial con la información necesaria para usar el programa.
 
-![Tutorial](capturas/tutorial2.gif)
-
-Léelo con atención y... ¡disfruta tocando la batería!
+Presta atención y... ¡disfruta tocando!
 
 ## Errores frecuentes o aspectos destacados
 
@@ -103,6 +101,8 @@ Alguno de los errores destacados han sido:
 * Parpadeo: La baqueta parpadeaba mucho, debido a que OpenGL se actualiza muy rápido y lo solucionamos poniendo un temporizador.
 
 * Complejidad: Programar en un entorno 3D usando OpenGL no es trivial, y para añadir algo tan sencillo como imágenes fijas hay que trabajarlo mucho. Por esta razón nos pasamos a un entorno 2D usando Pygame por completo, no sólo para el tutorial.
+
+* Movimiento de la baqueta: Posicionar un Sprite de una baqueta según la posición reconocida por Leap Motion es trivial. Lo complicado es rotarla según una dirección y que siga colisionando con el entorno de manera más o menos precisa. Se ha resuelto realizando un pequeño cálculo y aproximando.
 
 
 ## Lecturas recomendadas
