@@ -9,7 +9,7 @@ y [Adrián Ranea Robles](https://github.com/ranea).
 
 ## Fecha de realización
 
-Desde el día 16 de Octubre hasta el 30 de Octubre.
+Desde el día 16 de Octubre hasta el 2 de Diciembre.
 
 ## Descripción del problema que se aborda
 
