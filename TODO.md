@@ -9,10 +9,14 @@ Needed:
 * [x] fix lastrame.pointables when there are two tools
 * [x] rotate sticks
 
-* [ ] add new images
+* [ ] add new images and new sounds
 * [ ] improve layout of the screen
-* [ ] improve resolution of the stick
+* [ ] add tutorial
+* [x] improve resolution of the stick
 * [ ] clean code
+* [ ] do readme.md
+* [ ] comment code
+* [ ] write in the wiki
 
 Enhancements:
 * [ ] add effect when gesture happend in stick
