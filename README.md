@@ -73,7 +73,7 @@ Recomendamos la siguiente configuración en el panel de control de leap. En Arch
 $ LeapControlPanel
 ```
 
-![LeapPanel](capturas/leappanel.png)
+![LeapPanel](data/snapshots/leappanel.png)
 
 Para ejecutarlo este programa, basta escribir:
 ```bash
@@ -130,7 +130,3 @@ Las imagenes la hemos sacado de:
  - [chime](https://en.wikipedia.org/wiki/Mark_tree#/media/File:Meinl_CH-12_Chimes.jpg)
  - [framedrumes](https://en.wikipedia.org/wiki/Pandeiro#/media/File:Pandeiro.jpg)
  - [drumstick](https://commons.wikimedia.org/wiki/File:Drumsticks.png)
-
-
-
-
