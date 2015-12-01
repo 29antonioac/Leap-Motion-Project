@@ -6,7 +6,7 @@
 
 # TODO:  setattr(self.rect,pointList[k],Stick.controller.sticksPosition[self.idTool])
 # TODO:  add other sounds
-# TODO: change all variables to camel notation
+# TODO:  change all variables to camel notation
 
 import sys
 import os
@@ -180,7 +180,7 @@ class Instrument(pygame.sprite.Sprite):
 class Button(pygame.sprite.Sprite):
     """ Models a button drawn at the screen """
     def __init__(self,imagename,text,topleft=(0,0),center=None):
-        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        pygame.sprite.Sprite.__init__(self) # calls Sprite intializer
         self.image, self.rect = loadImage(imagename,-1)
         if center:
             self.rect.center = center
@@ -265,6 +265,7 @@ class DataController:
         normalizedPoint = iBox.normalize_point(leapPoint, False)
         app_x = normalizedPoint.x * self.app_width
         app_y = self.ySensibility* normalizedPoint.z * self.app_height
+
         # The y-coordinate is not used
         pos = (app_x, app_y)
         return pos
@@ -288,20 +289,6 @@ class DataController:
                 if sortedSticks != self.sticksPosition:
                     self.sticksPosition = sortedSticks
                     self.sticksDirection.reverse()
-            # i = 0
-            # for tool in frame.tools:
-            #     self.sticksPosition[i] = self.map2Dcoordinates(tool,frame)
-            #     self.sticksDirection[i] = (tool.direction.x, tool.direction.y)
-            #     i += 1
-            #     if i == 2:
-            #         sortedSticks = sorted(self.sticksPosition,reverse=True)
-            #         if sortedSticks != self.sticksPosition:
-            #             self.sticksPosition = sortedSticks
-            #             self.sticksDirection.reverse()
-            #         break
-            # for j in range(i,2):
-            #     self.sticksPosition[j] = None
-            #     self.sticksDirection[j] = None
 
             if self.lastFrame: # avoid error in the first frame
                 gestures = frame.gestures(self.lastFrame)
@@ -454,6 +441,7 @@ def main():
     tutorialTextList = ["Welcome to virtual drums! Please hover the Next button with the stick"]
     tutorialTextList.append("Great! That's the way you can select options in this program")
     tutorialTextList.append("Kick the instruments with your stick to play them")
+    tutorialTextList.append("You can configure some values as volume, instrument set and fullscreen")
     tutorialText = ( s for s in tutorialTextList )
 
     while going:
@@ -569,7 +557,6 @@ def main():
         elif current_screen == "optionsScreen":
             spritesOptionsScreen.update()
 
-        #print (stick1.rect.midtop, stick2.rect.midtop)
         if stick1.visible == False:
              currentSticks.remove(stick1)
         if stick2.visible == False and current_screen == "drumsScreen":
