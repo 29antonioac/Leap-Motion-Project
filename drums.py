@@ -9,7 +9,7 @@
 # change set volume to all instrument
 # why thread, why pygbutton
 
-import Leap, sys,
+import Leap, sys
 import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
@@ -74,7 +74,8 @@ class Stick(pygame.sprite.Sprite):
     lastID = 0
     def __init__(self, imageName):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
-        self.image, self.rect = loadImage(imageName,-1)
+        self.original, self.rect = loadImage(imageName,-1)
+        self.image = self.original.copy()
         self.kicking = False
         self.idTool = Stick.lastID
         Stick.lastID += 1
@@ -85,9 +86,11 @@ class Stick(pygame.sprite.Sprite):
         if Stick.controller.sticksPosition[self.idTool]:
             self.rect.midtop  = Stick.controller.sticksPosition[self.idTool]
             self.visible = True
-            self.image = pygame.transform.rotate(
-                    self.image, degrees(asin(
-                    Stick.controller.sticksDirection[self.idTool][0])))
+            deg = -degrees(asin(Stick.controller.sticksDirection[self.idTool][0]))
+            #if deg > 90:
+            self.image = pygame.transform.rotate(self.original,deg)
+            # self.image = pygame.transform.rotate(
+            #         self.image, )
         else:
             self.visible = False
 
@@ -210,8 +213,8 @@ class ButtonHoverable(Button):
 class DataController:
     def __init__(self, controller,app_width,app_height):
         self.controller = controller
-        self.app_width = 800
-        self.app_height = 600
+        self.app_width = app_width
+        self.app_height = app_height
         self.lastFrame = None
         self.lastFrameID = 0
         self.lastProcessedFrameID = 0
@@ -232,7 +235,7 @@ class DataController:
 
         app_x = normalizedPoint.x * self.app_width
         # app_y = (1 - normalizedPoint.y) * app_height
-        app_y = (normalizedPoint.z) * self.app_height
+        app_y = 0.9*(normalizedPoint.z) * self.app_height
         #The z-coordinate is not used
         pos = (app_x, app_y)
         return pos
@@ -281,16 +284,17 @@ def main():
        a loop until the function returns."""
     # Initialize Everything
     pygame.init()
-    screen_with = 800
-    screen_height = 600
-    screen = pygame.display.set_mode((screen_with, screen_height))
+    max_resolution = pygame.display.list_modes()[0]
+    screen_with = max_resolution[0]
+    screen_height = max_resolution[1]
+    screen = pygame.display.set_mode((screen_with, screen_height), pygame.FULLSCREEN | pygame.HWSURFACE)
     pygame.display.set_caption('Drums')
     # pygame.mouse.set_visible(0)
     controller = Leap.Controller()
     dataController = DataController(controller,screen_with,screen_height)
     Stick.controller = dataController
     Instrument.controller = dataController
-    Button.controller = dataController
+    ButtonHoverable.controller = dataController
 
     # if dataController.controller.is_connected:
         # global inputDevice
@@ -332,7 +336,7 @@ def main():
     buttonOptions = ButtonHoverable('buttonHoverable.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
 
-    buttonQuit = Button('button.bmp','Quit',
+    buttonQuit = ButtonHoverable('buttonHoverable.bmp','Quit',
         (4*screen_with/5, 1*screen_height/20))
 
     # battery A
@@ -361,7 +365,7 @@ def main():
     buttonBackToDrums = ButtonHoverable('buttonHoverable.bmp','Back',
         (4*screen_with/5, 1*screen_height/20))
     buttonSetVolume = Button('button.bmp','Volume',
-        center=(2*screen_with/10, 2*screen_height/10), hoverable=False)
+        center=(2*screen_with/10, 2*screen_height/10))
     buttonVolume0 = ButtonHoverable('buttonHoverable.bmp','Low',
         center=(4*screen_with/10, 2*screen_height/10))
     buttonVolume1 = ButtonHoverable('buttonHoverable.bmp','Medium',
@@ -369,7 +373,7 @@ def main():
     buttonVolume2 = ButtonHoverable('buttonHoverable.bmp','High',
         center=(8*screen_with/10, 2*screen_height/10))
     buttonSetBattery = Button('button.bmp','Battery',
-        center=(2*screen_with/10, 4*screen_height/10), hoverable=False)
+        center=(2*screen_with/10, 4*screen_height/10))
     buttonBatteryA = ButtonHoverable('buttonHoverable.bmp','Battery A',
         center=(4*screen_with/10, 4*screen_height/10))
     buttonBatteryB = ButtonHoverable('buttonHoverable.bmp','Battery B',
