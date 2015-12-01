@@ -11,12 +11,13 @@ Needed:
 
 * [ ] add new images and new sounds
 * [ ] improve layout of the screen
-* [ ] add tutorial
+* [x] add tutorial
 * [x] improve resolution of the stick
 * [ ] clean code
-* [ ] do readme.md
+* [x] do readme.md
 * [ ] comment code
 * [ ] write in the wiki
+* [ ] clean map2Dcoordinates
 
 Enhancements:
 * [ ] add effect when gesture happend in stick

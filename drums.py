@@ -4,29 +4,23 @@
 # baqueta: link
 # https://pixabay.com/p-149338/?no_redirect
 
-# TODO: clean map2Dcoordinates()
-# TODO: clean print
-# change set volume to all instrument
-# why thread, why pygbutton
 
 import Leap, sys
 import os, time, pygame
 from pygame.locals import *
 from pygame.compat import geterror
 from math import asin, degrees
-import pygbutton
 
-
+# Warnings about fonts or sounds disabled
 if not pygame.font: print ('Warning, fonts disabled')
 if not pygame.mixer: print ('Warning, sound disabled')
 
+# Paths for data
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 image_dir = os.path.join(main_dir, 'data/images')
 sound_dir = os.path.join(main_dir, 'data/sounds')
 
-#inputDevice = pygame.mouse
-
-#functions to create our resources
+# Some functions to create our resources
 def loadImage(name, colorkey=None):
     fullname = os.path.join(image_dir, name)
     try:
@@ -54,6 +48,7 @@ def loadSound(name):
         raise SystemExit(str(geterror()))
     return sound
 
+# Function to change volume sounds
 def changeVolumeSounds(instruments, option):
     if option == 0:
         volume = 0.1
@@ -67,7 +62,7 @@ def changeVolumeSounds(instruments, option):
     for i in instruments:
         i.sound.set_volume(volume)
 
-#classes for our game objects
+# Classes for our game objects
 class Stick(pygame.sprite.Sprite):
     """moves a stick on the screen, following the tool detected by the Leap"""
     controller = None
@@ -84,20 +79,21 @@ class Stick(pygame.sprite.Sprite):
     def update(self):
         "move the stick based on the tool position"
         if Stick.controller.sticksPosition[self.idTool]:
-            self.rect.midtop  = Stick.controller.sticksPosition[self.idTool]
             self.visible = True
             deg = -degrees(asin(Stick.controller.sticksDirection[self.idTool][0]))
-            #if deg > 90:
+
             self.image = pygame.transform.rotate(self.original,deg)
-            # self.image = pygame.transform.rotate(
-            #         self.image, )
+
+            pointList = [ "midtop", "topright", "midright",
+                    "bottomright", "midbottom", "bottomleft",
+                    "midleft", "topleft"]
+
+            for k in range(len(pointList) - 1):
+                if (45*k-22.5) % 360 <= deg < (45*(k+1)-22.5) % 360:
+                    setattr(self.rect,pointList[k],Stick.controller.sticksPosition[self.idTool])
+                    break
+
         else:
-            # if self.idTool == 0:
-            #     self.rect.midtop = (100,100)
-            #     self.visible = True
-            # else:
-            #     self.rect.midtop = (300,300)
-            #     self.visible = True
             self.visible = False
 
     def kick(self, targets):
@@ -120,7 +116,7 @@ class Stick(pygame.sprite.Sprite):
 class Instrument(pygame.sprite.Sprite):
     controller = None
     def __init__(self,imageName,sound,topleft):
-        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        pygame.sprite.Sprite.__init__(self) # call Sprite intializer
         self.image, self.rect = loadImage(imageName,-1)
         self.original = self.image.copy()
         self.sound = sound
@@ -128,6 +124,7 @@ class Instrument(pygame.sprite.Sprite):
         self.kicking = False
 
     def update(self):
+        """ Update the instrument checking collissions"""
         self.image = self.original
 
         if (Instrument.controller.sticksPosition[0] and
@@ -142,14 +139,17 @@ class Instrument(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, 1, 1)
 
     def kicked(self):
+        """ Play sound if we kick anything """
         if not self.kicking:
             self.kicking = True
             self.sound.play()
 
     def unkicked(self):
+        """ Unckick the instrument """
         self.kicking = False
 
     def play(self):
+        """ Play the sound """
         self.sound.play()
 
 class Button(pygame.sprite.Sprite):
@@ -181,6 +181,7 @@ class ButtonHoverable(Button):
         self.is_enable = False
 
     def update(self):
+        """ Update button filling it if hovered """
         self.image = self.original.copy()
 
         if self.is_enable:
@@ -208,9 +209,11 @@ class ButtonHoverable(Button):
             self.hovered = False
 
     def enable(self):
+        """ Enable button """
         self.is_enable = True
 
     def disable(self):
+        """ Disable button """
         self.is_enable = False
 
 # Leap Motion controller class
@@ -232,21 +235,21 @@ class DataController:
     #    return self.sticksPosition
 
     def map2Dcoordinates(self,pointable,frame):
-        #if self.lastFrame and self.lastFrame.pointables:
+        """ Map Leap Coordinates to 2D world """
+
         iBox = frame.interaction_box
         leapPoint = pointable.stabilized_tip_position
         normalizedPoint = iBox.normalize_point(leapPoint, False)
 
         app_x = normalizedPoint.x * self.app_width
-        # app_y = (1 - normalizedPoint.y) * app_height
+
         app_y = 0.9*(normalizedPoint.z) * self.app_height
-        #The z-coordinate is not used
+        # The z-coordinate is not used
         pos = (app_x, app_y)
         return pos
-        #else:
-        #    return (0,0)
 
     def processNextFrame(self):
+        """ Process next Leap frame """
         frame = self.controller.frame()
 
         if frame.id == self.lastFrameID:
@@ -269,9 +272,7 @@ class DataController:
                 self.sticksDirection[j] = None
 
             if self.lastFrame:
-                #print self.lastFrameID, frame.id
                 gestures = frame.gestures(self.lastFrame)
-                #print len(gestures)
                 for gesture in gestures:
                     # Key tap
                     if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
@@ -301,12 +302,6 @@ def main():
     Instrument.controller = dataController
     ButtonHoverable.controller = dataController
 
-    # if dataController.controller.is_connected:
-        # global inputDevice
-        # inputDevice = dataController
-    # global inputDevice
-    # inputDevice = dataController
-
     # Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -328,8 +323,6 @@ def main():
 
     stick1 = Stick('stick1.png')
     stick2 = Stick('stick2.png')
-    # stick = Stick(dataController)
-    # stick = Stick(inputDevice)
 
     #Start Screen
     buttonStart = ButtonHoverable('buttonHoverable.bmp','Start',
@@ -409,7 +402,7 @@ def main():
 
     # Main Loop
     going = True
-    current_screen = "startScreen"
+    current_screen = "tutorialScreen"
     currentInstruments = instrumentsBatteryA
     allInstruments = instrumentsBatteryA + instrumentsBatteryB
     spritesDrumsScreen = spritesBatteryA
@@ -418,13 +411,13 @@ def main():
     buttonFullScreenOn.enable()
     instrument_kicked1 = None
     instrument_kicked2 = None
-    fullScreen = True
-    changedFullScreen = False
+    fullScreen = False
+    changedFullScreen = True
     changedTutorialStep = True
 
-    tutorialTextList = ["Welcome to virtual drums!"]
-    tutorialTextList.append("Holi")
-    tutorialTextList.append("Adios")
+    tutorialTextList = ["Welcome to virtual drums! Please hover the Next button with the stick"]
+    tutorialTextList.append("Great! That's the way you can select options in this program")
+    tutorialTextList.append("Kick the instruments with your stick to play them")
 
 
     tutorialText = ( s for s in tutorialTextList )
