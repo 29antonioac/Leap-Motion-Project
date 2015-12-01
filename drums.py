@@ -247,7 +247,12 @@ class DataController:
                 self.sticksDirection[i] = tool.direction
                 i += 1
                 if i == 2:
+                    sortedSticks = sorted(self.sticksPosition,reverse=True)
+                    if sortedSticks != self.sticksPosition:
+                        self.sticksPosition = sortedSticks
+                        self.sticksDirection.reverse()
                     break
+
             for j in range(i,2):
                 self.sticksPosition[j] = None
                 self.sticksDirection[j] = None
@@ -270,7 +275,7 @@ def main():
     """this function is called when the program starts.
        it initializes everything it needs, then runs in
        a loop until the function returns."""
-#Initialize Everything
+    # Initialize Everything
     pygame.init()
     screen_with = 800
     screen_height = 600
@@ -289,23 +294,23 @@ def main():
     # global inputDevice
     # inputDevice = dataController
 
-#Create The Backgound
+    # Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     background.fill((0, 0, 0))
 
-#Put Text On The Background, Centered
+    # Put Text On The Background, Centered
     if pygame.font:
         font = pygame.font.Font(None, 36)
         text = font.render("Virtual drums", 1, (255, 255, 255))
         textpos = text.get_rect(centerx=background.get_width()/2,centery=30)
         background.blit(text, textpos)
 
-#Display The Background
+    #Display The Background
     screen.blit(background, (0, 0))
     pygame.display.flip()
 
-#Prepare Game Objects
+    #Prepare Game Objects
     clock = pygame.time.Clock()
 
     stick1 = Stick('stick1.png')
@@ -323,23 +328,30 @@ def main():
     buttonOptions = ButtonHoverable('buttonHoverable.bmp','Options',
         (4*screen_with/5, 3*screen_height/20))
 
-    #battery A
+    buttonQuit = Button('button.bmp','Quit',
+        (4*screen_with/5, 1*screen_height/20))
+
+    # battery A
     snare = Instrument('snare.bmp',loadSound('snare-acoustic01.wav'),
         (1*screen_with/5, 3*screen_height/5))
 
     instrumentsBatteryA = [snare]
+    changeVolumeSounds(instrumentsBatteryA,1)
     spritesBatteryA = pygame.sprite.OrderedUpdates()
     spritesBatteryA.add(*instrumentsBatteryA)
     spritesBatteryA.add(buttonOptions)
+    spritesBatteryA.add(buttonQuit)
 
-    #battery B
+    # battery B
     floortom = Instrument('floortom.bmp', loadSound('floortom-acoustic01.wav'),
         (3*screen_with/5, 3*screen_height/5))
 
     instrumentsBatteryB = [floortom]
+    changeVolumeSounds(instrumentsBatteryB,1)
     spritesBatteryB = pygame.sprite.OrderedUpdates()
     spritesBatteryB.add(*instrumentsBatteryB)
     spritesBatteryB.add(buttonOptions)
+    spritesBatteryB.add(buttonQuit)
 
     #Options Screen
     buttonBackToDrums = ButtonHoverable('buttonHoverable.bmp','Back',
@@ -364,7 +376,7 @@ def main():
         buttonVolume0,buttonVolume1,buttonVolume2,
         buttonSetBattery,buttonBatteryA,buttonBatteryB)
 
-#Main Loop
+    # Main Loop
     going = True
     current_screen = "drumsScreen"
     currentInstruments = instrumentsBatteryA
@@ -372,7 +384,8 @@ def main():
     spritesDrumsScreen = spritesBatteryA
     buttonVolume1.enable()
     buttonBatteryA.enable()
-    instrument_kicked = None
+    instrument_kicked1 = None
+    instrument_kicked2 = None
     while going:
         clock.tick(60)
         dataController.processNextFrame()
@@ -389,14 +402,21 @@ def main():
             if buttonOptions.hoveringended:
                 current_screen = "optionsScreen"
                 buttonOptions.hoveringended = False
+            elif buttonQuit.hoveringended:
+                going = False
 
             if dataController.detectedGesture:
-                instrument_kicked = stick1.kick(currentInstruments)
+                instrument_kicked1 = stick1.kick(currentInstruments)
+                instrument_kicked2 = stick2.kick(currentInstruments)
             else:
                 stick1.unkick()
-                if instrument_kicked:
-                    instrument_kicked.unkicked()
-                    instrument_kicked = None
+                stick2.unkick()
+                if instrument_kicked1:
+                    instrument_kicked1.unkicked()
+                    instrument_kicked1 = None
+                if instrument_kicked2:
+                    instrument_kicked2.unkicked()
+                    instrument_kicked2 = None
                 #for instrument in currentInstruments:
                 #    instrument.unkicked()
             dataController.detectedGesture = False
@@ -438,7 +458,7 @@ def main():
                 spritesDrumsScreen = spritesBatteryB
                 currentInstruments = instrumentsBatteryB
 
-        #Handle Input Events
+        # Handle Input Events
         for event in pygame.event.get():
             if event.type == QUIT:
                 going = False
@@ -459,7 +479,7 @@ def main():
         if stick2.visible == False and current_screen == "drumsScreen":
              currentSticks.remove(stick2)
 
-        #Draw Everything
+        # Draw Everything
         screen.blit(background, (0, 0))
         if current_screen == "startScreen":
             spritesStartScreen.draw(screen)
