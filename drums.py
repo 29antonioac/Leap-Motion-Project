@@ -308,12 +308,12 @@ def main():
        a loop until the function returns."""
     # ** Initialize Everything **
     pygame.init()
-    #max_resolution = pygame.display.list_modes()[0]
-    screen_with = 800 #max_resolution[0]
-    screen_height = 600 #max_resolution[1]
-    screen = pygame.display.set_mode((screen_with, screen_height))
-    #screen = pygame.display.set_mode((screen_with, screen_height),
-    #        pygame.FULLSCREEN | pygame.HWSURFACE)
+    max_resolution = pygame.display.list_modes()[0]
+    screen_with = max_resolution[0]
+    screen_height = max_resolution[1]
+    # screen = pygame.display.set_mode((screen_with, screen_height))
+    screen = pygame.display.set_mode((screen_with, screen_height),
+           pygame.FULLSCREEN | pygame.HWSURFACE)
     pygame.display.set_caption('Drums')
     pygame.mouse.set_visible(0)
     controller = Leap.Controller()
@@ -423,7 +423,7 @@ def main():
 
     # ** Initial state **
     fullScreen = False
-    current_screen = "drumsScreen"
+    current_screen = "startScreen"
     currentInstruments = instrumentsA
     spritesDrumsScreen = spritesInstrumentsA
     buttonVolume1.enable()
@@ -442,6 +442,7 @@ def main():
     tutorialTextList.append("Great! That's the way you can select options in this program")
     tutorialTextList.append("Kick the instruments with your stick to play them")
     tutorialTextList.append("You can configure some values as volume, instrument set and fullscreen")
+    tutorialTextList.append("Play the instruments and get fun!")
     tutorialText = ( s for s in tutorialTextList )
 
     while going:
