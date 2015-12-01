@@ -92,8 +92,13 @@ class Stick(pygame.sprite.Sprite):
             # self.image = pygame.transform.rotate(
             #         self.image, )
         else:
-            self.visible = False
-
+            if self.idTool == 0:
+                self.rect.midtop = (100,100)
+                self.visible = True
+            else:
+                self.rect.midtop = (300,300)
+                self.visible = True
+            #self.visible = False
 
 
     def kick(self, targets):
@@ -287,7 +292,9 @@ def main():
     max_resolution = pygame.display.list_modes()[0]
     screen_with = max_resolution[0]
     screen_height = max_resolution[1]
-    screen = pygame.display.set_mode((screen_with, screen_height), pygame.FULLSCREEN | pygame.HWSURFACE)
+    screen = pygame.display.set_mode(
+        (screen_with, screen_height))
+        #(screen_with, screen_height), pygame.FULLSCREEN | pygame.HWSURFACE)
     pygame.display.set_caption('Drums')
     # pygame.mouse.set_visible(0)
     controller = Leap.Controller()
@@ -305,7 +312,7 @@ def main():
     # Create The Backgound
     background = pygame.Surface(screen.get_size())
     background = background.convert()
-    background.fill((0, 0, 0))
+    background.fill((1, 1, 1))
 
     # Put Text On The Background, Centered
     if pygame.font:
@@ -321,8 +328,8 @@ def main():
     #Prepare Game Objects
     clock = pygame.time.Clock()
 
-    stick1 = Stick('stick1.png')
-    stick2 = Stick('stick2.png')
+    stick1 = Stick('stick11.png')
+    stick2 = Stick('stick22.png')
     # stick = Stick(dataController)
     # stick = Stick(inputDevice)
 
