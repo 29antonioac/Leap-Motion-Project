@@ -289,7 +289,7 @@ def main():
     screen_height = max_resolution[1]
     screen = pygame.display.set_mode((screen_with, screen_height), pygame.FULLSCREEN | pygame.HWSURFACE)
     pygame.display.set_caption('Drums')
-    # pygame.mouse.set_visible(0)
+    pygame.mouse.set_visible(0)
     controller = Leap.Controller()
     dataController = DataController(controller,screen_with,screen_height)
     Stick.controller = dataController
@@ -378,11 +378,18 @@ def main():
         center=(4*screen_with/10, 4*screen_height/10))
     buttonBatteryB = ButtonHoverable('buttonHoverable.bmp','Battery B',
         center=(6*screen_with/10, 4*screen_height/10))
+    buttonSetFullScreen = Button('button.bmp','Full Screen',
+        center=(2*screen_with/10, 6*screen_height/10))
+    buttonFullScreenOn = ButtonHoverable('buttonHoverable.bmp','On',
+        center=(4*screen_with/10, 6*screen_height/10))
+    buttonFullScreenOff = ButtonHoverable('buttonHoverable.bmp','Off',
+        center=(6*screen_with/10, 6*screen_height/10))
 
     spritesOptionsScreen = pygame.sprite.OrderedUpdates()
     spritesOptionsScreen.add(buttonBackToDrums,buttonSetVolume,
         buttonVolume0,buttonVolume1,buttonVolume2,
-        buttonSetBattery,buttonBatteryA,buttonBatteryB)
+        buttonSetBattery,buttonBatteryA,buttonBatteryB,
+        buttonSetFullScreen, buttonFullScreenOn, buttonFullScreenOff)
 
     # Main Loop
     going = True
@@ -392,8 +399,11 @@ def main():
     spritesDrumsScreen = spritesBatteryA
     buttonVolume1.enable()
     buttonBatteryA.enable()
+    buttonFullScreenOn.enable()
     instrument_kicked1 = None
     instrument_kicked2 = None
+    fullScreen = True
+    changedFullScreen = False
     while going:
         clock.tick(30)
         dataController.processNextFrame()
@@ -404,17 +414,8 @@ def main():
             if buttonStart.hoveringended:
                 current_screen = "drumsScreen"
                 buttonStart.hoveringended = False
-        elif current_screen =="drumsScreen":
+        elif current_screen == "drumsScreen":
             currentSticks = pygame.sprite.OrderedUpdates(stick1,stick2)
-
-            print dataController.sticksDirection
-            print dataController.sticksPosition
-
-            if buttonOptions.hoveringended:
-                current_screen = "optionsScreen"
-                buttonOptions.hoveringended = False
-            elif buttonQuit.hoveringended:
-                going = False
 
             if dataController.detectedGesture:
                 instrument_kicked1 = stick1.kick(currentInstruments)
@@ -468,6 +469,20 @@ def main():
                 buttonBatteryA.disable()
                 spritesDrumsScreen = spritesBatteryB
                 currentInstruments = instrumentsBatteryB
+            elif buttonFullScreenOn.hoveringended:
+                buttonFullScreenOn.hoveringended = False
+                buttonFullScreenOn.enable()
+                buttonFullScreenOff.disable()
+                if not fullScreen:
+                    changedFullScreen = True
+                    fullScreen = True
+            elif buttonFullScreenOff.hoveringended:
+                buttonFullScreenOff.hoveringended = False
+                buttonFullScreenOn.disable()
+                buttonFullScreenOff.enable()
+                if fullScreen:
+                    changedFullScreen = True
+                    fullScreen = False
 
         # Handle Input Events
         for event in pygame.event.get():
@@ -475,6 +490,8 @@ def main():
                 going = False
             elif event.type == KEYDOWN and (event.key == K_ESCAPE or event.key == K_q):
                 going = False
+
+
 
         currentSticks.update()
         if current_screen == "startScreen":
@@ -496,11 +513,24 @@ def main():
             spritesStartScreen.draw(screen)
         elif current_screen == "drumsScreen":
             spritesDrumsScreen.draw(screen)
+            if buttonOptions.hoveringended:
+                current_screen = "optionsScreen"
+                buttonOptions.hoveringended = False
+            elif buttonQuit.hoveringended:
+                going = False
         elif current_screen == "optionsScreen":
             spritesOptionsScreen.draw(screen)
         currentSticks.draw(screen)
 
+
+
         pygame.display.flip()
+
+
+        if changedFullScreen:
+            pygame.display.toggle_fullscreen()
+            changedFullScreen = False
+
 
     pygame.quit()
 
