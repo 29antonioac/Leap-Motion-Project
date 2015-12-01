@@ -1,13 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# baqueta: link
-# https://pixabay.com/p-149338/?no_redirect
-
-# TODO:  setattr(self.rect,pointList[k],Stick.controller.sticksPosition[self.idTool])
-# TODO:  add other sounds
-# TODO:  change all variables to camel notation
-
 import sys
 import os
 import time
@@ -26,7 +19,7 @@ main_dir = os.path.split(os.path.abspath(__file__))[0]
 image_dir = os.path.join(main_dir, 'data/images')
 sound_dir = os.path.join(main_dir, 'data/sounds')
 
-# Some functions to create our resources
+# Some functions to create or modify our resources
 def loadImage(name, colorkey=None):
     fullname = os.path.join(image_dir, name)
     try:
@@ -54,7 +47,6 @@ def loadSound(name):
         raise SystemExit(str(geterror()))
     return sound
 
-# Function to change volume sounds
 def changeVolumeSounds(instruments, option):
     if option == 0:
         volume = 0.1
@@ -368,9 +360,9 @@ def main():
 
     rainstick = Instrument('rainstick.png',loadSound('rainstick.wav'),
         (1*screen_with/5, 1*screen_height/5))
-    cymbal = Instrument('cymbal1.png',loadSound('cymbal.wav'),
+    cymbal = Instrument('cymbal.png',loadSound('cymbal.wav'),
         (1*screen_with/5, 3*screen_height/5))
-    framedrums = Instrument('framedrums1.png',loadSound('framedrums.wav'),
+    framedrums = Instrument('framedrums.png',loadSound('framedrums.wav'),
         (3*screen_with/5, 1*screen_height/5))
     chime = Instrument('chime.png',loadSound('chime.wav'),
         (3*screen_with/5, 3*screen_height/5))
