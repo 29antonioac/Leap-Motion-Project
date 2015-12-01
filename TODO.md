@@ -8,16 +8,18 @@ Needed:
 * [x] determine weight and height of the window
 * [x] fix lastrame.pointables when there are two tools
 * [x] rotate sticks
-
-* [ ] add new images and new sounds
-* [ ] improve layout of the screen
+* [x] add new images and new sounds
 * [x] add tutorial
 * [x] improve resolution of the stick
+* [x] clean map2Dcoordinates
+
+* [ ] complete readme.md
+* [ ] improve layout of the screen
+
+* [ ] fix variables to camel notatio
 * [ ] clean code
-* [x] do readme.md
 * [ ] comment code
 * [ ] write in the wiki
-* [ ] clean map2Dcoordinates
 
 Enhancements:
 * [ ] add effect when gesture happend in stick
