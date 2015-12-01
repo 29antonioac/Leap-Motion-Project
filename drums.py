@@ -291,9 +291,8 @@ def main():
     max_resolution = pygame.display.list_modes()[0]
     screen_with = max_resolution[0]
     screen_height = max_resolution[1]
-    screen = pygame.display.set_mode(
-        (screen_with, screen_height))
-        #(screen_with, screen_height), pygame.FULLSCREEN | pygame.HWSURFACE)
+    screen = pygame.display.set_mode((screen_with, screen_height),
+            pygame.FULLSCREEN | pygame.HWSURFACE)
     pygame.display.set_caption('Drums')
     pygame.mouse.set_visible(0)
     controller = Leap.Controller()
