@@ -31,7 +31,6 @@ el sonido que ofrece de manera sencilla.
 Para poder ejecutar este proyecto, hacen falta varias cosas:
 
 * Python
-* PyOpenGL
 * Pygame
 * Leap Motion SDK
 
@@ -86,6 +85,8 @@ Cuando ejecutes el programa, encontrarás un tutorial con la información necesa
 
 Presta atención y... ¡disfruta tocando!
 
+Entra en la configuración y verás algunas opciones que puedes modificar: volumen, sonidos y pantalla completa. Los sonidos no tienen por qué ser de batería, ¡entra y descubre cuáles son!
+
 ## Errores frecuentes o aspectos destacados
 
 Alguno de los errores destacados han sido:
@@ -107,8 +108,8 @@ Alguno de los errores destacados han sido:
 
 ## Lecturas recomendadas
 
-La documentación oficial para [LeapMotion](https://developer.leapmotion.com/documentation/python/index.html),
-[Pygame](https://www.pygame.org/docs/) y [PyOpenGL](http://pyopengl.sourceforge.net/documentation/) son imprescindibles.
+La documentación oficial para [LeapMotion](https://developer.leapmotion.com/documentation/python/index.html) y
+[Pygame](https://www.pygame.org/docs/) son imprescindibles.
 
 ## Referencias
 
