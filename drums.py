@@ -335,37 +335,38 @@ def main():
 
     # * Start Screen *
     buttonStart = ButtonHoverable('buttonHoverable.bmp','Start',
-        center=(5*screen_with/10, 5*screen_height/10))
+        center=(5*screen_with/10, 3*screen_height/10))
     buttonTutorial = ButtonHoverable('buttonHoverable.bmp','Tutorial',
-        center=(5*screen_with/10, 7*screen_height/10))
+        center=(5*screen_with/10, 5*screen_height/10))
 
     spritesStartScreen = pygame.sprite.OrderedUpdates(
         buttonStart,buttonTutorial,stick1)
 
     # * Drums Screen *
+    chunkInstruments = 7
     snare = Instrument('snare.png',loadSound('snare-acoustic01.wav'),
-        (1*screen_with/5, 3*screen_height/5))
+        (2*screen_with/chunkInstruments, 4*screen_height/chunkInstruments))
     floortom = Instrument('floortom.png', loadSound('floortom-acoustic01.wav'),
-        (3*screen_with/5, 3*screen_height/5))
+        (4*screen_with/chunkInstruments, 4*screen_height/chunkInstruments))
     tomtom = Instrument('tomtom.png', loadSound('tom-acoustic01.wav'),
-        (2*screen_with/5, 2*screen_height/5))
+        (3*screen_with/chunkInstruments, 3*screen_height/chunkInstruments))
     ride = Instrument('ride.png',loadSound('ride-acoustic01.wav'),
-        (3*screen_with/5, 1*screen_height/5))
+        (4*screen_with/chunkInstruments, 2*screen_height/chunkInstruments))
     crash = Instrument('crash.png',loadSound('crash-acoustic01.wav'),
-        (1*screen_with/5, 1*screen_height/5))
+        (2*screen_with/chunkInstruments, 2*screen_height/chunkInstruments))
     instrumentsA = [snare,floortom,tomtom,ride,crash]
     changeVolumeSounds(instrumentsA,1)
     spritesInstrumentsA = pygame.sprite.OrderedUpdates()
     spritesInstrumentsA.add(*instrumentsA)
 
     rainstick = Instrument('rainstick.png',loadSound('rainstick.wav'),
-        (1*screen_with/5, 1*screen_height/5))
+        (2*screen_with/chunkInstruments, 2*screen_height/chunkInstruments))
     cymbal = Instrument('cymbal.png',loadSound('cymbal.wav'),
-        (1*screen_with/5, 3*screen_height/5))
+        (2*screen_with/chunkInstruments, 4*screen_height/chunkInstruments))
     framedrums = Instrument('framedrums.png',loadSound('framedrums.wav'),
-        (3*screen_with/5, 1*screen_height/5))
+        (4*screen_with/chunkInstruments, 2*screen_height/chunkInstruments))
     chime = Instrument('chime.png',loadSound('chime.wav'),
-        (3*screen_with/5, 3*screen_height/5))
+        (4*screen_with/chunkInstruments, 4*screen_height/chunkInstruments))
     instrumentsB = [rainstick,cymbal,framedrums,chime]
     changeVolumeSounds(instrumentsB,1)
     spritesInstrumentsB = pygame.sprite.OrderedUpdates()
@@ -379,28 +380,29 @@ def main():
     spritesInstrumentsB.add(buttonOptions,buttonQuit)
 
     # * Options Screen *
+    chunkOptions = 10
     buttonBackToDrums = ButtonHoverable('buttonHoverable.bmp','Back',
         (4*screen_with/5, 1*screen_height/20))
     buttonSetVolume = Button('button.bmp','Volume',
-        center=(2*screen_with/10, 2*screen_height/10))
+        center=(2*screen_with/chunkOptions, 3*screen_height/chunkOptions))
     buttonVolume0 = ButtonHoverable('buttonHoverable.bmp','Low',
-        center=(4*screen_with/10, 2*screen_height/10))
+        center=(4*screen_with/chunkOptions, 3*screen_height/chunkOptions))
     buttonVolume1 = ButtonHoverable('buttonHoverable.bmp','Medium',
-        center=(6*screen_with/10, 2*screen_height/10))
+        center=(6*screen_with/chunkOptions, 3*screen_height/chunkOptions))
     buttonVolume2 = ButtonHoverable('buttonHoverable.bmp','High',
-        center=(8*screen_with/10, 2*screen_height/10))
+        center=(8*screen_with/chunkOptions, 3*screen_height/chunkOptions))
     buttonSetInstrument = Button('button.bmp','Instruments',
-        center=(2*screen_with/10, 4*screen_height/10))
+        center=(2*screen_with/chunkOptions, 5*screen_height/chunkOptions))
     buttonInstrumentA = ButtonHoverable('buttonHoverable.bmp','Drums',
-        center=(4*screen_with/10, 4*screen_height/10))
+        center=(4*screen_with/chunkOptions, 5*screen_height/chunkOptions))
     buttonInstrumentB = ButtonHoverable('buttonHoverable.bmp','Alternatives',
-        center=(6*screen_with/10, 4*screen_height/10))
+        center=(6*screen_with/chunkOptions, 5*screen_height/chunkOptions))
     buttonSetFullScreen = Button('button.bmp','Full Screen',
-        center=(2*screen_with/10, 6*screen_height/10))
+        center=(2*screen_with/chunkOptions, 7*screen_height/chunkOptions))
     buttonFullScreenOn = ButtonHoverable('buttonHoverable.bmp','On',
-        center=(4*screen_with/10, 6*screen_height/10))
+        center=(4*screen_with/chunkOptions, 7*screen_height/chunkOptions))
     buttonFullScreenOff = ButtonHoverable('buttonHoverable.bmp','Off',
-        center=(6*screen_with/10, 6*screen_height/10))
+        center=(6*screen_with/chunkOptions, 7*screen_height/chunkOptions))
 
     spritesOptionsScreen = pygame.sprite.OrderedUpdates()
     spritesOptionsScreen.add(buttonBackToDrums,buttonSetVolume,
@@ -414,7 +416,7 @@ def main():
         center=(screen_with/2, 6*screen_height/10))
 
     # ** Initial state **
-    fullScreen = False
+    fullScreen = True
     current_screen = "startScreen"
     currentInstruments = instrumentsA
     spritesDrumsScreen = spritesInstrumentsA
