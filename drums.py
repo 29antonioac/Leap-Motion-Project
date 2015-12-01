@@ -366,13 +366,13 @@ def main():
     spritesInstrumentsA = pygame.sprite.OrderedUpdates()
     spritesInstrumentsA.add(*instrumentsA)
 
-    rainstick = Instrument('rainstick.png',loadSound('snare-acoustic01.wav'),
+    rainstick = Instrument('rainstick.png',loadSound('rainstick.wav'),
         (1*screen_with/5, 1*screen_height/5))
-    cymbal = Instrument('cymbal.png',loadSound('snare-acoustic01.wav'),
+    cymbal = Instrument('cymbal1.png',loadSound('cymbal.wav'),
         (1*screen_with/5, 3*screen_height/5))
-    framedrums = Instrument('hi-hat.png',loadSound('snare-acoustic01.wav'),
+    framedrums = Instrument('framedrums1.png',loadSound('framedrums.wav'),
         (3*screen_with/5, 1*screen_height/5))
-    chime = Instrument('chime.png',loadSound('snare-acoustic01.wav'),
+    chime = Instrument('chime.png',loadSound('chime.wav'),
         (3*screen_with/5, 3*screen_height/5))
     instrumentsB = [rainstick,cymbal,framedrums,chime]
     changeVolumeSounds(instrumentsB,1)
