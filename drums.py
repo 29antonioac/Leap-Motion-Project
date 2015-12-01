@@ -335,7 +335,12 @@ def main():
     buttonStart = ButtonHoverable('buttonHoverable.bmp','Start',
         center=(5*screen_with/10, 5*screen_height/10))
 
-    spritesStartScreen = pygame.sprite.OrderedUpdates(buttonStart,stick1)
+    buttonTutorial = ButtonHoverable('buttonHoverable.bmp','Tutorial',
+        center=(5*screen_with/10, 7*screen_height/10))
+
+
+
+    spritesStartScreen = pygame.sprite.OrderedUpdates(buttonStart,buttonTutorial,stick1)
 
     #Drums Screen
     buttonOptions = ButtonHoverable('buttonHoverable.bmp','Options',
@@ -396,9 +401,15 @@ def main():
         buttonSetBattery,buttonBatteryA,buttonBatteryB,
         buttonSetFullScreen, buttonFullScreenOn, buttonFullScreenOff)
 
+    # Tutorial screen
+
+    spritesTutorialScreen = pygame.sprite.OrderedUpdates()
+    tutorialNext = ButtonHoverable('buttonHoverable.bmp',"Next",
+        center=(screen_with/2, 6*screen_height/10))
+
     # Main Loop
     going = True
-    current_screen = "drumsScreen"
+    current_screen = "startScreen"
     currentInstruments = instrumentsBatteryA
     allInstruments = instrumentsBatteryA + instrumentsBatteryB
     spritesDrumsScreen = spritesBatteryA
@@ -409,16 +420,44 @@ def main():
     instrument_kicked2 = None
     fullScreen = True
     changedFullScreen = False
+    changedTutorialStep = True
+
+    tutorialTextList = ["Welcome to virtual drums!"]
+    tutorialTextList.append("Holi")
+    tutorialTextList.append("Adios")
+
+
+    tutorialText = ( s for s in tutorialTextList )
+
     while going:
         clock.tick(30)
         dataController.processNextFrame()
 
-        if current_screen == "startScreen":
+        if current_screen == "tutorialScreen":
+            currentSticks = pygame.sprite.OrderedUpdates(stick1)
+            try:
+                if changedTutorialStep:
+                    currentTutorialStep = next(tutorialText)
+                    changedTutorialStep = False
+                    tutorialTextBox = Button('textBox.bmp',currentTutorialStep,
+                        center=(screen_with/2, screen_height/2))
+                    spritesTutorialScreen.empty()
+                    spritesTutorialScreen.add(tutorialTextBox)
+                    spritesTutorialScreen.add(tutorialNext)
+                if tutorialNext.hoveringended:
+                    changedTutorialStep = True
+                    tutorialNext.hoveringended = False
+            except StopIteration:
+                current_screen = "drumsScreen"
+        elif current_screen == "startScreen":
             currentSticks = pygame.sprite.OrderedUpdates(stick1)
 
             if buttonStart.hoveringended:
                 current_screen = "drumsScreen"
                 buttonStart.hoveringended = False
+            elif buttonTutorial.hoveringended:
+                current_screen = "tutorialScreen"
+                buttonTutorial.hoveringended = False
         elif current_screen == "drumsScreen":
             currentSticks = pygame.sprite.OrderedUpdates(stick1,stick2)
 
@@ -499,7 +538,9 @@ def main():
 
 
         currentSticks.update()
-        if current_screen == "startScreen":
+        if current_screen == "tutorialScreen":
+            spritesTutorialScreen.update()
+        elif current_screen == "startScreen":
             spritesStartScreen.update()
         elif current_screen == "drumsScreen":
             spritesDrumsScreen.update()
@@ -514,7 +555,9 @@ def main():
 
         # Draw Everything
         screen.blit(background, (0, 0))
-        if current_screen == "startScreen":
+        if current_screen == "tutorialScreen":
+            spritesTutorialScreen.draw(screen)
+        elif current_screen == "startScreen":
             spritesStartScreen.draw(screen)
         elif current_screen == "drumsScreen":
             spritesDrumsScreen.draw(screen)
