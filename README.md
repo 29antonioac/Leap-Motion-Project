@@ -115,5 +115,22 @@ La documentación oficial para [LeapMotion](https://developer.leapmotion.com/doc
 Lo referido a [Leap Motion](https://developer.leapmotion.com/documentation/python/index.html) y
 [Pygame](https://www.pygame.org/docs/) ha sido sacado de la documentación oficial.
 
-Los sonidos de ejemplo han sido sacados de [aquí](http://99sounds.org/drum-samples/), que
+Para Pygame se ha utilizado la documentación oficial y el ejemplo del tutorial
+[chimp](https://www.pygame.org/docs/tut/chimp/ChimpLineByLine.html)
+
+Los sonidos de ejemplo han sido sacados de [aquí](http://99sounds.org/drum-samples/)
+y de [aquí](http://99sounds.org/percussion-samples/), que
 son libres mientras no lo usemos en ámbito comercial.
+
+Las imagenes la hemos sacado de:
+
+ - [bateria electronica](https://www.google.es/imgres?imgurl=https://c1.staticflickr.com/7/6081/6026391058_5f98798c0f_b.jpg&imgrefurl=https://www.flickr.com/photos/jtjdt/6026391058&h=1024&w=1010&tbnid=kFktYv4p5FKmQM:&docid=ytmUsZe6UPWYJM&ei=qlJdVurSGInzatfHrqgP&tbm=isch&ved=0ahUKEwjqz4L1l7rJAhWJuRoKHdejC_UQMwhAKBkwGQ)
+ - [rainstick](https://en.wikipedia.org/wiki/Rainstick#/media/File:Rainstick_01.png)
+ - [cymbal](https://en.wikipedia.org/wiki/Cymbal#/media/File:2006-07-06_Crash_Zildjian_14.jpg)
+ - [chime](https://en.wikipedia.org/wiki/Mark_tree#/media/File:Meinl_CH-12_Chimes.jpg)
+ - [framedrumes](https://en.wikipedia.org/wiki/Pandeiro#/media/File:Pandeiro.jpg)
+ - [drumstick](https://commons.wikimedia.org/wiki/File:Drumsticks.png)
+
+
+
+
