@@ -84,13 +84,6 @@ class Stick(pygame.sprite.Sprite):
                     "bottomleft", "midbottom", "bottomright",
                     "midright", "topright"]
 
-            # for k in range(len(pointList)):
-            #     print (45*k-22.5),"<=",deg,"<",(45*(k+1)-22.5)
-            #     if (45*k-22.5) <= deg < (45*(k+1)-22.5) :
-            #         print(k, pointList[k])
-            #         setattr(self.rect,pointList[k],Stick.controller.sticksPosition[self.idTool])
-            #         break
-
             if -22.5 <= deg < 22.5 or 337.5 <= deg:
                 k = 0
             elif 22.5 <= deg < 67.5:
@@ -118,7 +111,6 @@ class Stick(pygame.sprite.Sprite):
         """ Returns the target that the stick collides with """
         if not self.kicking:
             self.kicking = True
-            # hitbox = self.rect.inflate(-5, -5)
             hitbox = self.rect
             for target in targets:
                 if hitbox.colliderect(target.rect):
