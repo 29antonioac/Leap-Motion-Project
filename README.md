@@ -117,7 +117,7 @@ se ha partido del ejemplo del tutorial de Pygame [chimp](https://www.pygame.org/
 Los sonidos de ejemplo han sido sacados de [aquí](http://99sounds.org/drum-samples/)
 y de [aquí](http://99sounds.org/percussion-samples/), que son libres.
 
-Las imagenes la hemos sacado de:
+Las imágenes la hemos sacado de:
 
  - [electronicdrums](https://www.flickr.com/photos/jtjdt/6026391058)
  - [rainstick](https://en.wikipedia.org/wiki/Rainstick#/media/File:Rainstick_01.png)
