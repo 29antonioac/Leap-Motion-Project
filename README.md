@@ -14,7 +14,7 @@ Desde el día 16 de Octubre hasta el 2 de Diciembre.
 ## Descripción del problema que se aborda
 
 El problema abordado es tocar instrumentos de percusión
-con el Leap. Utilizando dos lápices, rotuladores o similar,
+con el Leap. Utilizando hasta dos lápices, rotuladores o similar,
 podremos simular de manera sencilla y simple el *golpeo* (kick)
 al instrumento de percusión.
 
