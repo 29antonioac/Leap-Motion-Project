@@ -109,8 +109,6 @@ class Stick(pygame.sprite.Sprite):
                 k = 7
 
             setattr(self.rect,pointList[k],Stick.controller.sticksPosition[self.idTool])
-            print(deg,k, pointList[k], getattr(self.rect,pointList[k]))
-
             self.image = pygame.transform.rotate(self.original,deg)
 
         else:
