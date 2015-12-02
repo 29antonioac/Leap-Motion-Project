@@ -1,7 +1,7 @@
-# Batería con Leap Motion
+# Percusión con Leap Motion
 
 Este proyecto para la asignatura Nuevos Paradigmas de Interacción de la UGR
-consta de una batería virtual.
+consta de una batería virtual y otros instrumentos de percusión.
 
 ## Autores
 Sus autores somos [Antonio Álvarez Caballero](https://github.com/analca3)
@@ -13,18 +13,24 @@ Desde el día 16 de Octubre hasta el 2 de Diciembre.
 
 ## Descripción del problema que se aborda
 
-El problema abordado es una batería virtual: utilizando dos lápices, rotuladores o similar,
-podremos simular de manera sencilla y simple el funcionamiento de una batería.
+El problema abordado es tocar instrumentos de percusión
+con el Leap. Utilizando dos lápices, rotuladores o similar,
+podremos simular de manera sencilla y simple el *golpeo* (kick)
+al instrumento de percusión.
 
 ## Descripción de la solución que se aporta
 
-La solución propuesta es la siguiente: en un entorno virtual se dibujan cuatro regiones
-cuadradas de igual tamaño. Tomando como referencia una herramienta (lápiz, bolígrafo, rotuladores...)
-pintamos en pantalla algo similar a una baqueta, y al posicionarla encima de cada una
-de las regiones y detectar un gesto, se reproducirá un sonido asociado a dicha región.
+La solución propuesta es la siguiente: en un entorno virtual se dibujan varios
+instrumentos de percusión. Tomando como referencia una herramienta (lápiz, bolígrafo, rotuladores...)
+pintamos en pantalla una baqueta que trackea el movimiento de la herramienta
+utilizando los datos del Leap. Al posicionar la baqueta encima de un instrumento
+y realizar el gesto [key tap](https://di4564baj7skl.cloudfront.net/documentation/images/Leap_Gesture_Tap.png)
+(esto es agitar la baqueta hacia abajo como si golpeáramos una batería)
+se reproducirá el sonido asociado a ese gesto.
 
-Manteniendo la baqueta sin realizar gestos en una determinada región, podemos cambiar
-el sonido que ofrece de manera sencilla.
+Para navegar entre las distintas opciones lo único que hay que hacer es 
+dejar la baqueta encima del botón un tiempo determinado y se
+activará la opción asociada a dicho botón.
 
 ### Instalación
 
@@ -41,7 +47,7 @@ es un wrapper para instalar paquetes de la comunidad fácilmente. En caso de no 
 se pueden acceder a los paquetes de Leap de la comunidad desde [aquí](https://aur.archlinux.org/packages/?O=0&K=leap+motion)
 
 ```bash
-$ sudo pacman -Syu python2 python2-opengl python2-numpy python2-pygame
+$ sudo pacman -Syu python2 python2-pygame
 $ pacaur -Syu leap-motion-driver leap-motion-sdk
 ```
 
@@ -66,7 +72,7 @@ En Archlinux, bastaría conectar el Leap Motion mediante los comandos:
 $ sudo leapd
 ```
 
-Recomendamos la siguiente configuración en el panel de control de leap. En ArchLinux, puedes abrir dicho panel buscando la aplicación *Leap Motion Control Panel*. También puedes ejecutarla por consola
+Es necesaria activar la opción *Tool tracking en el panel de control de leap. En ArchLinux, puedes abrir dicho panel buscando la aplicación *Leap Motion Control Panel*. También puedes ejecutarla por consola
 
 ```bash
 $ LeapControlPanel
@@ -89,21 +95,12 @@ Entra en la configuración y verás algunas opciones que puedes modificar: volum
 
 ## Errores frecuentes o aspectos destacados
 
-Alguno de los errores destacados han sido:
+Alguno de los errores destacados en esta práctica han sido:
 
-* Elección de proyecto: En un principio queríamos realizar un minijuego de tiro al arco usando Kinect, pero vimos que la precisión que nos ofrecía no era lo suficiente, por eso cambiamos a este proyecto.
+- Movimiento de la baqueta: Posicionar un Sprite de una baqueta según la posición reconocida por Leap Motion es trivial. Lo complicado es rotarla según una dirección y que siga colisionando con el entorno de manera más o menos precisa. Se ha resuelto realizando un pequeño cálculo y aproximando.
 
-* Detección de la herramienta: Pasó su tiempo en que diéramos con la herramienta correcta. Un lápiz no muy corto o un rotulador opaco y mate nos servirían como baqueta mágica.
-
-* Detección del gesto: El gesto de Keytap no es tan intuitivo con una herramienta que con tu propio dedo, por lo que hemos tenido que habituarnos para hacerlo correctamente.
-
-* Problemas con el 3D: La profundidad no quedaba muy bien, se precisaba de mucho esfuerzo para acertar a dar en los instrumentos, por lo que optamos por esta solución pseudo-2D.
-
-* Parpadeo: La baqueta parpadeaba mucho, debido a que OpenGL se actualiza muy rápido y lo solucionamos poniendo un temporizador.
-
-* Complejidad: Programar en un entorno 3D usando OpenGL no es trivial, y para añadir algo tan sencillo como imágenes fijas hay que trabajarlo mucho. Por esta razón nos pasamos a un entorno 2D usando Pygame por completo, no sólo para el tutorial.
-
-* Movimiento de la baqueta: Posicionar un Sprite de una baqueta según la posición reconocida por Leap Motion es trivial. Lo complicado es rotarla según una dirección y que siga colisionando con el entorno de manera más o menos precisa. Se ha resuelto realizando un pequeño cálculo y aproximando.
+- No hay una gran de imágenes libres relacionadas con los distintos intrumentos de percusión y en muchos casos
+las imágenes existentes no eran de la suficiente calidad como para utilizarlas.
 
 
 ## Lecturas recomendadas
@@ -120,12 +117,11 @@ Para Pygame se ha utilizado la documentación oficial y el ejemplo del tutorial
 [chimp](https://www.pygame.org/docs/tut/chimp/ChimpLineByLine.html)
 
 Los sonidos de ejemplo han sido sacados de [aquí](http://99sounds.org/drum-samples/)
-y de [aquí](http://99sounds.org/percussion-samples/), que
-son libres mientras no lo usemos en ámbito comercial.
+y de [aquí](http://99sounds.org/percussion-samples/), que son libres.
 
 Las imagenes la hemos sacado de:
 
- - [bateria electronica](https://www.google.es/imgres?imgurl=https://c1.staticflickr.com/7/6081/6026391058_5f98798c0f_b.jpg&imgrefurl=https://www.flickr.com/photos/jtjdt/6026391058&h=1024&w=1010&tbnid=kFktYv4p5FKmQM:&docid=ytmUsZe6UPWYJM&ei=qlJdVurSGInzatfHrqgP&tbm=isch&ved=0ahUKEwjqz4L1l7rJAhWJuRoKHdejC_UQMwhAKBkwGQ)
+ - [electronicdrums](https://www.flickr.com/photos/jtjdt/6026391058)
  - [rainstick](https://en.wikipedia.org/wiki/Rainstick#/media/File:Rainstick_01.png)
  - [cymbal](https://en.wikipedia.org/wiki/Cymbal#/media/File:2006-07-06_Crash_Zildjian_14.jpg)
  - [chime](https://en.wikipedia.org/wiki/Mark_tree#/media/File:Meinl_CH-12_Chimes.jpg)
