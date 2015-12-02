@@ -111,10 +111,8 @@ La documentación oficial para [LeapMotion](https://developer.leapmotion.com/doc
 ## Referencias
 
 Lo referido a [Leap Motion](https://developer.leapmotion.com/documentation/python/index.html) y
-[Pygame](https://www.pygame.org/docs/) ha sido sacado de la documentación oficial.
-
-Para Pygame se ha utilizado la documentación oficial y el ejemplo del tutorial
-[chimp](https://www.pygame.org/docs/tut/chimp/ChimpLineByLine.html)
+[Pygame](https://www.pygame.org/docs/) ha sido sacado de la documentación oficial.Además
+se ha partido del ejemplo del tutorial de Pygame [chimp](https://www.pygame.org/docs/tut/chimp/ChimpLineByLine.html)
 
 Los sonidos de ejemplo han sido sacados de [aquí](http://99sounds.org/drum-samples/)
 y de [aquí](http://99sounds.org/percussion-samples/), que son libres.
