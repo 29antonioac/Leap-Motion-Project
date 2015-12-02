@@ -13,12 +13,12 @@ Needed:
 * [x] improve resolution of the stick
 * [x] clean map2Dcoordinates
 
-* [ ] complete readme.md
-* [ ] improve layout of the screen
+* [x] complete readme.md
+* [x] improve layout of the screen
 
 * [ ] fix variables to camel notatio
-* [ ] clean code
-* [ ] comment code
+* [x] clean code
+* [x] comment code
 * [ ] write in the wiki
 
 Enhancements:
