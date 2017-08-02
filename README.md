@@ -5,7 +5,7 @@ consta de una batería virtual.
 
 ## Autores
 Sus autores somos [Antonio Álvarez Caballero](https://github.com/analca3)
-y [Adrián Ranea Robles](https://github.com/ranea).
+y [Adrián](https://github.com/ranea).
 
 ## Fecha de realización
 
